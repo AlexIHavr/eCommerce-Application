@@ -37,6 +37,7 @@
     ".eslintrc.cjs",
     "commitlint.config.js",
     ".prettierrc.cjs",
-    "declaration.d.ts"
+    "declaration.d.ts",
+    "jest.config.js",
   ]
 }
