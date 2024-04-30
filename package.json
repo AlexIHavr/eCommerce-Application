@@ -10,7 +10,8 @@
     "lint": "eslint ./src",
     "lint:fix": "eslint --fix ./src",
     "format": "prettier ./src --write",
-    "ci:format": "prettier ./src --check"
+    "ci:format": "prettier ./src --check",
+    "prepare": "husky install"
   },
   "devDependencies": {
     "@commitlint/cli": "^19.3.0",
