@@ -1,5 +1,5 @@
 export default {
-  roots: ['./src/app/tests'],
+  roots: ['./src/tests'],
   transform: {
     '^.+\\.ts$': 'ts-jest',
   },
