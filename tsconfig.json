@@ -27,8 +27,7 @@
       "@interfaces/*": ["src/app/interfaces/*"],
       "@globalTypes/*": ["src/app/globalTypes/*"],
       "@services/*": ["src/app/services/*"],
-      "@assets/*": ["src/assets/*"],
-      "@tests/*": ["src/tests/*"]
+      "@assets/*": ["src/assets/*"]
     }
   },
   "include": [
@@ -38,6 +37,6 @@
     "commitlint.config.js",
     ".prettierrc.cjs",
     "declaration.d.ts",
-    "jest.config.js",
+    "jest.config.js"
   ]
 }
