@@ -1,0 +1,45 @@
+module.exports = {
+  root: true,
+  noInlineConfig: true,
+  env: { browser: true, es2020: true },
+  extends: [
+    'eslint:recommended',
+    'plugin:@typescript-eslint/recommended',
+    'airbnb-base',
+    'airbnb-typescript/base',
+  ],
+  overrides: [
+    {
+      env: { node: true },
+      files: ['.eslintrc.{js,cjs}'],
+      parserOptions: { sourceType: 'script' },
+    },
+  ],
+  parser: '@typescript-eslint/parser',
+  parserOptions: {
+    ecmaVersion: 'latest',
+    sourceType: 'module',
+    project: 'tsconfig.json',
+  },
+  plugins: ['@typescript-eslint', 'simple-import-sort'],
+  rules: {
+    'import/extensions': ['error', 'ignorePackages', { ts: 'never' }],
+    'simple-import-sort/imports': 'error',
+    'simple-import-sort/exports': 'error',
+    'max-lines-per-function': ['error', 40],
+    'linebreak-style': ['error', 'windows'],
+    'import/no-extraneous-dependencies': ['error', { devDependencies: true }],
+    'max-len': ['error', { code: 100, tabWidth: 2 }],
+    'implicit-arrow-linebreak': 'off',
+    'object-curly-newline': 'off',
+    '@typescript-eslint/explicit-function-return-type': ['error', { allowExpressions: true }],
+    '@typescript-eslint/explicit-member-accessibility': [
+      'error',
+      { overrides: { constructors: 'off' } },
+    ],
+    'function-paren-newline': 'off',
+    '@typescript-eslint/indent': 'off',
+    'operator-linebreak': ['error', 'after'],
+    indent: ['error', 2, { SwitchCase: 1 }],
+  },
+};
