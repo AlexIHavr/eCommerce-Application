@@ -24,3 +24,4 @@
 - [ ] I have performed a self-review of my own code.
 - [ ] I left comments in code, particularly in hard-to-understand areas.
 - [ ] There are no warnings, errors, console logs, debuggers in my changes.
+- [ ] All tests are passed.
