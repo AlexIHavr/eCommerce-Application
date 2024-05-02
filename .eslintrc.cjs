@@ -14,7 +14,7 @@ module.exports = {
   ],
   parser: '@typescript-eslint/parser',
   parserOptions: { project: 'tsconfig.json' },
-  plugins: ['@typescript-eslint', 'simple-import-sort', 'prettier'],
+  plugins: ['@typescript-eslint', 'simple-import-sort', 'no-relative-import-paths', 'prettier'],
   rules: {
     'import/no-extraneous-dependencies': ['error', { devDependencies: true }],
     'simple-import-sort/imports': 'error',
@@ -23,6 +23,10 @@ module.exports = {
     '@typescript-eslint/explicit-member-accessibility': [
       'error',
       { overrides: { constructors: 'off' } },
+    ],
+    'no-relative-import-paths/no-relative-import-paths': [
+      'error',
+      { allowSameFolder: true, rootDir: 'src/app' },
     ],
   },
 };

@@ -6,7 +6,7 @@
     "strict": true,
     "isolatedModules": true,
     "noEmit": true,
-    "baseUrl": "src/app/",
+    "baseUrl": "src/app",
   },
   "include": ["src", "./*", ".eslintrc.cjs"]
 }
