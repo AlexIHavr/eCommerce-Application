@@ -28,5 +28,6 @@ module.exports = {
       'error',
       { allowSameFolder: true, rootDir: 'src/app' },
     ],
+    'no-console': 'off',
   },
 };
