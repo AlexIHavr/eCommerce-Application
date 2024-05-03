@@ -1,10 +1,13 @@
 import { defineConfig } from 'vite';
-import eslint from 'vite-plugin-eslint';
+import checker from 'vite-plugin-checker';
 import tsconfigPaths from 'vite-tsconfig-paths';
 
 export default defineConfig({
   base: '/eCommerce-Application/',
-  plugins: [tsconfigPaths(), eslint()],
+  plugins: [
+    tsconfigPaths(),
+    checker({ typescript: true, eslint: { lintCommand: 'eslint ./src' } }),
+  ],
   build: {
     sourcemap: true,
   },
