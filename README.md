@@ -26,3 +26,41 @@ The application is powered by CommerceTools 🌐, a leading provider of commerce
 - **Single Page Application (SPA)**
 - **CommerceTools API**
 - **Vite**
+
+## Available scripts
+
+Show Linter errors:
+
+```bash
+> npm run lint
+```
+
+Show and fix Linter errors:
+
+```bash
+> npm run lint:fix
+```
+
+Format all files supported by Prettier:
+
+```bash
+> npm run format
+```
+
+Show list of unformatted files:
+
+```bash
+> npm run ci:format
+```
+
+To run the tests:
+
+```bash
+> npm run test
+```
+
+To run the tests with watch mode
+
+```bash
+> npm run test:watch
+```
