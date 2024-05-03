@@ -90,3 +90,9 @@ To run the tests with watch mode
 ```bash
 > npm run dev
 ```
+
+## The application developed in team of three:
+
+- 👨‍💻 [AlexIHavr](https://github.com/AlexIHavr)
+- 👨‍💻 [Koshman-Dmitri](https://github.com/Koshman-Dmitri)
+- 👨‍💻 [Parxommm](https://github.com/Parxommm)
