@@ -64,3 +64,29 @@ To run the tests with watch mode
 ```bash
 > npm run test:watch
 ```
+
+## Running the project locally
+
+1. Clone repository:
+
+```bash
+> git clone git@github.com:AlexIHavr/eCommerce-Application.git
+```
+
+2. Go to project folder
+
+```bash
+> cd eCommerce-Application
+```
+
+3. Install all dependencies:
+
+```bash
+> npm install
+```
+
+4. Run developing:
+
+```bash
+> npm run dev
+```
