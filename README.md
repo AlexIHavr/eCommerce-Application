@@ -26,8 +26,27 @@ The application is powered by CommerceTools 🌐, a leading provider of commerce
 - **Single Page Application (SPA)**
 - **CommerceTools API**
 - **Vite**
+- **Utils: eslint, prettier, jest**
 
 ## Available scripts
+
+Start dev server:
+
+```bash
+> npm run dev
+```
+
+Build for production:
+
+```bash
+> npm run build
+```
+
+Locally preview production build:
+
+```bash
+> npm run preview
+```
 
 Show Linter errors:
 
@@ -53,6 +72,12 @@ Show list of unformatted files:
 > npm run ci:format
 ```
 
+Script for automatic setup files in .husky/
+
+```bash
+> npm run prepare
+```
+
 To run the tests:
 
 ```bash
@@ -65,7 +90,13 @@ To run the tests with watch mode
 > npm run test:watch
 ```
 
-## Running the project locally
+Deploy production build:
+
+```bash
+> npm run deploy
+```
+
+## How to start development
 
 1. Clone repository:
 
