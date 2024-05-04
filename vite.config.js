@@ -6,7 +6,11 @@ export default defineConfig({
   base: '/eCommerce-Application/',
   plugins: [
     tsconfigPaths(),
-    checker({ typescript: true, eslint: { lintCommand: 'eslint ./src' } }),
+    checker({
+      typescript: true,
+      eslint: { lintCommand: 'eslint ./src' },
+      stylelint: { lintCommand: 'stylelint ./src/**/*.scss' },
+    }),
   ],
   build: {
     sourcemap: true,
