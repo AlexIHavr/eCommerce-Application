@@ -32,12 +32,24 @@ export class BaseComponent<T extends HTMLElement = HTMLElement> {
     return this.node.textContent;
   }
 
+  public setAttribute(attribute: string, value: string): void {
+    this.node.setAttribute(attribute, value);
+  }
+
   public setText(text: string): void {
     this.node.textContent = text;
   }
 
   public setProps(props: Props<T>): void {
     Object.assign(this.node, props);
+  }
+
+  public addListener(
+    event: string,
+    listener: EventListener,
+    options?: AddEventListenerOptions,
+  ): void {
+    this.node.addEventListener(event, listener, options);
   }
 
   public append(child: BaseComponent): void {
@@ -63,6 +75,18 @@ export class BaseComponent<T extends HTMLElement = HTMLElement> {
 
   public removeClass(className: string): void {
     this.node.classList.remove(className);
+  }
+
+  public removeAttribute(attribute: string): void {
+    this.node.removeAttribute(attribute);
+  }
+
+  public removeEventListener(
+    event: string,
+    listener: EventListener,
+    options?: AddEventListenerOptions,
+  ): void {
+    this.node.removeEventListener(event, listener, options);
   }
 
   public destroyChildren(): void {
