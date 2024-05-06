@@ -1,5 +1,5 @@
 import { Anchor, Button, Div, Heading, Input } from 'globalTypes/elements';
-import BaseComponent from 'shared/base/base.component';
+import { BaseComponent } from 'shared/base/base.component';
 import { Props } from 'shared/base/base.types';
 
 type TagProps<T extends HTMLElement = HTMLElement> = Omit<Props<T>, 'tag'>;

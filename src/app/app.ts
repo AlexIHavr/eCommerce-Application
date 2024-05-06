@@ -1,5 +1,5 @@
-import pageWrapper from 'pages/pageWrapper.component';
-import BaseComponent from 'shared/base/base.component';
+import { pageWrapper } from 'pages/pageWrapper.component';
+import { BaseComponent } from 'shared/base/base.component';
 
 class App {
   constructor(private readonly wrapper: BaseComponent) {}

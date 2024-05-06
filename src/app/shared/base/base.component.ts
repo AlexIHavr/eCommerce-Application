@@ -1,6 +1,6 @@
 import { Props } from './base.types';
 
-export default class BaseComponent<T extends HTMLElement = HTMLElement> {
+export class BaseComponent<T extends HTMLElement = HTMLElement> {
   private readonly node: T;
 
   private readonly children: BaseComponent[] = [];

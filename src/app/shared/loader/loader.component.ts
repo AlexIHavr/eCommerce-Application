@@ -1,4 +1,4 @@
-import BaseComponent from 'shared/base/base.component';
+import { BaseComponent } from 'shared/base/base.component';
 import { div } from 'shared/tags/tags.component';
 
 import styles from './loader.styles.module.scss';
@@ -25,4 +25,4 @@ class Loader extends BaseComponent {
   }
 }
 
-export default new Loader();
+export const loader = new Loader();

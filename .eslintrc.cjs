@@ -12,6 +12,14 @@ module.exports = {
     'plugin:prettier/recommended',
     'prettier',
   ],
+  overrides: [
+    {
+      files: ['src/**/*'],
+      rules: {
+        'import/no-default-export': 'error',
+      },
+    },
+  ],
   parser: '@typescript-eslint/parser',
   parserOptions: { project: 'tsconfig.json' },
   plugins: ['@typescript-eslint', 'simple-import-sort', 'no-relative-import-paths', 'prettier'],
@@ -29,6 +37,7 @@ module.exports = {
       { allowSameFolder: true, rootDir: 'src/app' },
     ],
     'no-console': 'off',
+    'import/prefer-default-export': 'off',
   },
   ignorePatterns: ['**/*.scss'],
 };

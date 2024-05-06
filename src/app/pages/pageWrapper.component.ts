@@ -1,5 +1,5 @@
-import BaseComponent from 'shared/base/base.component';
-import loader from 'shared/loader/loader.component';
+import { BaseComponent } from 'shared/base/base.component';
+import { loader } from 'shared/loader/loader.component';
 import { a, button, div, h1, h2, h3, icon, input, label } from 'shared/tags/tags.component';
 
 import styles from './pageWrapper.styles.module.scss';
@@ -25,4 +25,4 @@ class PageWrapper extends BaseComponent {
   }
 }
 
-export default new PageWrapper();
+export const pageWrapper = new PageWrapper();
