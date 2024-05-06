@@ -43,5 +43,12 @@
   "validate-branch-name": {
     "pattern": "^sprint-[1-4]/.+$",
     "errorMsg": "Branch name is not correct."
+  },
+  "dependencies": {
+    "@commercetools/platform-sdk": "^7.8.0",
+    "@commercetools/sdk-client-v2": "^2.5.0",
+    "@esbuild-plugins/node-globals-polyfill": "^0.2.3",
+    "@esbuild-plugins/node-modules-polyfill": "^0.2.2",
+    "rollup-plugin-node-polyfills": "^0.2.1"
   }
 }

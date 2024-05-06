@@ -1,12 +1,16 @@
 {
   "compilerOptions": {
     "target": "ESNext",
-    "esModuleInterop": true,
+    "lib": ["DOM", "DOM.Iterable", "ESNext"],
+    "allowJs": false,
     "skipLibCheck": true,
+    "esModuleInterop": true,
     "strict": true,
+    "module": "ESNext",
+    "moduleResolution": "Node",
     "isolatedModules": true,
     "noEmit": true,
-    "baseUrl": "src/app",
+    "baseUrl": "src/app"
   },
   "include": ["src", "./*", ".eslintrc.cjs"]
 }
