@@ -4,9 +4,9 @@ import {
   CustomerPagedQueryResponse,
   CustomerSignInResult,
   Project,
-  ShoppingListPagedQueryResponse,
 } from '@commercetools/platform-sdk';
-import apiRoot from 'services/BuildClient.service';
+import { NewCustomer } from 'interfaces/eCommerceApi.interface';
+import apiRoot from 'utils/buildClient';
 
 export default class ECommerceAPIService {
   private apiRoot: ByProjectKeyRequestBuilder;
@@ -19,24 +19,15 @@ export default class ECommerceAPIService {
     return this.apiRoot.get().execute();
   }
 
-  public getShoppingLists(): Promise<ClientResponse<ShoppingListPagedQueryResponse>> {
-    return this.apiRoot.shoppingLists().get().execute();
-  }
-
   public getCustomers(): Promise<ClientResponse<CustomerPagedQueryResponse>> {
     return this.apiRoot.customers().get().execute();
   }
 
-  public addCustomer(): Promise<ClientResponse<CustomerSignInResult>> {
+  public addCustomer(newCustomer: NewCustomer): Promise<ClientResponse<CustomerSignInResult>> {
     return this.apiRoot
       .customers()
       .post({
-        body: {
-          email: 'evg.parxpmenko@gmail.com',
-          firstName: 'Evgeny',
-          lastName: 'Parkhomenko',
-          password: '123qwe',
-        },
+        body: newCustomer,
       })
       .execute();
   }
