@@ -1,18 +1,3 @@
 .pageWrapper {
   display: flex;
-
-  // *! remove
-  flex-direction: column;
-  gap: 20px;
-
-  width: 30%;
-  padding: 10px;
-
-  .card {
-    background-color: var(--card-color);
-  }
-
-  .header {
-    background-color: var(--header-color);
-  }
 }
