@@ -6,6 +6,7 @@
     "strict": true,
     "isolatedModules": true,
     "noEmit": true,
+    "moduleResolution": "Bundler",
     "baseUrl": "src/app",
   },
   "include": ["src", "./*", ".eslintrc.cjs"]
