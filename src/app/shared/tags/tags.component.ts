@@ -1,4 +1,4 @@
-import { Button, Div, Heading, Input } from 'globalTypes/elements';
+import { Anchor, Button, Div, Heading, Input } from 'globalTypes/elements';
 import BaseComponent from 'shared/base/base.component';
 import { Props } from 'shared/base/base.types';
 
@@ -29,3 +29,6 @@ export const icon = (props: TagProps, code: string): BaseComponent =>
 
 export const div = (props: TagProps<HTMLDivElement>, ...children: BaseComponent[]): Div =>
   new BaseComponent(props, ...children);
+
+export const a = (props: TagProps<HTMLAnchorElement>, ...children: BaseComponent[]): Anchor =>
+  new BaseComponent({ ...props, tag: 'a' }, ...children);
