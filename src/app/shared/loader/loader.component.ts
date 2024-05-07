@@ -7,9 +7,7 @@ class Loader extends BaseComponent {
   private isOpened: boolean = false;
 
   constructor() {
-    super({ className: styles.loader });
-
-    this.append(div({ className: styles.loaderIcon }));
+    super({ className: styles.loader }, div({ className: styles.loaderIcon }));
   }
 
   public open(): void {

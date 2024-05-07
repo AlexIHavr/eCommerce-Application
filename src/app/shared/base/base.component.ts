@@ -46,8 +46,8 @@ export class BaseComponent<T extends HTMLElement = HTMLElement> {
 
   public addListener(
     event: string,
-    listener: EventListener,
-    options?: AddEventListenerOptions,
+    listener: (evt?: Event) => void,
+    options?: AddEventListenerOptions | boolean,
   ): void {
     this.node.addEventListener(event, listener, options);
   }
@@ -83,8 +83,8 @@ export class BaseComponent<T extends HTMLElement = HTMLElement> {
 
   public removeEventListener(
     event: string,
-    listener: EventListener,
-    options?: AddEventListenerOptions,
+    listener: (evt?: Event) => void,
+    options?: AddEventListenerOptions | boolean,
   ): void {
     this.node.removeEventListener(event, listener, options);
   }
