@@ -81,7 +81,7 @@ export class BaseComponent<T extends HTMLElement = HTMLElement> {
     this.node.removeAttribute(attribute);
   }
 
-  public removeEventListener(
+  public removeListener(
     event: string,
     listener: (evt?: Event) => void,
     options?: AddEventListenerOptions | boolean,
