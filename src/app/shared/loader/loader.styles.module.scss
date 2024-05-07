@@ -1,0 +1,35 @@
+.loader {
+  position: fixed;
+  z-index: 1000;
+  top: 0;
+  left: 0;
+
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 100vw;
+  height: 100vh;
+
+  .loaderIcon {
+    --loader-size: 60px;
+
+    z-index: 100;
+
+    width: var(--loader-size);
+    height: var(--loader-size);
+
+    border: 5px solid var(--base-text-color);
+    border-right-color: transparent;
+    border-radius: 50%;
+
+    animation: loader-rotate 1.2s linear infinite;
+  }
+}
+
+@keyframes loader-rotate {
+  100% {
+    rotate: 360deg;
+  }
+}

@@ -6,9 +6,9 @@
     "esModuleInterop": true,
     "strict": true,
     "module": "ESNext",
-    "moduleResolution": "Node",
     "isolatedModules": true,
     "noEmit": true,
+    "moduleResolution": "Bundler",
     "baseUrl": "src/app"
   },
   "include": ["src", "./*", ".eslintrc.cjs"]

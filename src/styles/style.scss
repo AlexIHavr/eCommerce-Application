@@ -1,1 +1,29 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+:root {
+  --base-color: white;
+  --header-color: rgb(249 241 231);
+  --card-color: rgb(222 223 225);
+  --valid-color: limegreen;
+  --invalid-color: red;
+  --border-color: black;
+  --box-shadow-color: rgb(0 0 0 / 70%);
+  --box-shadow-hover-color: rgb(0 0 0 / 90%);
+  --base-text-color: black;
+  --disabled-color: rgb(184 184 184);
+}
+
+*,
+::before,
+::after {
+  box-sizing: border-box;
+  font-family: Poppins, Helvetica, Arial, sans-serif;
+}
+
+@font-face {
+  font-family: Poppins;
+  src: url('src/fonts/Poppins-Regular.ttf');
+}
+
+body {
+  margin: 0;
+  color: var(--base-text-color);
+}

@@ -90,12 +90,6 @@ To run the tests with watch mode
 > npm run test:watch
 ```
 
-Deploy production build:
-
-```bash
-> npm run deploy
-```
-
 ## How to start development
 
 1. Clone repository:
