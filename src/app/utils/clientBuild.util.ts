@@ -39,5 +39,5 @@ const ctpClient: Client = new ClientBuilder()
   .build();
 
 export const apiRoot = createApiBuilderFromCtpClient(ctpClient).withProjectKey({
-  projectKey: import.meta.env.VITE_CTP_PROJECT_KEY,
+  projectKey: VITE_CTP_PROJECT_KEY,
 });

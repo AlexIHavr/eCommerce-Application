@@ -4,8 +4,8 @@ import {
   CustomerSignInResult,
   Project,
 } from '@commercetools/platform-sdk';
-import { ApiClientResponse } from 'globalTypes/eCommerceApi.type';
-import { NewCustomer } from 'interfaces/eCommerceApi.interface';
+import { ApiClientResponse } from 'globalTypes/api.type';
+import { NewCustomer } from 'interfaces/api.interface';
 import { apiRoot } from 'utils/clientBuild.util';
 
 export class ApiService {
