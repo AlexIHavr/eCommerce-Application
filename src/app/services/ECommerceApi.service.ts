@@ -1,34 +1,29 @@
 import {
   ByProjectKeyRequestBuilder,
-  ClientResponse,
   CustomerPagedQueryResponse,
   CustomerSignInResult,
   Project,
 } from '@commercetools/platform-sdk';
+import { ApiClientResponse } from 'globalTypes/eCommerceApi.type';
 import { NewCustomer } from 'interfaces/eCommerceApi.interface';
-import apiRoot from 'utils/buildClient';
+import { apiRoot } from 'utils/clientBuild.util';
 
-export default class ECommerceAPIService {
+export class ApiService {
   private apiRoot: ByProjectKeyRequestBuilder;
 
   constructor() {
     this.apiRoot = apiRoot;
   }
 
-  public getProject(): Promise<ClientResponse<Project>> {
+  public getProject(): ApiClientResponse<Project> {
     return this.apiRoot.get().execute();
   }
 
-  public getCustomers(): Promise<ClientResponse<CustomerPagedQueryResponse>> {
+  public getCustomers(): ApiClientResponse<CustomerPagedQueryResponse> {
     return this.apiRoot.customers().get().execute();
   }
 
-  public addCustomer(newCustomer: NewCustomer): Promise<ClientResponse<CustomerSignInResult>> {
-    return this.apiRoot
-      .customers()
-      .post({
-        body: newCustomer,
-      })
-      .execute();
+  public addCustomer(newCustomer: NewCustomer): ApiClientResponse<CustomerSignInResult> {
+    return this.apiRoot.customers().post({ body: newCustomer }).execute();
   }
 }

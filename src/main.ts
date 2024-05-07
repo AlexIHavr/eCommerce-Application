@@ -1,8 +1,8 @@
 import './styles/style.scss';
 import './app/app';
 
-import ECommerceAPIService from 'services/eCommerceApi.service';
+/* Example Api Service Request */
+// import { ApiService } from 'services/eCommerceApi.service';
 
-const eCommerceAPIService = new ECommerceAPIService();
-
-eCommerceAPIService.getProject();
+// const apiService = new ApiService();
+// apiService.getProject();
