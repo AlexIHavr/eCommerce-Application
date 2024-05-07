@@ -1,4 +1,5 @@
 import { PageWrapper } from 'pages/pageWrapper.component';
+import { ApiService } from 'services/api.service';
 import { BaseComponent } from 'shared/base/base.component';
 
 class App {
@@ -6,6 +7,8 @@ class App {
 
   public start(): void {
     document.body.append(this.wrapper.getNode());
+
+    new ApiService().getProject();
   }
 }
 
