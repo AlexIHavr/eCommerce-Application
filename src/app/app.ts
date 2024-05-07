@@ -1,4 +1,4 @@
-import { pageWrapper } from 'pages/pageWrapper.component';
+import { PageWrapper } from 'pages/pageWrapper.component';
 import { BaseComponent } from 'shared/base/base.component';
 
 class App {
@@ -9,6 +9,6 @@ class App {
   }
 }
 
-const app = new App(pageWrapper);
+const app = new App(new PageWrapper());
 
 app.start();
