@@ -9,7 +9,8 @@ import './app/app';
 
 // Example to test formField
 console.log(`
-import { FormField, LoginFieldProps } from 'pages/shared/components/formField/formField.component';
+import { FormField } from 'pages/shared/components/formField/formField.component';
+import { LoginFieldProps } from 'pages/shared/components/formField/formField.types';
 
 const propsTest: LoginFieldProps = {
   name: 'login-email',

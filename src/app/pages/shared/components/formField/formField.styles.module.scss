@@ -1,10 +1,14 @@
 .formLabel {
+  position: relative;
+
+  width: 100%;
+  max-width: 400px;
   margin-bottom: 10px;
+
   font-size: 0.6em;
 }
 
 .formInput {
-  max-width: 400px;
   margin-top: 10px;
   margin-bottom: 6px;
   font-size: 0.9em;
@@ -71,4 +75,25 @@
 
 .formWrapper.error .formInput:invalid + .formErrorText {
   visibility: visible;
+}
+
+.btnPassVis {
+  cursor: pointer;
+
+  position: absolute;
+  top: 56%;
+  right: 10px;
+  transform: translateY(-50%);
+
+  width: 20px;
+  height: 20px;
+
+  background-image: url('./icons/eye-close.png');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+}
+
+.btnPassVis.open {
+  background-image: url('./icons/eye-open.png');
 }
