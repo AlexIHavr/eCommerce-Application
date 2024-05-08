@@ -1,4 +1,5 @@
 import Navigo from 'navigo';
+import { Header } from 'pages/header/header.components';
 import { Main } from 'pages/main/main.component';
 import { BaseComponent } from 'shared/base/base.component';
 import { div } from 'shared/tags/tags.component';
@@ -10,7 +11,7 @@ export class PageWrapper extends BaseComponent {
   private readonly pageContent = div({});
 
   constructor() {
-    super({ className: styles.pageWrapper });
+    super({ className: styles.pageWrapper }, new Header());
     this.append(this.pageContent);
 
     this.setRouting();
@@ -19,13 +20,9 @@ export class PageWrapper extends BaseComponent {
   private setRouting(): void {
     const router = new Navigo(import.meta.env.BASE_URL);
 
-    router.on(PagesPaths.MAIN, () => this.goToMainPage());
+    router.on(PagesPaths.MAIN, () => this.goToPage(new Main()));
 
     router.resolve();
-  }
-
-  private goToMainPage(): void {
-    this.goToPage(new Main());
   }
 
   private goToPage(page: BaseComponent): void {
