@@ -1,4 +1,56 @@
+.formWrapper {
+  width: 100%;
+  max-width: 640px;
+  margin: 0 auto;
+}
+
 .loginPage {
   padding: 40px 20px;
   font-size: 36px;
+
+  .formWrapper {
+    max-width: 400px;
+  }
+}
+
+.formHeader {
+  margin-bottom: 40px;
+  font-size: 1em;
+  text-align: center;
+  text-decoration: underline;
+}
+
+.formButton {
+  margin: 30px auto 0;
+  font-size: 0.6em;
+}
+
+.formFooter {
+  display: block;
+  margin-top: 30px;
+  font-size: 0.6em;
+  text-align: center;
+}
+
+.formFooterLink {
+  cursor: pointer;
+
+  font-weight: normal;
+  font-style: normal;
+  color: var(--form-link-color);
+  text-decoration: underline;
+
+  transition: color 0.2s ease-in;
+
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      color: var(--form-link-color-hover);
+    }
+  }
+}
+
+@media (width <= 600px) {
+  .loginPage {
+    font-size: 30px;
+  }
 }
