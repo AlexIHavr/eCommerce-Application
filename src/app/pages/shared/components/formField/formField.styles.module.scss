@@ -1,0 +1,74 @@
+.formLabel {
+  margin-bottom: 10px;
+  font-size: 0.6em;
+}
+
+.formInput {
+  max-width: 400px;
+  margin-top: 10px;
+  margin-bottom: 6px;
+  font-size: 0.9em;
+}
+
+.formInput::placeholder {
+  font-size: 0.8em;
+  letter-spacing: initial;
+}
+
+.formInput[type='password'] {
+  letter-spacing: 2px;
+}
+
+.formWrapper.error .formInput:invalid {
+  border: 2px solid var(--input-error-border-color);
+  animation: invalid-input 0.4s 1;
+  animation-fill-mode: backwards;
+}
+
+.formInput[name='login-password'] {
+  padding-right: 36px;
+}
+
+@keyframes invalid-input {
+  0% {
+    transform: translateX(0);
+  }
+
+  20% {
+    transform: translateX(2px);
+  }
+
+  40% {
+    transform: translateX(-2px);
+  }
+
+  60% {
+    transform: translateX(2px);
+  }
+
+  80% {
+    transform: translateX(-2px);
+  }
+
+  100% {
+    transform: translateX(0);
+  }
+}
+
+.formErrorText {
+  cursor: default;
+
+  display: block;
+
+  height: 20px;
+
+  font-size: 0.65em;
+  font-weight: 600;
+  color: var(--text-error-color);
+
+  visibility: hidden;
+}
+
+.formWrapper.error .formInput:invalid + .formErrorText {
+  visibility: visible;
+}
