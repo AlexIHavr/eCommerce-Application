@@ -1,5 +1,20 @@
 .header {
   display: flex;
-  gap: 10px;
-  justify-content: center;
+  align-items: center;
+  justify-content: space-around;
+  padding: 10px;
+
+  .logo {
+    font-size: 1.5em;
+  }
+
+  .navLinks {
+    display: flex;
+    gap: 20px;
+  }
+
+  .navIcons {
+    display: flex;
+    gap: 10px;
+  }
 }

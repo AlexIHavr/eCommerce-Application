@@ -9,7 +9,7 @@ import { PagesPaths } from './pageWrapper.consts';
 import styles from './pageWrapper.styles.module.scss';
 
 export class PageWrapper extends BaseComponent {
-  private readonly pageContent = div({});
+  private readonly pageContent = div({ className: styles.pageContent });
 
   constructor() {
     super({ className: styles.pageWrapper }, new Header());
