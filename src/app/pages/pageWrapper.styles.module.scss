@@ -2,6 +2,13 @@
   display: flex;
   flex-direction: column;
   gap: 20px;
+  justify-content: space-between;
+
+  height: 100vh;
+
+  & > * {
+    padding: 20px;
+  }
 
   .pageContent {
     display: flex;

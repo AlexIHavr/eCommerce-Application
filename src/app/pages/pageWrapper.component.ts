@@ -1,3 +1,4 @@
+import { Footer } from 'pages/footer/footer.component';
 import { Header } from 'pages/header/header.components';
 import { Main } from 'pages/main/main.component';
 import { NotFound } from 'pages/notFound/notFound.component';
@@ -13,7 +14,7 @@ export class PageWrapper extends BaseComponent {
 
   constructor() {
     super({ className: styles.pageWrapper }, new Header());
-    this.append(this.pageContent);
+    this.appendChildren([this.pageContent, new Footer()]);
 
     routingService.setRouting(
       {
