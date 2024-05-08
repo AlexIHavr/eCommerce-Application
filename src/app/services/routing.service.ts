@@ -8,8 +8,8 @@ class RoutingService {
     this.router = new Navigo(import.meta.env.BASE_URL);
   }
 
-  public setRouting(map: Record<string, ActionFunc>): void {
-    this.router.on(map).resolve();
+  public setRouting(map: Record<string, ActionFunc>, notFoundAction: ActionFunc): void {
+    this.router.on(map).notFound(notFoundAction).resolve();
   }
 
   public navigate(path: string): void {

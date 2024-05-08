@@ -1,5 +1,6 @@
 import { Header } from 'pages/header/header.components';
 import { Main } from 'pages/main/main.component';
+import { NotFound } from 'pages/notFound/notFound.component';
 import { routingService } from 'services/routing.service';
 import { BaseComponent } from 'shared/base/base.component';
 import { div } from 'shared/tags/tags.component';
@@ -14,9 +15,12 @@ export class PageWrapper extends BaseComponent {
     super({ className: styles.pageWrapper }, new Header());
     this.append(this.pageContent);
 
-    routingService.setRouting({
-      [PagesPaths.MAIN]: () => this.goToPage(new Main()),
-    });
+    routingService.setRouting(
+      {
+        [PagesPaths.MAIN]: () => this.goToPage(new Main()),
+      },
+      () => this.goToPage(new NotFound()),
+    );
   }
 
   private goToPage(page: BaseComponent): void {
