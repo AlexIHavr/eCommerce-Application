@@ -8,25 +8,30 @@ import { PagesPaths } from './pageWrapper.consts';
 import styles from './pageWrapper.styles.module.scss';
 
 export class PageWrapper extends BaseComponent {
+  private router: Navigo;
+
   private readonly pageContent = div({});
 
   constructor() {
     super({ className: styles.pageWrapper }, new Header());
     this.append(this.pageContent);
 
+    this.router = new Navigo(import.meta.env.BASE_URL);
+
     this.setRouting();
   }
 
   private setRouting(): void {
-    const router = new Navigo(import.meta.env.BASE_URL);
-
-    router.on(PagesPaths.MAIN, () => this.goToPage(new Main()));
-
-    router.resolve();
+    this.router
+      .on({
+        [PagesPaths.MAIN]: () => this.goToPage(new Main()),
+      })
+      .resolve();
   }
 
   private goToPage(page: BaseComponent): void {
     this.pageContent.destroyChildren();
     this.pageContent.append(page);
+    this.router.updatePageLinks();
   }
 }
