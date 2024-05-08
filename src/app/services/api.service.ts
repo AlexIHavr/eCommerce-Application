@@ -27,3 +27,5 @@ export class ApiService {
     return this.apiRoot.customers().post({ body: newCustomer }).execute();
   }
 }
+
+export const apiService = new ApiService();
