@@ -1,6 +1,17 @@
 import './tags.scss';
 
-import { Anchor, Button, Div, Form, Heading, Input, Span } from 'globalTypes/elements';
+import {
+  Anchor,
+  Button,
+  Div,
+  Fieldset,
+  Form,
+  Heading,
+  Input,
+  Option,
+  Select,
+  Span,
+} from 'globalTypes/elements';
 import { BaseComponent } from 'shared/base/base.component';
 import { Props } from 'shared/base/base.types';
 
@@ -40,3 +51,14 @@ export const span = (props: TagProps<HTMLSpanElement>, ...children: BaseComponen
 
 export const form = (props: TagProps<HTMLFormElement>, ...children: BaseComponent[]): Form =>
   new BaseComponent({ ...props, tag: 'form' }, ...children);
+
+export const fieldset = (
+  props: TagProps<HTMLFieldSetElement>,
+  ...children: BaseComponent[]
+): Fieldset => new BaseComponent({ ...props, tag: 'fieldset' }, ...children);
+
+export const select = (props: TagProps<HTMLSelectElement>, ...children: BaseComponent[]): Select =>
+  new BaseComponent({ ...props, tag: 'select' }, ...children);
+
+export const option = (props: TagProps<HTMLOptionElement>): Option =>
+  new BaseComponent({ ...props, tag: 'option' });
