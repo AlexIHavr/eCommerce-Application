@@ -1,8 +1,6 @@
 import './styles/style.scss';
 import './app/app';
 
-/* Example Api Service Request */
-// import { ApiService } from 'services/api.service';
+import { LoginPage } from 'pages/login/login.component';
 
-// const apiService = new ApiService();
-// apiService.getProject();
+document.body.append(new LoginPage().getNode());

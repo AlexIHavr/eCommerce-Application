@@ -2,7 +2,7 @@ import { Div, Input, Span } from 'globalTypes/elements';
 import { BaseComponent } from 'shared/base/base.component';
 import { div, input, span } from 'shared/tags/tags.component';
 
-import styles from './formField.styles.module.scss';
+import styles from './formField.module.scss';
 import { LoginFieldProps } from './formField.types';
 
 export class FormField extends BaseComponent {

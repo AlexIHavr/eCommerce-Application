@@ -1,11 +1,11 @@
 import { Anchor, Button, Form } from 'globalTypes/elements';
 import { FormField } from 'pages/shared/components/formField/formField.component';
-import formFieldStyles from 'pages/shared/components/formField/formField.styles.module.scss';
+import formFieldStyles from 'pages/shared/components/formField/formField.module.scss';
 import { BaseComponent } from 'shared/base/base.component';
 import { a, button, form, h2, span } from 'shared/tags/tags.component';
 
-import styles from './loginPage.styles.module.scss';
-import { LOGIN_PAGE_PROPS } from './loginPageProps';
+import { LOGIN_PROPS } from './login.consts';
+import styles from './login.module.scss';
 
 export class LoginPage extends BaseComponent {
   private readonly loginForm: Form;
@@ -20,8 +20,8 @@ export class LoginPage extends BaseComponent {
 
   constructor() {
     super({ className: styles.loginPage });
-    this.emailField = new FormField(LOGIN_PAGE_PROPS.email);
-    this.passwordField = new FormField(LOGIN_PAGE_PROPS.password);
+    this.emailField = new FormField(LOGIN_PROPS.email);
+    this.passwordField = new FormField(LOGIN_PROPS.password);
     this.loginButton = button({
       className: styles.formButton,
       text: 'Login',
