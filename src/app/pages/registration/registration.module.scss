@@ -2,3 +2,137 @@
   padding: 40px 20px;
   font-size: 36px;
 }
+
+.signupFormWrapper {
+  width: 100%;
+  max-width: 640px;
+  margin: 0 auto;
+
+  & button:last-of-type {
+    max-width: 400px;
+  }
+}
+
+.userWrapper {
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.formText {
+  display: block;
+
+  margin-bottom: 5px;
+
+  font-size: 0.6em;
+  font-weight: bold;
+  text-align: center;
+}
+
+.formCheckbox {
+  cursor: pointer;
+  width: 20px;
+  height: 20px;
+  accent-color: var(--form-checkbox-color);
+}
+
+.checkboxLabel {
+  display: flex;
+  flex-direction: row-reverse;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+
+  margin-bottom: 10px;
+
+  font-size: 0.6em;
+  font-weight: normal;
+  color: var(--label-checkbox-inactive-color);
+
+  transition:
+    color 0.2s ease-in,
+    text-shadow 0.2s ease-in;
+
+  .addressWrapper & {
+    justify-content: flex-end;
+  }
+
+  &:has(.formCheckbox:checked) {
+    color: var(--label-checkbox-active-color);
+    text-shadow: 0 0 2px var(--form-checkbox-color);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      color: var(--label-checkbox-active-color);
+    }
+  }
+}
+
+.hr {
+  width: 55%;
+  height: 20px;
+  margin: 0 auto;
+
+  border-top: 2px solid black;
+  border-radius: 50%;
+
+  @media (width <= 520px) {
+    & {
+      display: none;
+    }
+  }
+}
+
+.addressWrapper {
+  display: flex;
+  gap: 20px;
+  justify-content: space-between;
+
+  & > * {
+    padding: 5px 10px 0;
+    border: 1px dotted black;
+    border-radius: 10px;
+  }
+
+  @media (width <= 520px) {
+    & {
+      flex-direction: column;
+      max-width: 400px;
+      margin: 0 auto;
+    }
+  }
+}
+
+.billingFieldset,
+.shippingFieldset {
+  & label:last-of-type {
+    cursor: default;
+  }
+}
+
+.select {
+  cursor: pointer;
+
+  width: 100%;
+  max-width: 400px;
+  margin-bottom: 20px;
+  padding: 9px;
+
+  font-size: 19.44px;
+
+  border: 2px solid var(--input-border-color);
+  border-radius: 8px;
+
+  @media (width <= 600px) {
+    & {
+      font-size: 16.2px;
+    }
+  }
+}
+
+@media (width <= 600px) {
+  .signupPage {
+    font-size: 30px;
+  }
+}

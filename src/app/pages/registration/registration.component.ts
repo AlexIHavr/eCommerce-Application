@@ -1,5 +1,7 @@
 import { Form } from 'globalTypes/elements';
 import { FormField } from 'pages/shared/components/formField/formField.component';
+import formFieldStyles from 'pages/shared/components/formField/formField.module.scss';
+import formStyles from 'pages/shared/styles/form-elements.module.scss';
 import { BaseComponent } from 'shared/base/base.component';
 import {
   a,
@@ -75,7 +77,7 @@ export class Registration extends BaseComponent {
     );
 
     this.signupForm = form(
-      { className: styles.formWrapper },
+      { className: styles.signupFormWrapper },
       div(
         { className: styles.userWrapper },
         this.emailField,
@@ -108,7 +110,7 @@ export class Registration extends BaseComponent {
             this.bilStreetField,
             this.bilCityField,
             this.bilPostalCodeField,
-            label({ className: styles.formLabel, text: 'Country' }),
+            label({ className: formFieldStyles.formLabel, text: 'Country' }),
             this.bilCountryField,
           ),
           label(
@@ -132,7 +134,7 @@ export class Registration extends BaseComponent {
             this.shipStreetField,
             this.shipCityField,
             this.shipPostalCodeField,
-            label({ className: styles.formLabel, text: 'Country' }),
+            label({ className: formFieldStyles.formLabel, text: 'Country' }),
             this.shipCountryField,
           ),
           label(
@@ -150,7 +152,7 @@ export class Registration extends BaseComponent {
         ),
       ),
       button({
-        className: styles.formButton,
+        className: formStyles.formButton,
         text: 'Signup',
         type: 'submit',
         onclick: () => console.log('TODO submit handler'),
@@ -158,12 +160,12 @@ export class Registration extends BaseComponent {
     );
 
     this.appendChildren([
-      h2('Signup', styles.formHeader),
+      h2('Signup', formStyles.formHeader),
       this.signupForm,
       span(
-        { className: styles.formFooter, text: 'Don`t have an account? ' },
+        { className: formStyles.formFooter, text: 'Don`t have an account? ' },
         a({
-          className: styles.formFooterLink,
+          className: formStyles.formFooterLink,
           text: 'Login',
           onclick: () => console.log('TODO redirect to LoginPage'),
         }),
