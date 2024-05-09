@@ -43,8 +43,8 @@ export class FormField extends BaseComponent {
 
   private togglePasswordVisibility(): void {
     this.passwordButton?.toggleClass(styles.open);
-    const curentType = this.input.getNode().getAttribute('type');
-    const newType = curentType === 'password' ? 'text' : 'password';
+    const currentType = this.input.getAttribute('type');
+    const newType = currentType === 'password' ? 'text' : 'password';
     this.input.setAttribute('type', newType);
   }
 }
