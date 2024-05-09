@@ -35,8 +35,8 @@ export const div = (props: TagProps<HTMLDivElement>, ...children: BaseComponent[
 export const a = (props: TagProps<HTMLAnchorElement>, ...children: BaseComponent[]): Anchor =>
   new BaseComponent({ ...props, tag: 'a' }, ...children);
 
-export const span = (props: TagProps<HTMLSpanElement>): Span =>
-  new BaseComponent({ ...props, tag: 'span' });
+export const span = (props: TagProps<HTMLSpanElement>, ...children: BaseComponent[]): Span =>
+  new BaseComponent({ ...props, tag: 'span' }, ...children);
 
 export const form = (props: TagProps<HTMLFormElement>, ...children: BaseComponent[]): Form =>
   new BaseComponent({ ...props, tag: 'form' }, ...children);

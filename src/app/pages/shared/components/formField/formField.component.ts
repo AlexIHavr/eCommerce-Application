@@ -16,9 +16,9 @@ export class FormField extends BaseComponent {
 
   constructor(props: LoginFieldProps) {
     super({ tag: 'label', className: styles.formLabel, text: props.labelName });
+
     this.pattern = props.pattern || '';
-    this.input = input({ className: styles.formInput });
-    Object.assign(this.input.getNode(), props);
+    this.input = input({ ...props, className: styles.formInput });
     this.errorText = span({ className: styles.formErrorText, text: props.errorText });
     this.appendChildren([this.input, this.errorText]);
 
@@ -37,8 +37,8 @@ export class FormField extends BaseComponent {
     return this.input.getNode().value || '';
   }
 
-  public isValid(): boolean | null {
-    return this.value.match(this.pattern) ? true : null;
+  public isValid(): boolean {
+    return Boolean(this.value.match(this.pattern));
   }
 
   private togglePasswordVisibility(): void {
