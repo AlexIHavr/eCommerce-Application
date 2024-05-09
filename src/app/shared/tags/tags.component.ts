@@ -1,6 +1,6 @@
 import './tags.styles.scss';
 
-import { Anchor, Button, Div, Heading, Input } from 'globalTypes/elements';
+import { Anchor, Button, Div, Form, Heading, Input, Span } from 'globalTypes/elements';
 import { BaseComponent } from 'shared/base/base.component';
 import { Props } from 'shared/base/base.types';
 
@@ -34,3 +34,9 @@ export const div = (props: TagProps<HTMLDivElement>, ...children: BaseComponent[
 
 export const a = (props: TagProps<HTMLAnchorElement>, ...children: BaseComponent[]): Anchor =>
   new BaseComponent({ ...props, tag: 'a' }, ...children);
+
+export const span = (props: TagProps<HTMLSpanElement>, ...children: BaseComponent[]): Span =>
+  new BaseComponent({ ...props, tag: 'span' }, ...children);
+
+export const form = (props: TagProps<HTMLFormElement>, ...children: BaseComponent[]): Form =>
+  new BaseComponent({ ...props, tag: 'form' }, ...children);

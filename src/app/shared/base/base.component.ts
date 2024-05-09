@@ -36,6 +36,10 @@ export class BaseComponent<T extends HTMLElement = HTMLElement> {
     this.node.setAttribute(attribute, value);
   }
 
+  public getAttribute(attribute: string): string | null {
+    return this.node.getAttribute(attribute);
+  }
+
   public setText(text: string): void {
     this.node.textContent = text;
   }
