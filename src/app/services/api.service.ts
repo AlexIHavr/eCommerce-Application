@@ -4,15 +4,20 @@ import {
   CustomerSignInResult,
   Project,
 } from '@commercetools/platform-sdk';
+import { TokenCache } from '@commercetools/sdk-client-v2';
 import { ApiClientResponse } from 'globalTypes/api.type';
 import { NewCustomer } from 'interfaces/api.interface';
-import { apiRoot } from 'utils/clientBuild.util';
+import { clientBuildUtil } from 'utils/clientBuild.util';
+import { tokenCache } from 'utils/tokenCache.util';
 
 export class ApiService {
-  private apiRoot: ByProjectKeyRequestBuilder;
+  public apiRoot: ByProjectKeyRequestBuilder;
+
+  public tokenCache: TokenCache;
 
   constructor() {
-    this.apiRoot = apiRoot;
+    this.apiRoot = clientBuildUtil.apiRoot;
+    this.tokenCache = tokenCache;
   }
 
   public getProject(): ApiClientResponse<Project> {

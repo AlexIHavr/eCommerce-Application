@@ -10,7 +10,10 @@ class App {
     document.body.append(this.wrapper.getNode());
 
     routingService.updateLinks();
-    apiService.getProject();
+
+    apiService.getProject().then(() => {
+      console.log(apiService.tokenCache);
+    });
   }
 }
 
