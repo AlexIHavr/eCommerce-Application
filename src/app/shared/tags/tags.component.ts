@@ -1,4 +1,4 @@
-import './tags.styles.scss';
+import './tags.scss';
 
 import { Anchor, Button, Div, Form, Heading, Input, Span } from 'globalTypes/elements';
 import { BaseComponent } from 'shared/base/base.component';

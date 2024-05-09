@@ -7,7 +7,7 @@ import { a, button, form, h2, span } from 'shared/tags/tags.component';
 import { LOGIN_PROPS } from './login.consts';
 import styles from './login.module.scss';
 
-export class LoginPage extends BaseComponent {
+export class Login extends BaseComponent {
   private readonly loginForm: Form;
 
   private readonly emailField: FormField;
