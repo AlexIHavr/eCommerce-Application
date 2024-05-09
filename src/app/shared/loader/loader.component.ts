@@ -1,7 +1,7 @@
 import { BaseComponent } from 'shared/base/base.component';
 import { div } from 'shared/tags/tags.component';
 
-import styles from './loader.styles.module.scss';
+import styles from './loader.module.scss';
 
 class Loader extends BaseComponent {
   private isOpened: boolean = false;

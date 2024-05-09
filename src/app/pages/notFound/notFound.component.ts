@@ -1,7 +1,7 @@
 import { BaseComponent } from 'shared/base/base.component';
 import { h2 } from 'shared/tags/tags.component';
 
-import styles from './notFound.styles.module.scss';
+import styles from './notFound.module.scss';
 
 export class NotFound extends BaseComponent {
   constructor() {

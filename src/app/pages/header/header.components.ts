@@ -4,7 +4,7 @@ import { BaseComponent } from 'shared/base/base.component';
 import { div, icon } from 'shared/tags/tags.component';
 
 import { getNavLink } from './header.helpers';
-import styles from './header.styles.module.scss';
+import styles from './header.module.scss';
 
 export class Header extends BaseComponent {
   constructor() {

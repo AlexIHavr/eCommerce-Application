@@ -1,7 +1,7 @@
 import { BaseComponent } from 'shared/base/base.component';
 import { a, div, h3 } from 'shared/tags/tags.component';
 
-import styles from './footer.styles.module.scss';
+import styles from './footer.module.scss';
 
 export class Footer extends BaseComponent {
   constructor() {

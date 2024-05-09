@@ -7,7 +7,7 @@ import { BaseComponent } from 'shared/base/base.component';
 import { div } from 'shared/tags/tags.component';
 
 import { PagesPaths } from './pageWrapper.consts';
-import styles from './pageWrapper.styles.module.scss';
+import styles from './pageWrapper.module.scss';
 
 export class PageWrapper extends BaseComponent {
   private readonly pageContent = div({ className: styles.pageContent });
