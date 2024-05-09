@@ -1,6 +1,7 @@
 import { Form } from 'globalTypes/elements';
 import { FormField } from 'pages/shared/components/formField/formField.component';
 import formFieldStyles from 'pages/shared/components/formField/formField.module.scss';
+import formStyles from 'pages/shared/styles/form-elements.module.scss';
 import { BaseComponent } from 'shared/base/base.component';
 import { a, button, form, h2, span } from 'shared/tags/tags.component';
 
@@ -21,11 +22,11 @@ export class Login extends BaseComponent {
     this.passwordField = new FormField(LOGIN_PROPS.password);
 
     this.loginForm = form(
-      { className: styles.formWrapper },
+      { className: styles.loginFormWrapper },
       this.emailField,
       this.passwordField,
       button({
-        className: styles.formButton,
+        className: formStyles.formButton,
         text: 'Login',
         type: 'submit',
         onclick: (e) => this.submitHandler(e),
@@ -33,12 +34,12 @@ export class Login extends BaseComponent {
     );
 
     this.appendChildren([
-      h2('Login', styles.formHeader),
+      h2('Login', formStyles.formHeader),
       this.loginForm,
       span(
-        { className: styles.formFooter, text: 'Don`t have an account? ' },
+        { className: formStyles.formFooter, text: 'Don`t have an account? ' },
         a({
-          className: styles.formFooterLink,
+          className: formStyles.formFooterLink,
           text: 'Signup',
           onclick: () => console.log('TODO redirect to RegPage'),
         }),
