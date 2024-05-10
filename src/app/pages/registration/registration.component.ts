@@ -1,4 +1,4 @@
-import { Form } from 'globalTypes/elements';
+import { Fieldset, Form, Select } from 'globalTypes/elements';
 import { FormField } from 'pages/shared/components/formField/formField.component';
 import formFieldStyles from 'pages/shared/components/formField/formField.module.scss';
 import formStyles from 'pages/shared/styles/form-elements.module.scss';
@@ -33,13 +33,17 @@ export class Registration extends BaseComponent {
 
   private readonly birthField: FormField;
 
+  private readonly bilFieldset: Fieldset;
+
   private readonly bilStreetField: FormField;
 
   private readonly bilCityField: FormField;
 
   private readonly bilPostalCodeField: FormField;
 
-  private readonly bilCountryField: BaseComponent;
+  private readonly bilCountryField: Select;
+
+  private readonly shipFieldset: Fieldset;
 
   private readonly shipStreetField: FormField;
 
@@ -47,10 +51,13 @@ export class Registration extends BaseComponent {
 
   private readonly shipPostalCodeField: FormField;
 
-  private readonly shipCountryField: BaseComponent;
+  private readonly shipCountryField: Select;
+
+  private isSameAddress: boolean;
 
   constructor() {
     super({ className: styles.signupPage });
+    this.isSameAddress = false;
 
     this.emailField = new FormField(REGISTRATION_PROPS.email);
     this.passwordField = new FormField(REGISTRATION_PROPS.password);
@@ -78,6 +85,26 @@ export class Registration extends BaseComponent {
       option({ value: 'Russia', text: 'Russia' }),
     );
 
+    this.bilFieldset = fieldset(
+      { className: styles.billingFieldset },
+      span({ className: styles.formText, text: 'Billing' }),
+      this.bilStreetField,
+      this.bilCityField,
+      this.bilPostalCodeField,
+      label({ className: formFieldStyles.formLabel, text: 'Country' }),
+      this.bilCountryField,
+    );
+
+    this.shipFieldset = fieldset(
+      { className: styles.shippingFieldset },
+      span({ className: styles.formText, text: 'Shipping' }),
+      this.shipStreetField,
+      this.shipCityField,
+      this.shipPostalCodeField,
+      label({ className: formFieldStyles.formLabel, text: 'Country' }),
+      this.shipCountryField,
+    );
+
     this.signupForm = form(
       { className: styles.signupFormWrapper },
       div(
@@ -98,7 +125,7 @@ export class Registration extends BaseComponent {
           className: styles.formCheckbox,
           type: 'checkbox',
           name: 'sameAddress',
-          onclick: () => console.log('TODO same address click'),
+          onclick: () => this.sameAddressHandler(),
         }),
       ),
       div({ className: styles.hr }),
@@ -106,15 +133,7 @@ export class Registration extends BaseComponent {
         { className: styles.addressWrapper },
         div(
           {},
-          fieldset(
-            { className: styles.billingFieldset },
-            span({ className: styles.formText, text: 'Billing' }),
-            this.bilStreetField,
-            this.bilCityField,
-            this.bilPostalCodeField,
-            label({ className: formFieldStyles.formLabel, text: 'Country' }),
-            this.bilCountryField,
-          ),
+          this.bilFieldset,
           label(
             {
               className: styles.checkboxLabel,
@@ -130,15 +149,7 @@ export class Registration extends BaseComponent {
         ),
         div(
           {},
-          fieldset(
-            { className: styles.shippingFieldset },
-            span({ className: styles.formText, text: 'Shipping' }),
-            this.shipStreetField,
-            this.shipCityField,
-            this.shipPostalCodeField,
-            label({ className: formFieldStyles.formLabel, text: 'Country' }),
-            this.shipCountryField,
-          ),
+          this.shipFieldset,
           label(
             {
               className: styles.checkboxLabel,
@@ -198,4 +209,24 @@ export class Registration extends BaseComponent {
     this.birthField.setAttribute('area-invalid', 'true');
     return false;
   }
+
+  private sameAddressHandler(): void {
+    this.isSameAddress = !this.isSameAddress;
+    this.copyAddress();
+
+    if (this.isSameAddress) {
+      this.shipFieldset.setAttribute('disabled', '');
+      this.bilFieldset.addListener('input', this.copyAddress);
+    } else {
+      this.shipFieldset.removeAttribute('disabled');
+      this.bilFieldset.removeListener('input', this.copyAddress);
+    }
+  }
+
+  private copyAddress = (): void => {
+    this.shipStreetField.value = this.bilStreetField.value;
+    this.shipCityField.value = this.bilCityField.value;
+    this.shipPostalCodeField.value = this.bilPostalCodeField.value;
+    this.shipCountryField.getNode().value = this.bilCountryField.getNode().value;
+  };
 }

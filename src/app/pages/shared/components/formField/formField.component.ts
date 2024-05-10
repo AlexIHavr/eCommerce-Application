@@ -37,6 +37,10 @@ export class FormField extends BaseComponent {
     return this.input.getNode().value || '';
   }
 
+  public set value(text: string) {
+    this.input.getNode().value = text;
+  }
+
   public isValid(): boolean {
     return Boolean(this.value.match(this.pattern));
   }
