@@ -21,8 +21,7 @@ export const SIGNUP_PROPS: Record<string, LoginFieldProps> = {
     maxLength: 30,
     pattern: '(?=^[a-zA-Z\\d]{8,}$)(?=.*\\d)(?=.*[a-z])(?=.*[A-Z]).*',
     required: true,
-    errorText:
-      '⚠️ At least one lowercase, uppercase letter and digit. Only letters and digits. Min 8 chars',
+    errorText: '⚠️ Min 8 letters/digits. At least one digit, one lowercase and uppercase letter',
   },
   firstname: {
     name: 'firstname',
