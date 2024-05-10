@@ -20,6 +20,10 @@ input {
   &:active {
     border: 2px solid var(--input-focus-border-color);
   }
+
+  &[type='date'] {
+    cursor: text;
+  }
 }
 
 button {
