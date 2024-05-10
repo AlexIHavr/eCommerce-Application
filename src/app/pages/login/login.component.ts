@@ -2,6 +2,7 @@ import { Form } from 'globalTypes/elements';
 import { FormField } from 'pages/shared/components/formField/formField.component';
 import formFieldStyles from 'pages/shared/components/formField/formField.module.scss';
 import formStyles from 'pages/shared/styles/form-elements.module.scss';
+import { ApiService, apiService } from 'services/api.service';
 import { BaseComponent } from 'shared/base/base.component';
 import { a, button, form, h2, span } from 'shared/tags/tags.component';
 
@@ -15,8 +16,16 @@ export class Login extends BaseComponent {
 
   private readonly passwordField: FormField;
 
+  private readonly loginButton: Button;
+
+  private readonly linkToRegistration: Anchor;
+
+  private readonly apiService: ApiService;
+
   constructor() {
     super({ className: styles.loginPage });
+
+    this.apiService = apiService;
 
     this.emailField = new FormField(LOGIN_PROPS.email);
     this.passwordField = new FormField(LOGIN_PROPS.password);
@@ -51,6 +60,10 @@ export class Login extends BaseComponent {
     e.preventDefault();
     if (this.emailField.isValid() && this.passwordField.isValid()) {
       console.log('TODO Success Login');
+      this.apiService.loginCustomer({
+        email: this.emailField.value,
+        password: this.passwordField.value,
+      });
     } else {
       this.loginForm.addClass(formFieldStyles.error);
     }

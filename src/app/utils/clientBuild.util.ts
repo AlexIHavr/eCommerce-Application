@@ -4,12 +4,12 @@ import {
 } from '@commercetools/platform-sdk';
 import {
   AnonymousAuthMiddlewareOptions,
-  // AuthMiddlewareOptions,
   Client,
   ClientBuilder,
   HttpMiddlewareOptions,
   PasswordAuthMiddlewareOptions,
 } from '@commercetools/sdk-client-v2';
+import { CustomerLoginData } from 'interfaces/api.interface';
 
 import { tokenCache } from './tokenCache.util';
 
@@ -47,8 +47,8 @@ class ClientBuildUtil {
       clientId: VITE_CTP_CLIENT_ID,
       clientSecret: VITE_CTP_CLIENT_SECRET,
       user: {
-        username: 'johndoe@example.com',
-        password: 'secret123',
+        username: '',
+        password: '',
       },
     },
     scopes: [VITE_CTP_SCOPES],
@@ -56,22 +56,12 @@ class ClientBuildUtil {
     tokenCache,
   };
 
-  // private authMiddlewareOptions: AuthMiddlewareOptions = {
-  //   host: VITE_CTP_AUTH_URL,
-  //   projectKey: VITE_CTP_PROJECT_KEY,
-  //   credentials: {
-  //     clientId: VITE_CTP_CLIENT_ID,
-  //     clientSecret: VITE_CTP_CLIENT_SECRET,
-  //   },
-  //   scopes: [VITE_CTP_SCOPES],
-  //   fetch,
-  // };
-
   private ctpClient!: Client;
 
   public apiRoot!: ByProjectKeyRequestBuilder;
 
   constructor() {
+    // this.setClientWithPasswordFlow({ email: 'johndoe@example.com', password: 'secret123' });
     this.setClientWithAnonymousFlow();
     this.setApiRoot();
   }
@@ -85,7 +75,11 @@ class ClientBuildUtil {
       .build();
   }
 
-  private setClientWithPasswordFlow(): void {
+  private setClientWithPasswordFlow(customerData: CustomerLoginData): void {
+    console.log(customerData);
+    this.passwordAuthMiddlewareOptions.credentials.user.username = customerData.email;
+    this.passwordAuthMiddlewareOptions.credentials.user.password = customerData.password;
+
     this.ctpClient = new ClientBuilder()
       .withProjectKey(VITE_CTP_PROJECT_KEY)
       .withPasswordFlow(this.passwordAuthMiddlewareOptions)
@@ -100,13 +94,16 @@ class ClientBuildUtil {
     });
   }
 
-  public getApiRootByFlow(flow: 'anonymous' | 'password'): ByProjectKeyRequestBuilder {
+  public getApiRootByFlow(
+    flow: 'anonymous' | 'password',
+    customerData?: CustomerLoginData,
+  ): ByProjectKeyRequestBuilder {
     switch (flow) {
       case 'anonymous':
         this.setClientWithAnonymousFlow();
         break;
       case 'password':
-        this.setClientWithPasswordFlow();
+        this.setClientWithPasswordFlow(customerData!);
         break;
       default:
         break;
