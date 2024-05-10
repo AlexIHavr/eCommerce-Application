@@ -38,6 +38,14 @@ export class FormField extends BaseComponent {
     return Boolean(this.value.match(this.pattern));
   }
 
+  public setErrorText(text: string): void {
+    this.errorText.setText(text);
+  }
+
+  public setPattern(pattern: string): void {
+    this.input.setAttribute('pattern', pattern);
+  }
+
   private addPasswordButton(): void {
     this.passwordButton = div({
       className: styles.btnPassVis,

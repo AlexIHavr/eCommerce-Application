@@ -78,9 +78,8 @@ export const SIGNUP_PROPS: Record<string, LoginFieldProps> = {
     labelName: 'Postal code',
     placeholder: 'Enter your postal code',
     maxLength: 30,
-    pattern: 'TODO pattern',
     required: true,
-    errorText: '⚠️ Enter correct postal code of your country',
+    errorText: '⚠️ Belarus postal code must have 6 digits, starting with "2"',
   },
   shipStreet: {
     name: 'ship-street',
@@ -108,8 +107,18 @@ export const SIGNUP_PROPS: Record<string, LoginFieldProps> = {
     labelName: 'Postal code',
     placeholder: 'Enter your postal code',
     maxLength: 30,
-    pattern: 'TODO pattern',
     required: true,
-    errorText: '⚠️ Enter correct postal code of your country',
+    errorText: '⚠️ Belarus postal code must have 6 digits, starting with "2"',
+  },
+};
+
+export const POSTALCODE_PROPS: Record<string, Partial<LoginFieldProps>> = {
+  Belarus: {
+    pattern: '^2\\d{5}$',
+    errorText: '⚠️ Belarus postal code must have 6 digits, starting with "2"',
+  },
+  Ukraine: {
+    pattern: '^\\d{5}$',
+    errorText: '⚠️ Ukraine postal code must have exactly 5 digits',
   },
 };

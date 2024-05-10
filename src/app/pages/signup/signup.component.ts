@@ -17,7 +17,7 @@ import {
   span,
 } from 'shared/tags/tags.component';
 
-import { SIGNUP_PROPS, USER_AVAILABLE_AGE } from './signup.consts';
+import { POSTALCODE_PROPS, SIGNUP_PROPS, USER_AVAILABLE_AGE } from './signup.consts';
 import styles from './signup.module.scss';
 
 export class Signup extends BaseComponent {
@@ -78,17 +78,27 @@ export class Signup extends BaseComponent {
     this.shipPostalCodeField = new FormField(SIGNUP_PROPS.shipPostalCode);
 
     this.birthField.addListener('input', () => this.isBirthdayValid());
+    this.bilPostalCodeField.addListener('input', () => this.isPostalCodeValid('billing'));
+    this.shipPostalCodeField.addListener('input', () => this.isPostalCodeValid('shipping'));
 
     this.bilCountryField = select(
-      { className: styles.select, name: 'ship-country' },
+      {
+        className: styles.select,
+        name: 'ship-country',
+        onchange: () => this.isPostalCodeValid('billing'),
+      },
       option({ value: 'Belarus', text: 'Belarus' }),
-      option({ value: 'Russia', text: 'Russia' }),
+      option({ value: 'Ukraine', text: 'Ukraine' }),
     );
 
     this.shipCountryField = select(
-      { className: styles.select, name: 'bil-country' },
+      {
+        className: styles.select,
+        name: 'bil-country',
+        onchange: () => this.isPostalCodeValid('shipping'),
+      },
       option({ value: 'Belarus', text: 'Belarus' }),
-      option({ value: 'Russia', text: 'Russia' }),
+      option({ value: 'Ukraine', text: 'Ukraine' }),
     );
 
     this.bilFieldset = fieldset(
@@ -206,10 +216,10 @@ export class Signup extends BaseComponent {
       this.isBirthdayValid() &&
       this.bilStreetField.isValid() &&
       this.bilCityField.isValid() &&
-      this.bilPostalCodeField.isValid() &&
+      this.isPostalCodeValid('billing') &&
       this.shipStreetField.isValid() &&
       this.shipCityField.isValid() &&
-      this.shipPostalCodeField.isValid()
+      this.isPostalCodeValid('shipping')
     ) {
       console.log('TODO Signup');
     } else {
@@ -251,4 +261,27 @@ export class Signup extends BaseComponent {
     this.shipPostalCodeField.value = this.bilPostalCodeField.value;
     this.shipCountryField.getNode().value = this.bilCountryField.getNode().value;
   };
+
+  private isPostalCodeValid(address: 'billing' | 'shipping'): boolean {
+    let countryInput;
+    let postalCodeInput;
+
+    if (address === 'billing') {
+      countryInput = this.bilCountryField;
+      postalCodeInput = this.bilPostalCodeField;
+    } else {
+      countryInput = this.shipCountryField;
+      postalCodeInput = this.shipPostalCodeField;
+    }
+
+    const countryValue = countryInput.getNode().value;
+    const postalCodeValue = postalCodeInput.value;
+    const country = POSTALCODE_PROPS[countryValue];
+
+    if (!country) return false;
+    postalCodeInput.setPattern(`${country.pattern}`);
+    postalCodeInput.setErrorText(`${country.errorText}`);
+
+    return Boolean(postalCodeValue.match(`${country.pattern}`));
+  }
 }
