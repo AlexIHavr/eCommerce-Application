@@ -17,10 +17,10 @@ import {
   span,
 } from 'shared/tags/tags.component';
 
-import { REGISTRATION_PROPS, USER_AVAILABLE_AGE } from './registration.consts';
-import styles from './registration.module.scss';
+import { SIGNUP_PROPS, USER_AVAILABLE_AGE } from './signup.consts';
+import styles from './signup.module.scss';
 
-export class Registration extends BaseComponent {
+export class Signup extends BaseComponent {
   private readonly signupForm: Form;
 
   private readonly emailField: FormField;
@@ -59,17 +59,17 @@ export class Registration extends BaseComponent {
     super({ className: styles.signupPage });
     this.isSameAddress = false;
 
-    this.emailField = new FormField(REGISTRATION_PROPS.email);
-    this.passwordField = new FormField(REGISTRATION_PROPS.password);
-    this.firstNameField = new FormField(REGISTRATION_PROPS.firstname);
-    this.lastNameField = new FormField(REGISTRATION_PROPS.lastname);
-    this.birthField = new FormField(REGISTRATION_PROPS.birthDate);
-    this.bilStreetField = new FormField(REGISTRATION_PROPS.bilStreet);
-    this.bilCityField = new FormField(REGISTRATION_PROPS.bilCity);
-    this.bilPostalCodeField = new FormField(REGISTRATION_PROPS.bilPostalCode);
-    this.shipStreetField = new FormField(REGISTRATION_PROPS.shipStreet);
-    this.shipCityField = new FormField(REGISTRATION_PROPS.shipCity);
-    this.shipPostalCodeField = new FormField(REGISTRATION_PROPS.shipPostalCode);
+    this.emailField = new FormField(SIGNUP_PROPS.email);
+    this.passwordField = new FormField(SIGNUP_PROPS.password);
+    this.firstNameField = new FormField(SIGNUP_PROPS.firstname);
+    this.lastNameField = new FormField(SIGNUP_PROPS.lastname);
+    this.birthField = new FormField(SIGNUP_PROPS.birthDate);
+    this.bilStreetField = new FormField(SIGNUP_PROPS.bilStreet);
+    this.bilCityField = new FormField(SIGNUP_PROPS.bilCity);
+    this.bilPostalCodeField = new FormField(SIGNUP_PROPS.bilPostalCode);
+    this.shipStreetField = new FormField(SIGNUP_PROPS.shipStreet);
+    this.shipCityField = new FormField(SIGNUP_PROPS.shipCity);
+    this.shipPostalCodeField = new FormField(SIGNUP_PROPS.shipPostalCode);
 
     this.birthField.addListener('input', () => this.isBirthdayValid());
 

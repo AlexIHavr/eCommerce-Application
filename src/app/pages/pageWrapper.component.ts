@@ -6,8 +6,10 @@ import { routingService } from 'services/routing.service';
 import { BaseComponent } from 'shared/base/base.component';
 import { div } from 'shared/tags/tags.component';
 
+import { Login } from './login/login.component';
 import { PagesPaths } from './pageWrapper.consts';
 import styles from './pageWrapper.module.scss';
+import { Signup } from './signup/signup.component';
 
 export class PageWrapper extends BaseComponent {
   private readonly pageContent = div({ className: styles.pageContent });
@@ -19,6 +21,8 @@ export class PageWrapper extends BaseComponent {
     routingService.setRouting(
       {
         [PagesPaths.MAIN]: () => this.goToPage(new Main()),
+        [PagesPaths.LOGIN]: () => this.goToPage(new Login()),
+        [PagesPaths.SIGNUP]: () => this.goToPage(new Signup()),
       },
       () => this.goToPage(new NotFound()),
     );

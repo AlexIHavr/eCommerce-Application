@@ -2,7 +2,7 @@ import { LoginFieldProps } from 'pages/shared/components/formField/formField.typ
 
 export const USER_AVAILABLE_AGE = 13;
 
-export const REGISTRATION_PROPS: Record<string, LoginFieldProps> = {
+export const SIGNUP_PROPS: Record<string, LoginFieldProps> = {
   email: {
     name: 'sign-email',
     type: 'text',
