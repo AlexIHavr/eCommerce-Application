@@ -55,9 +55,15 @@ export class Signup extends BaseComponent {
 
   private isSameAddress: boolean;
 
+  private setDefaultBilAdr: boolean;
+
+  private setDefaultShipAdr: boolean;
+
   constructor() {
     super({ className: styles.signupPage });
     this.isSameAddress = false;
+    this.setDefaultBilAdr = false;
+    this.setDefaultShipAdr = false;
 
     this.emailField = new FormField(SIGNUP_PROPS.email);
     this.passwordField = new FormField(SIGNUP_PROPS.password);
@@ -143,7 +149,9 @@ export class Signup extends BaseComponent {
               className: styles.formCheckbox,
               type: 'checkbox',
               name: 'defaultBilling',
-              onclick: () => console.log('TODO set default billing'),
+              onclick: () => {
+                this.setDefaultBilAdr = !this.setDefaultBilAdr;
+              },
             }),
           ),
         ),
@@ -159,7 +167,9 @@ export class Signup extends BaseComponent {
               className: styles.formCheckbox,
               type: 'checkbox',
               name: 'defaultShipping',
-              onclick: () => console.log('TODO set default shipping'),
+              onclick: () => {
+                this.setDefaultShipAdr = !this.setDefaultShipAdr;
+              },
             }),
           ),
         ),
