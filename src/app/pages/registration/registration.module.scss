@@ -108,11 +108,14 @@
 .shippingFieldset {
   & label:last-of-type {
     cursor: default;
+    margin-bottom: 3px;
   }
 }
 
 .select {
   cursor: pointer;
+
+  display: block;
 
   width: 100%;
   max-width: 400px;

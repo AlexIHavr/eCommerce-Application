@@ -1,5 +1,7 @@
 import { LoginFieldProps } from 'pages/shared/components/formField/formField.types';
 
+export const USER_AVAILABLE_AGE = 13;
+
 export const REGISTRATION_PROPS: Record<string, LoginFieldProps> = {
   email: {
     name: 'sign-email',
@@ -46,8 +48,7 @@ export const REGISTRATION_PROPS: Record<string, LoginFieldProps> = {
     name: 'birth',
     type: 'date',
     labelName: 'Date of birth',
-    maxLength: 30,
-    pattern: 'TODO pattern',
+    max: '9999-12-31',
     required: true,
     errorText: '⚠️ The service is available to users over 13 years old',
   },

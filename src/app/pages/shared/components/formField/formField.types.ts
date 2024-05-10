@@ -5,6 +5,7 @@ export type LoginFieldProps = {
   autocomplete?: AutoFill;
   minLength?: number;
   maxLength?: number;
+  max?: string;
   placeholder?: string;
   pattern?: string;
   required?: boolean;

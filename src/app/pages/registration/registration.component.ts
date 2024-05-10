@@ -17,7 +17,7 @@ import {
   span,
 } from 'shared/tags/tags.component';
 
-import { REGISTRATION_PROPS } from './registration.consts';
+import { REGISTRATION_PROPS, USER_AVAILABLE_AGE } from './registration.consts';
 import styles from './registration.module.scss';
 
 export class Registration extends BaseComponent {
@@ -63,6 +63,8 @@ export class Registration extends BaseComponent {
     this.shipStreetField = new FormField(REGISTRATION_PROPS.shipStreet);
     this.shipCityField = new FormField(REGISTRATION_PROPS.shipCity);
     this.shipPostalCodeField = new FormField(REGISTRATION_PROPS.shipPostalCode);
+
+    this.birthField.addListener('input', () => this.isBirthdayValid());
 
     this.bilCountryField = select(
       { className: styles.select, name: 'ship-country' },
@@ -155,7 +157,7 @@ export class Registration extends BaseComponent {
         className: formStyles.formButton,
         text: 'Signup',
         type: 'submit',
-        onclick: () => console.log('TODO submit handler'),
+        onclick: (e) => this.submitHandler(e),
       }),
     );
 
@@ -171,5 +173,29 @@ export class Registration extends BaseComponent {
         }),
       ),
     ]);
+  }
+
+  private submitHandler(e: Event): void {
+    e.preventDefault();
+    if (this.emailField.isValid() && this.passwordField.isValid()) {
+      console.log('TODO Signup');
+    } else {
+      this.signupForm.addClass(formFieldStyles.error);
+    }
+  }
+
+  private isBirthdayValid(): boolean {
+    const birth = new Date(this.birthField.value);
+    birth.setHours(0);
+
+    const validationDate = new Date();
+    validationDate.setFullYear(new Date().getFullYear() - USER_AVAILABLE_AGE);
+
+    if (birth < validationDate) {
+      this.birthField.removeAttribute('area-invalid');
+      return true;
+    }
+    this.birthField.setAttribute('area-invalid', 'true');
+    return false;
   }
 }
