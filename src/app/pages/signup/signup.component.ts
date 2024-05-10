@@ -188,7 +188,19 @@ export class Signup extends BaseComponent {
 
   private submitHandler(e: Event): void {
     e.preventDefault();
-    if (this.emailField.isValid() && this.passwordField.isValid()) {
+    if (
+      this.emailField.isValid() &&
+      this.passwordField.isValid() &&
+      this.firstNameField.isValid() &&
+      this.lastNameField.isValid() &&
+      this.isBirthdayValid() &&
+      this.bilStreetField.isValid() &&
+      this.bilCityField.isValid() &&
+      this.bilPostalCodeField.isValid() &&
+      this.shipStreetField.isValid() &&
+      this.shipCityField.isValid() &&
+      this.shipPostalCodeField.isValid()
+    ) {
       console.log('TODO Signup');
     } else {
       this.signupForm.addClass(formFieldStyles.error);
