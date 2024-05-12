@@ -20,6 +20,10 @@ input {
   &:active {
     border: 2px solid var(--input-focus-border-color);
   }
+
+  &[type='date'] {
+    cursor: text;
+  }
 }
 
 button {
@@ -56,4 +60,10 @@ button {
       background-color: rgb(0 0 0 / 75%);
     }
   }
+}
+
+fieldset {
+  margin: 0;
+  padding: 0;
+  border: none;
 }

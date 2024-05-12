@@ -10,7 +10,7 @@ export class FormField extends BaseComponent {
 
   private readonly errorText: Span;
 
-  private readonly passwordButton: Div | null;
+  private passwordButton: Div | null;
 
   private readonly pattern: string;
 
@@ -20,25 +20,38 @@ export class FormField extends BaseComponent {
     this.pattern = props.pattern || '';
     this.input = input({ ...props, className: styles.formInput });
     this.errorText = span({ className: styles.formErrorText, text: props.errorText });
+    this.passwordButton = null;
     this.appendChildren([this.input, this.errorText]);
 
-    if (props.type !== 'password') {
-      this.passwordButton = null;
-    } else {
-      this.passwordButton = div({
-        className: styles.btnPassVis,
-        onclick: () => this.togglePasswordVisibility(),
-      });
-      this.append(this.passwordButton);
-    }
+    if (props.type === 'password') this.addPasswordButton();
   }
 
   public get value(): string {
     return this.input.getNode().value || '';
   }
 
+  public set value(text: string) {
+    this.input.getNode().value = text;
+  }
+
   public isValid(): boolean {
     return Boolean(this.value.match(this.pattern));
+  }
+
+  public setErrorText(text: string): void {
+    this.errorText.setText(text);
+  }
+
+  public setPattern(pattern: string): void {
+    this.input.setAttribute('pattern', pattern);
+  }
+
+  private addPasswordButton(): void {
+    this.passwordButton = div({
+      className: styles.btnPassVis,
+      onclick: () => this.togglePasswordVisibility(),
+    });
+    this.append(this.passwordButton);
   }
 
   private togglePasswordVisibility(): void {

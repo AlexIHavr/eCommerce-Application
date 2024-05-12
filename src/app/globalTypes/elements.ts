@@ -7,3 +7,6 @@ export type Input = BaseComponent<HTMLInputElement>;
 export type Anchor = BaseComponent<HTMLAnchorElement>;
 export type Span = BaseComponent<HTMLSpanElement>;
 export type Form = BaseComponent<HTMLFormElement>;
+export type Fieldset = BaseComponent<HTMLFieldSetElement>;
+export type Select = BaseComponent<HTMLSelectElement>;
+export type Option = BaseComponent<HTMLOptionElement>;
