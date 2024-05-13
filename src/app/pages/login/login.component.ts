@@ -19,10 +19,6 @@ export class Login extends BaseComponent {
 
   private readonly passwordField: FormField;
 
-  private readonly loginButton: Button;
-
-  private readonly linkToRegistration: Anchor;
-
   private readonly apiService: ApiService;
 
   constructor() {
