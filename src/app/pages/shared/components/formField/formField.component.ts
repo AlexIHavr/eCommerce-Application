@@ -14,10 +14,13 @@ export class FormField extends BaseComponent {
 
   private readonly pattern: string;
 
+  private readonly errorTextInitValue: string;
+
   constructor(props: LoginFieldProps) {
     super({ tag: 'label', className: styles.formLabel, text: props.labelName });
 
     this.pattern = props.pattern || '';
+    this.errorTextInitValue = props.errorText || '';
     this.input = input({ ...props, className: styles.formInput });
     this.errorText = span({ className: styles.formErrorText, text: props.errorText });
     this.passwordButton = null;
@@ -47,8 +50,6 @@ export class FormField extends BaseComponent {
   }
 
   public showApiError(errorText: string): void {
-    const prevErrorText = this.errorText.getText();
-
     this.addClass(styles.apiError);
     this.setErrorText(errorText);
 
@@ -56,7 +57,7 @@ export class FormField extends BaseComponent {
       'input',
       () => {
         this.removeClass(styles.apiError);
-        if (prevErrorText) this.setErrorText(prevErrorText);
+        this.setErrorText(this.errorTextInitValue);
       },
       { once: true },
     );
