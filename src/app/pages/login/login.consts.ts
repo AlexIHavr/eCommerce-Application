@@ -17,8 +17,7 @@ export const LOGIN_PROPS: Record<string, LoginFieldProps> = {
     labelName: 'Password',
     placeholder: 'Enter your password',
     maxLength: 30,
-    // pattern: '(?=^[a-zA-Z\\d]{8,}$)(?=.*\\d)(?=.*[a-z])(?=.*[A-Z]).*',
-    pattern: '.',
+    pattern: '(?=^[a-zA-Z\\d]{8,}$)(?=.*\\d)(?=.*[a-z])(?=.*[A-Z]).*',
     required: true,
     errorText:
       '⚠️ At least one lowercase, uppercase letter and digit. Only letters and digits. Min 8 chars',

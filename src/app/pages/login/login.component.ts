@@ -2,7 +2,7 @@ import { Form } from 'globalTypes/elements';
 import { FormField } from 'pages/shared/components/formField/formField.component';
 import formFieldStyles from 'pages/shared/components/formField/formField.module.scss';
 import formStyles from 'pages/shared/styles/form-elements.module.scss';
-import { ApiService, apiService } from 'services/api.service';
+import { apiService } from 'services/api.service';
 import { LocalStorageService } from 'services/localStorage.service';
 import { BaseComponent } from 'shared/base/base.component';
 import { a, button, form, h2, span } from 'shared/tags/tags.component';
@@ -19,13 +19,8 @@ export class Login extends BaseComponent {
 
   private readonly passwordField: FormField;
 
-  private readonly apiService: ApiService;
-
   constructor() {
     super({ className: styles.loginPage });
-
-    this.apiService = apiService;
-
     this.emailField = new FormField(LOGIN_PROPS.email);
     this.passwordField = new FormField(LOGIN_PROPS.password);
 
@@ -59,14 +54,14 @@ export class Login extends BaseComponent {
     e.preventDefault();
     if (this.emailField.isValid() && this.passwordField.isValid()) {
       console.log('TODO Success Login');
-      this.apiService
+      apiService
         .returnCustomerByEmail(this.emailField.value)
         .then(({ body }) => {
           if (body.results.length === 0) {
             // Show error from server in form about email
             console.log('This email address has not been registered.');
           } else {
-            this.apiService
+            apiService
               .loginCustomer({
                 email: this.emailField.value,
                 password: this.passwordField.value,
@@ -80,7 +75,7 @@ export class Login extends BaseComponent {
                 // Show error from server in form about password
                 console.log('This password is not correct');
                 // Set anonymous flow
-                this.apiService.apiRoot = clientBuildUtil.getApiRootByFlow('anonymous');
+                apiService.apiRoot = clientBuildUtil.getApiRootByFlow('anonymous');
               });
             console.log('Email:', body.results[0].id);
           }
