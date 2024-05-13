@@ -121,3 +121,7 @@ export const POSTALCODE_PROPS: Record<string, Partial<LoginFieldProps>> = {
     errorText: '⚠️ Ukraine postal code must have exactly 5 digits',
   },
 };
+
+export const SIGNUP_API_ERROR_TEXT: Record<'email', string> = {
+  email: 'Login failed: No such user',
+};
