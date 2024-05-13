@@ -25,6 +25,6 @@ export const LOGIN_PROPS: Record<string, LoginFieldProps> = {
 };
 
 export const LOGIN_API_ERROR_TEXT: Record<'email' | 'password', string> = {
-  email: 'Login failed: No such user',
-  password: 'Login failed: Wrong password',
+  email: '⚠️ Login failed: No such user',
+  password: '⚠️ Login failed: Wrong password',
 };

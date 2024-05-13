@@ -122,6 +122,7 @@ export const POSTALCODE_PROPS: Record<string, Partial<LoginFieldProps>> = {
   },
 };
 
-export const SIGNUP_API_ERROR_TEXT: Record<'email', string> = {
-  email: 'Login failed: No such user',
+export const SIGNUP_API_ERROR_TEXT: Record<'email' | 'serverInternalError', string> = {
+  email: '⚠️ Signup failed: this email has already exist. Try another email',
+  serverInternalError: '⚠️ Signup failed: Technical issues. Try again later',
 };
