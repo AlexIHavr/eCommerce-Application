@@ -46,6 +46,22 @@ export class FormField extends BaseComponent {
     this.input.setAttribute('pattern', pattern);
   }
 
+  public showApiError(errorText: string): void {
+    const prevErrorText = this.errorText.getText();
+
+    this.addClass(styles.apiError);
+    this.setErrorText(errorText);
+
+    this.input.addListener(
+      'input',
+      () => {
+        this.removeClass(styles.apiError);
+        if (prevErrorText) this.setErrorText(prevErrorText);
+      },
+      { once: true },
+    );
+  }
+
   private addPasswordButton(): void {
     this.passwordButton = div({
       className: styles.btnPassVis,

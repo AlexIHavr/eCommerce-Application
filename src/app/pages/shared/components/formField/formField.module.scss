@@ -35,6 +35,7 @@
     padding-right: 36px;
   }
 
+  .apiError &,
   .error &:invalid,
   .error .formLabel[area-invalid='true'] & {
     border: 2px solid var(--input-error-border-color);
@@ -82,11 +83,12 @@
   color: var(--text-error-color);
 
   visibility: hidden;
-}
 
-.error .formLabel[area-invalid='true'] .formErrorText,
-.error .formInput:invalid + .formErrorText {
-  visibility: visible;
+  .apiError &,
+  .error .formLabel[area-invalid='true'] &,
+  .error .formInput:invalid + & {
+    visibility: visible;
+  }
 }
 
 .btnPassVis {
