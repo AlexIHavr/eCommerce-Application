@@ -53,34 +53,29 @@ export class Login extends BaseComponent {
   private submitHandler(e: Event): void {
     e.preventDefault();
     if (this.emailField.isValid() && this.passwordField.isValid()) {
-      console.log('TODO Success Login');
-      apiService
-        .getCustomerByEmail(this.emailField.value)
-        .then(({ body }) => {
-          if (body.results.length === 0) {
-            // Show error from server in form about email
-            console.log('This email address has not been registered.');
-          } else {
-            apiService
-              .loginCustomer({
-                email: this.emailField.value,
-                password: this.passwordField.value,
-              })
-              .then(() => {
-                // Save refresh token
-                LocalStorageService.saveData('refreshToken', tokenCache.cache.refreshToken!);
-                console.log(tokenCache);
-              })
-              .catch(() => {
-                // Show error from server in form about password
-                console.log('This password is not correct');
-                // Set anonymous flow
-                apiService.apiRoot = clientBuildUtil.getApiRootByFlow('anonymous');
-              });
-            console.log('Email:', body.results[0].id);
-          }
-        })
-        .catch(console.error);
+      apiService.getCustomerByEmail(this.emailField.value).then(({ body }) => {
+        if (body.results.length === 0) {
+          // TODO: Show error from server in form about email
+        } else {
+          apiService
+            .loginCustomer({
+              email: this.emailField.value,
+              password: this.passwordField.value,
+            })
+            .then(() => {
+              // TODO: Redirect to main
+              if (tokenCache.cache.refreshToken) {
+                LocalStorageService.saveData('refreshToken', tokenCache.cache.refreshToken);
+              } else {
+                throw new Error('refreshToken was not found in tokenCache');
+              }
+            })
+            .catch(() => {
+              // TODO: Show error from server in form about password
+              apiService.apiRoot = clientBuildUtil.getApiRootByFlow('anonymous');
+            });
+        }
+      });
     } else {
       this.loginForm.addClass(formFieldStyles.error);
     }
