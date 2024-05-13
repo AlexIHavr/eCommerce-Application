@@ -55,7 +55,7 @@ export class Login extends BaseComponent {
     if (this.emailField.isValid() && this.passwordField.isValid()) {
       console.log('TODO Success Login');
       apiService
-        .returnCustomerByEmail(this.emailField.value)
+        .getCustomerByEmail(this.emailField.value)
         .then(({ body }) => {
           if (body.results.length === 0) {
             // Show error from server in form about email

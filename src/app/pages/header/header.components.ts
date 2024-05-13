@@ -8,7 +8,7 @@ import styles from './header.module.scss';
 
 export class Header extends BaseComponent {
   constructor() {
-    const isLogined = LocalStorageService.getData('user');
+    const isLogined = LocalStorageService.getData('refreshToken');
     const logoutNavLink = getNavLink('Logout', PagesPaths.LOGIN);
 
     super(

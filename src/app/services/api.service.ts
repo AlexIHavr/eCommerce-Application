@@ -37,9 +37,7 @@ export class ApiService {
     return this.apiRoot.login().post({ body: newCustomer }).execute();
   }
 
-  public returnCustomerByEmail(
-    customerEmail: string,
-  ): ApiClientResponse<CustomerPagedQueryResponse> {
+  public getCustomerByEmail(customerEmail: string): ApiClientResponse<CustomerPagedQueryResponse> {
     return this.apiRoot
       .customers()
       .get({ queryArgs: { where: `email="${customerEmail}"` } })
