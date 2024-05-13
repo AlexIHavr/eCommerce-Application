@@ -3,8 +3,11 @@ import { FormField } from 'pages/shared/components/formField/formField.component
 import formFieldStyles from 'pages/shared/components/formField/formField.module.scss';
 import formStyles from 'pages/shared/styles/form-elements.module.scss';
 import { ApiService, apiService } from 'services/api.service';
+import { LocalStorageService } from 'services/localStorage.service';
 import { BaseComponent } from 'shared/base/base.component';
 import { a, button, form, h2, span } from 'shared/tags/tags.component';
+import { clientBuildUtil } from 'utils/clientBuild.util';
+import { tokenCache } from 'utils/tokenCache.util';
 
 import { LOGIN_PROPS } from './login.consts';
 import styles from './login.module.scss';
@@ -60,10 +63,33 @@ export class Login extends BaseComponent {
     e.preventDefault();
     if (this.emailField.isValid() && this.passwordField.isValid()) {
       console.log('TODO Success Login');
-      this.apiService.loginCustomer({
-        email: this.emailField.value,
-        password: this.passwordField.value,
-      });
+      this.apiService
+        .returnCustomerByEmail(this.emailField.value)
+        .then(({ body }) => {
+          if (body.results.length === 0) {
+            // Show error from server in form about email
+            console.log('This email address has not been registered.');
+          } else {
+            this.apiService
+              .loginCustomer({
+                email: this.emailField.value,
+                password: this.passwordField.value,
+              })
+              .then(() => {
+                // Save refresh token
+                LocalStorageService.saveData('refreshToken', tokenCache.cache.refreshToken!);
+                console.log(tokenCache);
+              })
+              .catch(() => {
+                // Show error from server in form about password
+                console.log('This password is not correct');
+                // Set anonymous flow
+                this.apiService.apiRoot = clientBuildUtil.getApiRootByFlow('anonymous');
+              });
+            console.log('Email:', body.results[0].id);
+          }
+        })
+        .catch(console.error);
     } else {
       this.loginForm.addClass(formFieldStyles.error);
     }

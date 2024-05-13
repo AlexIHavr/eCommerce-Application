@@ -11,9 +11,7 @@ class App {
 
     routingService.updateLinks();
 
-    apiService.getProject().then(() => {
-      console.log(apiService.tokenCache);
-    });
+    apiService.getProject();
   }
 }
 

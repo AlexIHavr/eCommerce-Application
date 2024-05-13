@@ -32,20 +32,18 @@ export class ApiService {
     return this.apiRoot.customers().post({ body: newCustomer }).execute();
   }
 
-  public loginCustomer(newCustomer: CustomerLoginData): void {
+  public loginCustomer(newCustomer: CustomerLoginData): ApiClientResponse<CustomerSignInResult> {
     this.apiRoot = clientBuildUtil.getApiRootByFlow('password', newCustomer);
-    this.apiRoot
-      .login()
-      .post({ body: newCustomer })
-      .execute()
-      .then((res) => {
-        console.log('login OK', res);
-        console.log(tokenCache);
-      })
-      .catch((res) => {
-        console.log('login error', res);
-        this.apiRoot = clientBuildUtil.getApiRootByFlow('anonymous');
-      });
+    return this.apiRoot.login().post({ body: newCustomer }).execute();
+  }
+
+  public returnCustomerByEmail(
+    customerEmail: string,
+  ): ApiClientResponse<CustomerPagedQueryResponse> {
+    return this.apiRoot
+      .customers()
+      .get({ queryArgs: { where: `email="${customerEmail}"` } })
+      .execute();
   }
 }
 
