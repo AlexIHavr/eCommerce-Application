@@ -4,3 +4,8 @@ export interface NewCustomer {
   lastName: string;
   password: string;
 }
+
+export interface CustomerLoginData {
+  email: string;
+  password: string;
+}
