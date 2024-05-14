@@ -2,8 +2,12 @@ import { Form } from 'globalTypes/elements';
 import { FormField } from 'pages/shared/components/formField/formField.component';
 import formFieldStyles from 'pages/shared/components/formField/formField.module.scss';
 import formStyles from 'pages/shared/styles/form-elements.module.scss';
+import { apiService } from 'services/api.service';
+import { LocalStorageService } from 'services/localStorage.service';
 import { BaseComponent } from 'shared/base/base.component';
 import { a, button, form, h2, span } from 'shared/tags/tags.component';
+import { clientBuildUtil } from 'utils/clientBuild.util';
+import { tokenCache } from 'utils/tokenCache.util';
 
 import { LOGIN_PROPS } from './login.consts';
 import styles from './login.module.scss';
@@ -17,7 +21,6 @@ export class Login extends BaseComponent {
 
   constructor() {
     super({ className: styles.loginPage });
-
     this.emailField = new FormField(LOGIN_PROPS.email);
     this.passwordField = new FormField(LOGIN_PROPS.password);
 
@@ -50,7 +53,29 @@ export class Login extends BaseComponent {
   private submitHandler(e: Event): void {
     e.preventDefault();
     if (this.emailField.isValid() && this.passwordField.isValid()) {
-      console.log('TODO Success Login');
+      apiService.getCustomerByEmail(this.emailField.value).then(({ body }) => {
+        if (body.results.length === 0) {
+          // TODO: Show error from server in form about email
+        } else {
+          apiService
+            .loginCustomer({
+              email: this.emailField.value,
+              password: this.passwordField.value,
+            })
+            .then(() => {
+              // TODO: Redirect to main
+              if (tokenCache.cache.refreshToken) {
+                LocalStorageService.saveData('refreshToken', tokenCache.cache.refreshToken);
+              } else {
+                throw new Error('refreshToken was not found in tokenCache');
+              }
+            })
+            .catch(() => {
+              // TODO: Show error from server in form about password
+              apiService.apiRoot = clientBuildUtil.getApiRootByFlow('anonymous');
+            });
+        }
+      });
     } else {
       this.loginForm.addClass(formFieldStyles.error);
     }

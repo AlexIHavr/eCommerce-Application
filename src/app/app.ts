@@ -10,6 +10,7 @@ class App {
     document.body.append(this.wrapper.getNode());
 
     routingService.updateLinks();
+
     apiService.getProject();
   }
 }

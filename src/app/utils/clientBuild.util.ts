@@ -1,10 +1,19 @@
-import { createApiBuilderFromCtpClient } from '@commercetools/platform-sdk';
 import {
-  AuthMiddlewareOptions,
+  ByProjectKeyRequestBuilder,
+  createApiBuilderFromCtpClient,
+} from '@commercetools/platform-sdk';
+import {
+  AnonymousAuthMiddlewareOptions,
   Client,
   ClientBuilder,
   HttpMiddlewareOptions,
+  PasswordAuthMiddlewareOptions,
+  RefreshAuthMiddlewareOptions,
 } from '@commercetools/sdk-client-v2';
+import { CustomerLoginData } from 'interfaces/api.interface';
+import { LocalStorageService } from 'services/localStorage.service';
+
+import { tokenCache } from './tokenCache.util';
 
 const {
   VITE_CTP_AUTH_URL,
@@ -15,29 +24,135 @@ const {
   VITE_CTP_SCOPES,
 } = import.meta.env;
 
-const authMiddlewareOptions: AuthMiddlewareOptions = {
-  host: VITE_CTP_AUTH_URL,
-  projectKey: VITE_CTP_PROJECT_KEY,
-  credentials: {
-    clientId: VITE_CTP_CLIENT_ID,
-    clientSecret: VITE_CTP_CLIENT_SECRET,
-  },
-  scopes: [VITE_CTP_SCOPES],
-  fetch,
-};
+class ClientBuildUtil {
+  private ctpClient: Client;
 
-const httpMiddlewareOptions: HttpMiddlewareOptions = {
-  host: VITE_CTP_API_URL,
-  fetch,
-};
+  public apiRoot: ByProjectKeyRequestBuilder;
 
-const ctpClient: Client = new ClientBuilder()
-  // .withProjectKey(VITE_CTP_PROJECT_KEY)
-  .withClientCredentialsFlow(authMiddlewareOptions)
-  .withHttpMiddleware(httpMiddlewareOptions)
-  .withLoggerMiddleware()
-  .build();
+  private httpMiddlewareOptions: HttpMiddlewareOptions = {
+    host: VITE_CTP_API_URL,
+    fetch,
+  };
 
-export const apiRoot = createApiBuilderFromCtpClient(ctpClient).withProjectKey({
-  projectKey: VITE_CTP_PROJECT_KEY,
-});
+  private anonymousAuthMiddlewareOptions: AnonymousAuthMiddlewareOptions = {
+    host: VITE_CTP_AUTH_URL,
+    projectKey: VITE_CTP_PROJECT_KEY,
+    credentials: {
+      clientId: VITE_CTP_CLIENT_ID,
+      clientSecret: VITE_CTP_CLIENT_SECRET,
+    },
+    scopes: [VITE_CTP_SCOPES],
+    fetch,
+  };
+
+  private passwordAuthMiddlewareOptions: PasswordAuthMiddlewareOptions = {
+    host: VITE_CTP_AUTH_URL,
+    projectKey: VITE_CTP_PROJECT_KEY,
+    credentials: {
+      clientId: VITE_CTP_CLIENT_ID,
+      clientSecret: VITE_CTP_CLIENT_SECRET,
+      user: {
+        username: '',
+        password: '',
+      },
+    },
+    scopes: [VITE_CTP_SCOPES],
+    fetch,
+    tokenCache,
+  };
+
+  private refreshAuthMiddlewareOptions: RefreshAuthMiddlewareOptions = {
+    host: VITE_CTP_AUTH_URL,
+    projectKey: VITE_CTP_PROJECT_KEY,
+    credentials: {
+      clientId: VITE_CTP_CLIENT_ID,
+      clientSecret: VITE_CTP_CLIENT_SECRET,
+    },
+    refreshToken: '',
+    fetch,
+    tokenCache,
+  };
+
+  private basicClientBuilder: ClientBuilder;
+
+  constructor() {
+    this.basicClientBuilder = new ClientBuilder()
+      .withProjectKey(VITE_CTP_PROJECT_KEY)
+      .withHttpMiddleware(this.httpMiddlewareOptions)
+      .withLoggerMiddleware();
+
+    this.ctpClient = this.basicClientBuilder
+      .withAnonymousSessionFlow(this.anonymousAuthMiddlewareOptions)
+      .build();
+
+    this.apiRoot = createApiBuilderFromCtpClient(this.ctpClient).withProjectKey({
+      projectKey: VITE_CTP_PROJECT_KEY,
+    });
+  }
+
+  private setClientWithAnonymousFlow(): void {
+    this.ctpClient = this.basicClientBuilder
+      .withAnonymousSessionFlow(this.anonymousAuthMiddlewareOptions)
+      .build();
+  }
+
+  private setClientWithPasswordFlow(customerData: CustomerLoginData): void {
+    this.passwordAuthMiddlewareOptions.credentials.user.username = customerData.email;
+    this.passwordAuthMiddlewareOptions.credentials.user.password = customerData.password;
+
+    this.ctpClient = this.basicClientBuilder
+      .withPasswordFlow(this.passwordAuthMiddlewareOptions)
+      .build();
+  }
+
+  private setClientWithRefreshFlow(refreshToken: string): void {
+    this.refreshAuthMiddlewareOptions.refreshToken = refreshToken;
+
+    this.ctpClient = this.basicClientBuilder
+      .withRefreshTokenFlow(this.refreshAuthMiddlewareOptions)
+      .build();
+  }
+
+  private updateApiRoot(): void {
+    this.apiRoot = createApiBuilderFromCtpClient(this.ctpClient).withProjectKey({
+      projectKey: VITE_CTP_PROJECT_KEY,
+    });
+  }
+
+  public getApiRootByFlow(
+    flow: 'anonymous' | 'password' | 'refresh',
+    customerData?: CustomerLoginData,
+  ): ByProjectKeyRequestBuilder {
+    switch (flow) {
+      case 'anonymous':
+        this.setClientWithAnonymousFlow();
+        break;
+
+      case 'password':
+        if (customerData) {
+          this.setClientWithPasswordFlow(customerData);
+        } else {
+          throw new Error('customerData was not passed');
+        }
+        break;
+
+      case 'refresh': {
+        const refreshToken = LocalStorageService.getData('refreshToken');
+        if (refreshToken) {
+          this.setClientWithRefreshFlow(refreshToken);
+        } else {
+          throw new Error('refreshToken was not found in local storage');
+        }
+        break;
+      }
+
+      default:
+        break;
+    }
+
+    this.updateApiRoot();
+    return this.apiRoot;
+  }
+}
+
+export const clientBuildUtil = new ClientBuildUtil();
