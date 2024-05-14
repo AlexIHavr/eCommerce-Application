@@ -224,7 +224,6 @@ export class Signup extends BaseComponent {
       this.isPostalCodeValid('shipping')
     ) {
       // TODO: Signup
-      console.log('signup');
       apiService
         .signupCustomer(this.getNewCustomerFromForm())
         .then((res) => {
@@ -236,7 +235,6 @@ export class Signup extends BaseComponent {
           console.log(res);
         });
     } else {
-      console.log('error');
       this.signupForm.addClass(formFieldStyles.error);
     }
   }
@@ -259,28 +257,21 @@ export class Signup extends BaseComponent {
       country: this.bilCountryField.getNode().value,
     };
 
-    newCustomer.addresses.push(billingAddress);
+    const shippingAddress: NewAddress = {
+      key: 'shipping',
+      streetName: this.shipStreetField.value,
+      city: this.shipCityField.value,
+      postalCode: this.shipPostalCodeField.value,
+      country: this.shipCountryField.getNode().value,
+    };
 
-    if (!this.isSameAddress) {
-      const shippingAddress: NewAddress = {
-        key: 'shipping',
-        streetName: this.shipStreetField.value,
-        city: this.shipCityField.value,
-        postalCode: this.shipPostalCodeField.value,
-        country: this.shipCountryField.getNode().value,
-      };
-      newCustomer.addresses.push(shippingAddress);
-    }
+    newCustomer.addresses.push(billingAddress, shippingAddress);
 
     if (this.isDefaultBilAdr) {
       newCustomer.defaultBillingAddress = 0;
     }
 
-    if (this.isDefaultShipAdr && this.isSameAddress) {
-      newCustomer.defaultShippingAddress = 0;
-    }
-
-    if (this.isDefaultShipAdr && !this.isSameAddress) {
+    if (this.isDefaultShipAdr) {
       newCustomer.defaultShippingAddress = 1;
     }
 
