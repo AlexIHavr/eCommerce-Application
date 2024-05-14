@@ -1,9 +1,11 @@
 import { Fieldset, Form, Select } from 'globalTypes/elements';
 import { NewAddress, NewCustomer } from 'interfaces/api.interface';
+import { PagesPaths } from 'pages/pageWrapper.consts';
 import { FormField } from 'pages/shared/components/formField/formField.component';
 import formFieldStyles from 'pages/shared/components/formField/formField.module.scss';
 import formStyles from 'pages/shared/styles/form-elements.module.scss';
 import { apiService } from 'services/api.service';
+import { routingService } from 'services/routing.service';
 import { BaseComponent } from 'shared/base/base.component';
 import {
   a,
@@ -223,12 +225,18 @@ export class Signup extends BaseComponent {
       this.shipCityField.isValid() &&
       this.isPostalCodeValid('shipping')
     ) {
-      // TODO: Signup
       apiService
         .signupCustomer(this.getNewCustomerFromForm())
-        .then((res) => {
-          // TODO: Auto login and redirect to main
-          console.log(res);
+        .then(() => {
+          apiService
+            .loginCustomer({
+              email: this.emailField.value,
+              password: this.passwordField.value,
+            })
+            .then(() => {
+              routingService.navigate(PagesPaths.MAIN);
+              // ? TODO: change info in HEADER (add username or email, change btn login to logout);
+            });
         })
         .catch((res) => {
           // TODO: show errors in form
