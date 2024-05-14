@@ -227,16 +227,15 @@ export class Signup extends BaseComponent {
     ) {
       apiService
         .signupCustomer(this.getNewCustomerFromForm())
+        .then(() =>
+          apiService.loginCustomer({
+            email: this.emailField.value,
+            password: this.passwordField.value,
+          }),
+        )
         .then(() => {
-          apiService
-            .loginCustomer({
-              email: this.emailField.value,
-              password: this.passwordField.value,
-            })
-            .then(() => {
-              routingService.navigate(PagesPaths.MAIN);
-              // ? TODO: change info in HEADER (add username or email, change btn login to logout);
-            });
+          routingService.navigate(PagesPaths.MAIN);
+          // ? TODO: change info in HEADER (add username or email, change btn login to logout);
         })
         .catch((res) => {
           // TODO: show errors in form
