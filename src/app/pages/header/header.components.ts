@@ -9,40 +9,56 @@ import { div, icon } from 'shared/tags/tags.component';
 import styles from './header.module.scss';
 
 export class Header extends BaseComponent {
-  private readonly loginNavLinkWrapper: Div;
+  private readonly navLinks: Record<PagesPaths, Anchor>;
+
+  private readonly navLinksWrapper: Div;
+
+  private readonly navLinksEntries: [string, Anchor][];
 
   private readonly logoutNavLink: Anchor;
 
   constructor() {
     super({ tag: 'header', className: styles.header });
 
-    this.loginNavLinkWrapper = div({});
+    this.navLinks = {
+      [PagesPaths.MAIN]: getNavLink('Home', PagesPaths.MAIN),
+      [PagesPaths.LOGIN]: loginNavLink(),
+      [PagesPaths.SIGNUP]: signupNavLink(),
+    };
+
+    this.navLinksEntries = Object.entries(this.navLinks);
+
+    this.navLinksWrapper = div({ className: styles.navLinksWrapper });
+
     this.logoutNavLink = getNavLink('Logout', PagesPaths.LOGIN);
     this.logoutNavLink.setProps({
       onclick: () => {
         LocalStorageService.removeData('refreshToken');
-        this.setLoginNavLink();
+        this.updateNavLinks(PagesPaths.LOGIN);
       },
     });
 
     this.appendChildren([
       div({ className: styles.logo }, icon({}, '&#128241;')),
-      div(
-        { className: styles.navLinks },
-        getNavLink('Home', PagesPaths.MAIN),
-        this.loginNavLinkWrapper,
-        signupNavLink(),
-      ),
+      this.navLinksWrapper,
       div({ className: styles.navIcons }, icon({}, '&#128187;'), icon({}, '&#128722;')),
     ]);
-
-    this.setLoginNavLink();
   }
 
-  public setLoginNavLink(): void {
+  public updateNavLinks(url: string): void {
     const isLogined = LocalStorageService.getData('refreshToken');
 
-    this.loginNavLinkWrapper.destroyChildren();
-    this.loginNavLinkWrapper.append(isLogined ? this.logoutNavLink : loginNavLink());
+    this.navLinksWrapper.destroyChildren();
+
+    this.navLinksEntries.forEach(([path, navLink]) => {
+      if (navLink === this.navLinks[PagesPaths.LOGIN]) {
+        this.navLinksWrapper.append(isLogined ? this.logoutNavLink : navLink);
+      } else {
+        this.navLinksWrapper.append(navLink);
+      }
+
+      if (path === url) navLink.addClass(styles.active);
+      else navLink.removeClass(styles.active);
+    });
   }
 }

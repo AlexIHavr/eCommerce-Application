@@ -7,9 +7,36 @@
     font-size: 1.5em;
   }
 
-  .navLinks {
+  .navLinksWrapper {
     display: flex;
     gap: 40px;
+
+    & > * {
+      transition: text-decoration 0.2s;
+
+      &::after {
+        content: '';
+
+        display: block;
+
+        width: 0%;
+        height: 3px;
+
+        background-color: var(--base-text-color);
+
+        transition: width 0.4s;
+      }
+
+      &.active::after {
+        width: 100%;
+      }
+
+      @media (hover: hover) and (pointer: fine) {
+        &:hover::after {
+          width: 100%;
+        }
+      }
+    }
   }
 
   .navIcons {

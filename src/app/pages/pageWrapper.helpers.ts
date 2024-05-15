@@ -16,7 +16,7 @@ export function navigateToMain(): void {
 }
 
 export function getNavLink(title: string, path: PagesPaths, className?: string): Anchor {
-  const homeLink = a({ text: title, href: path, className });
+  const homeLink = a({ text: title, href: path, className: className || '' });
   homeLink.setAttribute('data-navigo', '');
 
   return homeLink;
