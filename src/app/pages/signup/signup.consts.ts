@@ -122,7 +122,19 @@ export const POSTALCODE_PROPS: Record<string, Partial<LoginFieldProps>> = {
   },
 };
 
-export const SIGNUP_API_ERROR_TEXT: Record<'email' | 'serverInternalError', string> = {
-  email: '⚠️ Signup failed: this email has already exist. Try another email',
+export const SIGNUP_API_ERROR_TEXT: Record<
+  | 'existedEmail'
+  | 'emptyEmail'
+  | 'emptyPassword'
+  | 'emptyDateOfBirth'
+  | 'badCountryValue'
+  | 'serverInternalError',
+  string
+> = {
+  existedEmail: '⚠️ Signup failed: this email has already exist. Try another email',
+  emptyEmail: '⚠️ Email should not be empty',
+  emptyPassword: '⚠️ Password should not be empty',
+  emptyDateOfBirth: '⚠️ Please enter valid date of birth',
+  badCountryValue: '⚠️ Invalid country value',
   serverInternalError: '⚠️ Signup failed: Technical issues. Try again later',
 };
