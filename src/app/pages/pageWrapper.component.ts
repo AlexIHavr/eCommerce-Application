@@ -28,6 +28,7 @@ export class PageWrapper extends BaseComponent {
     routingService.setRouting(
       {
         [PagesPaths.MAIN]: () => this.goToPage(main),
+        [PagesPaths.HOME]: () => this.goToPage(main),
         [PagesPaths.LOGIN]: () => this.goToPage(login),
         [PagesPaths.SIGNUP]: () => this.goToPage(signup),
       },
