@@ -1,15 +1,21 @@
 .header {
   display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
   align-items: center;
   justify-content: space-around;
 
   .logo {
     font-size: 1.5em;
+
+    @media (width <= 550px) {
+      font-size: 1.2em;
+    }
   }
 
   .navLinksWrapper {
     display: flex;
-    gap: 40px;
+    gap: 30px;
 
     & > * {
       transition: text-decoration 0.2s;
@@ -35,6 +41,10 @@
         &:hover::after {
           width: 100%;
         }
+      }
+
+      @media (width <= 550px) {
+        font-size: 1em;
       }
     }
   }
