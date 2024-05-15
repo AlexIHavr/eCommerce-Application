@@ -10,7 +10,7 @@
   --form-checkbox-color: green;
   --label-checkbox-inactive-color: gray;
   --label-checkbox-active-color: black;
-  --loader-color: black;
+  --base-text-color: black;
 }
 
 *,
@@ -25,4 +25,8 @@
 @font-face {
   font-family: Poppins;
   src: url('/Poppins-Regular.ttf');
+}
+
+body {
+  color: var(--base-text-color);
 }
