@@ -30,22 +30,22 @@ export class PageWrapper extends BaseComponent {
 
     this.appendChildren([header, this.pageContent, new Footer()]);
 
-    routingService.setRouting(
-      {
-        [PagesPaths.MAIN]: () => this.goToPage(main),
-        [PagesPaths.LOGIN]: () => {
-          this.goToPage(login);
-          loginRedirect();
-        },
-        [PagesPaths.SIGNUP]: () => this.goToPage(signup),
+    routingService.setHooks({
+      after(match) {
+        header.updateNavLinks(match.url);
       },
-      () => this.goToPage(notFound),
-      {
-        after(match) {
-          header.updateNavLinks(match.url);
-        },
+    });
+
+    routingService.setRouting({
+      [PagesPaths.MAIN]: () => this.goToPage(main),
+      [PagesPaths.LOGIN]: () => {
+        this.goToPage(login);
+        loginRedirect();
       },
-    );
+      [PagesPaths.SIGNUP]: () => this.goToPage(signup),
+    });
+
+    routingService.setNotFound(() => this.goToPage(notFound));
   }
 
   private goToPage(page: BaseComponent): void {
