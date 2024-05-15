@@ -9,6 +9,7 @@ import { BaseComponent } from 'shared/base/base.component';
 import { div } from 'shared/tags/tags.component';
 
 import { PagesPaths } from './pageWrapper.consts';
+import { loginRedirect } from './pageWrapper.helpers';
 import styles from './pageWrapper.module.scss';
 
 export class PageWrapper extends BaseComponent {
@@ -32,7 +33,10 @@ export class PageWrapper extends BaseComponent {
     routingService.setRouting(
       {
         [PagesPaths.MAIN]: () => this.goToPage(main),
-        [PagesPaths.LOGIN]: () => this.goToPage(login),
+        [PagesPaths.LOGIN]: () => {
+          this.goToPage(login);
+          loginRedirect();
+        },
         [PagesPaths.SIGNUP]: () => this.goToPage(signup),
       },
       () => this.goToPage(notFound),

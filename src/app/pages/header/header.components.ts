@@ -1,6 +1,6 @@
 import { Anchor, Div } from 'globalTypes/elements';
 import { PagesPaths } from 'pages/pageWrapper.consts';
-import { getNavLink } from 'pages/pageWrapper.helpers';
+import { getNavLink, isLogined } from 'pages/pageWrapper.helpers';
 import { loginNavLink, signupNavLink } from 'pages/shared/components/navLinks/navLinks.component';
 import { LocalStorageService } from 'services/localStorage.service';
 import { BaseComponent } from 'shared/base/base.component';
@@ -46,13 +46,11 @@ export class Header extends BaseComponent {
   }
 
   public updateNavLinks(url: string): void {
-    const isLogined = LocalStorageService.getData('refreshToken');
-
     this.navLinksWrapper.destroyChildren();
 
     this.navLinksEntries.forEach(([path, navLink]) => {
       if (navLink === this.navLinks[PagesPaths.LOGIN]) {
-        this.navLinksWrapper.append(isLogined ? this.logoutNavLink : navLink);
+        this.navLinksWrapper.append(isLogined() ? this.logoutNavLink : navLink);
       } else {
         this.navLinksWrapper.append(navLink);
       }

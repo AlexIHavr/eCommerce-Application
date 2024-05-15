@@ -6,10 +6,14 @@ import { tokenCache } from 'utils/tokenCache.util';
 
 import { PagesPaths } from './pageWrapper.consts';
 
+export function redirectToMain(): void {
+  routingService.navigate(PagesPaths.MAIN);
+}
+
 export function navigateToMain(): void {
   if (tokenCache.cache.refreshToken) {
     LocalStorageService.saveData('refreshToken', tokenCache.cache.refreshToken);
-    routingService.navigate(PagesPaths.MAIN);
+    redirectToMain();
   } else {
     throw new Error('refreshToken was not found in tokenCache');
   }
@@ -20,4 +24,14 @@ export function getNavLink(title: string, path: PagesPaths, className?: string):
   homeLink.setAttribute('data-navigo', '');
 
   return homeLink;
+}
+
+export function isLogined(): boolean {
+  return !!LocalStorageService.getData('refreshToken');
+}
+
+export function loginRedirect(): void {
+  if (!isLogined()) return;
+
+  redirectToMain();
 }
