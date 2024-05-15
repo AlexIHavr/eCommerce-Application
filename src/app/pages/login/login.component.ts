@@ -24,6 +24,22 @@ export class Login extends BaseComponent {
     this.emailField = new FormField(LOGIN_PROPS.email);
     this.passwordField = new FormField(LOGIN_PROPS.password);
 
+    this.emailField.addListener(
+      'input',
+      () => {
+        this.emailField.addClass(formFieldStyles.selfError);
+      },
+      { once: true },
+    );
+
+    this.passwordField.addListener(
+      'input',
+      () => {
+        this.passwordField.addClass(formFieldStyles.selfError);
+      },
+      { once: true },
+    );
+
     this.loginForm = form(
       { className: styles.loginFormWrapper },
       this.emailField,
