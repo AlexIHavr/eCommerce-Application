@@ -3,11 +3,11 @@ import { NewAddress, NewCustomer } from 'interfaces/api.interface';
 import { navigateToMain } from 'pages/pageWrapper.helpers';
 import { FormField } from 'pages/shared/components/formField/formField.component';
 import formFieldStyles from 'pages/shared/components/formField/formField.module.scss';
+import { loginNavLink } from 'pages/shared/components/navLinks/navLinks.component';
 import formStyles from 'pages/shared/styles/form-elements.module.scss';
 import { apiService } from 'services/api.service';
 import { BaseComponent } from 'shared/base/base.component';
 import {
-  a,
   button,
   div,
   fieldset,
@@ -200,11 +200,7 @@ export class Signup extends BaseComponent {
       this.signupForm,
       span(
         { className: formStyles.formFooter, text: 'Don`t have an account? ' },
-        a({
-          className: formStyles.formFooterLink,
-          text: 'Login',
-          onclick: () => console.log('TODO redirect to LoginPage'),
-        }),
+        loginNavLink(formStyles.formFooterLink),
       ),
     ]);
   }
