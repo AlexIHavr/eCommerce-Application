@@ -14,9 +14,14 @@ import { Signup } from './signup/signup.component';
 export class PageWrapper extends BaseComponent {
   private readonly pageContent = div({ className: styles.pageContent });
 
+  private readonly header;
+
   constructor() {
-    super({ className: styles.pageWrapper }, new Header());
-    this.appendChildren([this.pageContent, new Footer()]);
+    super({ className: styles.pageWrapper });
+
+    this.header = new Header();
+
+    this.appendChildren([this.header, this.pageContent, new Footer()]);
 
     const [main, login, signup, notFound] = [new Main(), new Login(), new Signup(), new NotFound()];
 
@@ -33,5 +38,6 @@ export class PageWrapper extends BaseComponent {
   private goToPage(page: BaseComponent): void {
     this.pageContent.destroyChildren();
     this.pageContent.append(page);
+    this.header.setLoginNavLink();
   }
 }
