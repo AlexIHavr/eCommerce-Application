@@ -6,6 +6,7 @@ import formFieldStyles from 'pages/shared/components/formField/formField.module.
 import formStyles from 'pages/shared/styles/form-elements.module.scss';
 import { apiService } from 'services/api.service';
 import { routingService } from 'services/routing.service';
+import { alertModal } from 'shared/alert/alert.component';
 import { BaseComponent } from 'shared/base/base.component';
 import {
   a,
@@ -235,6 +236,7 @@ export class Signup extends BaseComponent {
         )
         .then(() => {
           routingService.navigate(PagesPaths.MAIN);
+          alertModal.showAlert('success', 'Registration was completed successfully');
           // ? TODO: change info in HEADER (add username or email, change btn login to logout);
         })
         .catch((res) => {
