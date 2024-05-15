@@ -36,6 +36,7 @@
   }
 
   .apiError &,
+  .selfError &:invalid,
   .error &:invalid,
   .error .formLabel[area-invalid='true'] & {
     border: 2px solid var(--input-error-border-color);
@@ -86,7 +87,8 @@
 
   .apiError &,
   .error .formLabel[area-invalid='true'] &,
-  .error .formInput:invalid + & {
+  .error .formInput:invalid + &,
+  .selfError .formInput:invalid + & {
     visibility: visible;
   }
 }
