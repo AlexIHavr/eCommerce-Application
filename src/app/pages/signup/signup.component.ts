@@ -1,15 +1,14 @@
-import { Fieldset, Form, Select } from 'globalTypes/elements';
+import { Fieldset, Form, Select, Span } from 'globalTypes/elements';
 import { NewAddress, NewCustomer } from 'interfaces/api.interface';
-import { PagesPaths } from 'pages/pageWrapper.consts';
+import { redirectToMain, saveRefreshToken } from 'pages/pageWrapper.helpers';
 import { FormField } from 'pages/shared/components/formField/formField.component';
 import formFieldStyles from 'pages/shared/components/formField/formField.module.scss';
+import { loginNavLink } from 'pages/shared/components/navLinks/navLinks.component';
 import formStyles from 'pages/shared/styles/form-elements.module.scss';
 import { apiService } from 'services/api.service';
-import { routingService } from 'services/routing.service';
 import { alertModal } from 'shared/alert/alert.component';
 import { BaseComponent } from 'shared/base/base.component';
 import {
-  a,
   button,
   div,
   fieldset,
@@ -22,7 +21,12 @@ import {
   span,
 } from 'shared/tags/tags.component';
 
-import { POSTALCODE_PROPS, SIGNUP_PROPS, USER_AVAILABLE_AGE } from './signup.consts';
+import {
+  POSTALCODE_PROPS,
+  SIGNUP_API_ERROR_TEXT,
+  SIGNUP_PROPS,
+  USER_AVAILABLE_AGE,
+} from './signup.consts';
 import styles from './signup.module.scss';
 
 export class Signup extends BaseComponent {
@@ -57,6 +61,8 @@ export class Signup extends BaseComponent {
   private readonly shipPostalCodeField: FormField;
 
   private readonly shipCountryField: Select;
+
+  private readonly commonTextError: Span;
 
   private isSameAddress: boolean;
 
@@ -126,6 +132,8 @@ export class Signup extends BaseComponent {
       this.shipCountryField,
     );
 
+    this.commonTextError = span({ className: styles.commonErrorText, text: 'Error text' });
+
     this.signupForm = form(
       { className: styles.signupFormWrapper },
       div(
@@ -189,6 +197,7 @@ export class Signup extends BaseComponent {
           ),
         ),
       ),
+      this.commonTextError,
       button({
         className: formStyles.formButton,
         text: 'Signup',
@@ -202,11 +211,7 @@ export class Signup extends BaseComponent {
       this.signupForm,
       span(
         { className: formStyles.formFooter, text: 'Don`t have an account? ' },
-        a({
-          className: formStyles.formFooterLink,
-          text: 'Login',
-          onclick: () => console.log('TODO redirect to LoginPage'),
-        }),
+        loginNavLink(formStyles.formFooterLink),
       ),
     ]);
   }
@@ -235,13 +240,36 @@ export class Signup extends BaseComponent {
           }),
         )
         .then(() => {
-          routingService.navigate(PagesPaths.MAIN);
+          saveRefreshToken();
+          redirectToMain();
           alertModal.showAlert('success', 'Registration was completed successfully');
-          // ? TODO: change info in HEADER (add username or email, change btn login to logout);
         })
         .catch((res) => {
-          // TODO: show errors in form
-          console.log(res);
+          const { code, message, detailedErrorMessage } = res.body.errors[0];
+
+          switch (code) {
+            case 'InvalidOperation':
+              if (message === 'The provided value is not a valid email') {
+                this.emailField.showApiError(SIGNUP_API_ERROR_TEXT.emptyEmail);
+              }
+              if (message === `'password' should not be empty.`) {
+                this.passwordField.showApiError(SIGNUP_API_ERROR_TEXT.emptyPassword);
+              }
+              break;
+            case 'InvalidJsonInput':
+              if (String(detailedErrorMessage).startsWith('dateOfBirth')) {
+                this.birthField.showApiError(SIGNUP_API_ERROR_TEXT.emptyDateOfBirth);
+              }
+              if (String(detailedErrorMessage).startsWith('addresses')) {
+                this.showCommonError(SIGNUP_API_ERROR_TEXT.badCountryValue);
+              }
+              break;
+            case 'DuplicateField':
+              this.emailField.showApiError(SIGNUP_API_ERROR_TEXT.existedEmail);
+              break;
+            default:
+              this.showCommonError(SIGNUP_API_ERROR_TEXT.serverInternalError);
+          }
         });
     } else {
       this.signupForm.addClass(formFieldStyles.error);
@@ -343,5 +371,11 @@ export class Signup extends BaseComponent {
     postalCodeInput.setErrorText(`${country.errorText}`);
 
     return Boolean(postalCodeValue.match(`${country.pattern}`));
+  }
+
+  private showCommonError(errorText: string): void {
+    this.commonTextError.addClass(styles.visible);
+    this.commonTextError.setText(errorText);
+    setTimeout(() => this.commonTextError.removeClass(styles.visible), 4000);
   }
 }

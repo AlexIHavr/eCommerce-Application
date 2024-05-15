@@ -1,5 +1,5 @@
 :root {
-  /* Login-Registrtion forms */
+  /* Login-Registration forms */
   --input-border-color: gray;
   --input-focus-border-color: black;
   --input-error-border-color: crimson;
@@ -10,6 +10,7 @@
   --form-checkbox-color: green;
   --label-checkbox-inactive-color: gray;
   --label-checkbox-active-color: black;
+  --base-text-color: black;
 }
 
 *,
@@ -23,10 +24,9 @@
 
 @font-face {
   font-family: Poppins;
-  src: url('src/fonts/Poppins-Regular.ttf');
+  src: url('/Poppins-Regular.ttf');
 }
 
 body {
-  font-size: 36px;
   color: var(--base-text-color);
 }

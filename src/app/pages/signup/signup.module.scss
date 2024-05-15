@@ -6,7 +6,7 @@
 
 .signupFormWrapper {
   width: 100%;
-  max-width: 640px;
+  max-width: 800px;
   margin: 0 auto;
 
   & button:last-of-type {
@@ -91,7 +91,7 @@
   justify-content: space-between;
 
   & > * {
-    max-width: calc(50% - 25px);
+    max-width: 100%;
     padding: 5px 10px 0;
     border-radius: 10px;
     box-shadow: 0 0 5px black;
@@ -102,10 +102,6 @@
       flex-direction: column;
       max-width: 400px;
       margin: 0 auto;
-    }
-
-    & > * {
-      max-width: unset;
     }
   }
 }
@@ -146,8 +142,28 @@
   }
 }
 
-@media (width <= 600px) {
+.commonErrorText {
+  display: block;
+
+  height: 20px;
+  margin-top: 15px;
+
+  font-size: 0.4em;
+  font-weight: 600;
+  line-height: 1.2;
+  color: var(--text-error-color);
+  text-align: center;
+
+  visibility: hidden;
+
+  &.visible {
+    visibility: visible;
+  }
+}
+
+@media (width <= 630px) {
   .signupPage {
+    padding: 20px 0;
     font-size: 30px;
   }
 }

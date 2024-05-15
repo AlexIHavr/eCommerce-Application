@@ -1,12 +1,40 @@
 .footer {
   display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
   align-items: center;
   justify-content: space-around;
+
+  .gitLinks {
+    display: flex;
+    flex-grow: 1;
+    gap: 10px;
+    align-items: center;
+    justify-content: space-around;
+
+    & > * {
+      font-size: 1.2em;
+
+      @media (width <= 550px) {
+        font-size: 1em;
+      }
+    }
+  }
+
+  .year {
+    @media (width <= 700px) {
+      display: none;
+    }
+  }
 
   .rssLogo {
     width: 50px;
     height: 50px;
     background-image: url('/rsschoolLogo.jpg');
     background-size: cover;
+
+    @media (width <= 700px) {
+      display: none;
+    }
   }
 }

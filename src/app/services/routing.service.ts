@@ -1,5 +1,5 @@
 import { ActionFunc } from 'globalTypes/actionFunc';
-import Navigo from 'navigo';
+import Navigo, { RouteHooks } from 'navigo';
 
 class RoutingService {
   private router: Navigo;
@@ -8,8 +8,16 @@ class RoutingService {
     this.router = new Navigo(import.meta.env.BASE_URL);
   }
 
-  public setRouting(map: Record<string, ActionFunc>, notFoundAction: ActionFunc): void {
-    this.router.on(map).notFound(notFoundAction).resolve();
+  public setRouting(map: Record<string, ActionFunc>): void {
+    this.router.on(map).resolve();
+  }
+
+  public setNotFound(notFoundAction: ActionFunc): void {
+    this.router.notFound(notFoundAction).resolve();
+  }
+
+  public setHooks(hooks: RouteHooks): void {
+    this.router.hooks(hooks);
   }
 
   public navigate(path: string): void {
