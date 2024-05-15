@@ -1,6 +1,6 @@
 import { Fieldset, Form, Select } from 'globalTypes/elements';
 import { NewAddress, NewCustomer } from 'interfaces/api.interface';
-import { navigateToMain } from 'pages/pageWrapper.helpers';
+import { redirectToMain, saveRefreshToken } from 'pages/pageWrapper.helpers';
 import { FormField } from 'pages/shared/components/formField/formField.component';
 import formFieldStyles from 'pages/shared/components/formField/formField.module.scss';
 import { loginNavLink } from 'pages/shared/components/navLinks/navLinks.component';
@@ -229,7 +229,8 @@ export class Signup extends BaseComponent {
           }),
         )
         .then(() => {
-          navigateToMain();
+          saveRefreshToken();
+          redirectToMain();
         })
         .catch((res) => {
           // TODO: show errors in form

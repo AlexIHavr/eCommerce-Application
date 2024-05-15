@@ -1,5 +1,5 @@
 import { Form } from 'globalTypes/elements';
-import { navigateToMain } from 'pages/pageWrapper.helpers';
+import { redirectToMain, saveRefreshToken } from 'pages/pageWrapper.helpers';
 import { FormField } from 'pages/shared/components/formField/formField.component';
 import formFieldStyles from 'pages/shared/components/formField/formField.module.scss';
 import { signupNavLink } from 'pages/shared/components/navLinks/navLinks.component';
@@ -59,7 +59,8 @@ export class Login extends BaseComponent {
               password: this.passwordField.value,
             })
             .then(() => {
-              navigateToMain();
+              saveRefreshToken();
+              redirectToMain();
             })
             .catch(() => {
               this.passwordField.showApiError(LOGIN_API_ERROR_TEXT.password);

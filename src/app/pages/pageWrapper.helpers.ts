@@ -10,13 +10,10 @@ export function redirectToMain(): void {
   routingService.navigate(PagesPaths.MAIN);
 }
 
-export function navigateToMain(): void {
-  if (tokenCache.cache.refreshToken) {
-    LocalStorageService.saveData('refreshToken', tokenCache.cache.refreshToken);
-    redirectToMain();
-  } else {
-    throw new Error('refreshToken was not found in tokenCache');
-  }
+export function saveRefreshToken(): void {
+  if (!tokenCache.cache.refreshToken) return;
+
+  LocalStorageService.saveData('refreshToken', tokenCache.cache.refreshToken);
 }
 
 export function getNavLink(title: string, path: PagesPaths, className?: string): Anchor {
@@ -27,7 +24,7 @@ export function getNavLink(title: string, path: PagesPaths, className?: string):
 }
 
 export function isLogined(): boolean {
-  return !!LocalStorageService.getData('refreshToken');
+  return Boolean(LocalStorageService.getData('refreshToken'));
 }
 
 export function loginRedirect(): void {
