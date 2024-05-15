@@ -112,11 +112,11 @@ export const SIGNUP_PROPS: Record<string, LoginFieldProps> = {
 };
 
 export const POSTALCODE_PROPS: Record<string, Partial<LoginFieldProps>> = {
-  Belarus: {
+  BY: {
     pattern: '^2\\d{5}$',
     errorText: '⚠️ Belarus postal code must have 6 digits, starting with "2"',
   },
-  Ukraine: {
+  UA: {
     pattern: '^\\d{5}$',
     errorText: '⚠️ Ukraine postal code must have exactly 5 digits',
   },

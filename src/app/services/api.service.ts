@@ -28,10 +28,6 @@ export class ApiService {
     return this.apiRoot.customers().get().execute();
   }
 
-  public addCustomer(newCustomer: NewCustomer): ApiClientResponse<CustomerSignInResult> {
-    return this.apiRoot.customers().post({ body: newCustomer }).execute();
-  }
-
   public loginCustomer(newCustomer: CustomerLoginData): ApiClientResponse<CustomerSignInResult> {
     this.apiRoot = clientBuildUtil.getApiRootByFlow('password', newCustomer);
     return this.apiRoot.login().post({ body: newCustomer }).execute();
@@ -42,6 +38,10 @@ export class ApiService {
       .customers()
       .get({ queryArgs: { where: `email="${customerEmail}"` } })
       .execute();
+  }
+
+  public signupCustomer(newCustomer: NewCustomer): ApiClientResponse<CustomerSignInResult> {
+    return this.apiRoot.me().signup().post({ body: newCustomer }).execute();
   }
 }
 

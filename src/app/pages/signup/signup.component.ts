@@ -1,7 +1,11 @@
 import { Fieldset, Form, Select } from 'globalTypes/elements';
+import { NewAddress, NewCustomer } from 'interfaces/api.interface';
+import { PagesPaths } from 'pages/pageWrapper.consts';
 import { FormField } from 'pages/shared/components/formField/formField.component';
 import formFieldStyles from 'pages/shared/components/formField/formField.module.scss';
 import formStyles from 'pages/shared/styles/form-elements.module.scss';
+import { apiService } from 'services/api.service';
+import { routingService } from 'services/routing.service';
 import { BaseComponent } from 'shared/base/base.component';
 import {
   a,
@@ -87,8 +91,8 @@ export class Signup extends BaseComponent {
         name: 'ship-country',
         onchange: () => this.isPostalCodeValid('billing'),
       },
-      option({ value: 'Belarus', text: 'Belarus' }),
-      option({ value: 'Ukraine', text: 'Ukraine' }),
+      option({ value: 'BY', text: 'Belarus' }),
+      option({ value: 'UA', text: 'Ukraine' }),
     );
 
     this.shipCountryField = select(
@@ -97,8 +101,8 @@ export class Signup extends BaseComponent {
         name: 'bil-country',
         onchange: () => this.isPostalCodeValid('shipping'),
       },
-      option({ value: 'Belarus', text: 'Belarus' }),
-      option({ value: 'Ukraine', text: 'Ukraine' }),
+      option({ value: 'BY', text: 'Belarus' }),
+      option({ value: 'UA', text: 'Ukraine' }),
     );
 
     this.bilFieldset = fieldset(
@@ -221,10 +225,64 @@ export class Signup extends BaseComponent {
       this.shipCityField.isValid() &&
       this.isPostalCodeValid('shipping')
     ) {
-      console.log('TODO Signup');
+      apiService
+        .signupCustomer(this.getNewCustomerFromForm())
+        .then(() =>
+          apiService.loginCustomer({
+            email: this.emailField.value,
+            password: this.passwordField.value,
+          }),
+        )
+        .then(() => {
+          routingService.navigate(PagesPaths.MAIN);
+          // ? TODO: change info in HEADER (add username or email, change btn login to logout);
+        })
+        .catch((res) => {
+          // TODO: show errors in form
+          console.log(res);
+        });
     } else {
       this.signupForm.addClass(formFieldStyles.error);
     }
+  }
+
+  private getNewCustomerFromForm(): NewCustomer {
+    const newCustomer: NewCustomer = {
+      email: this.emailField.value,
+      password: this.passwordField.value,
+      firstName: this.firstNameField.value,
+      lastName: this.lastNameField.value,
+      dateOfBirth: this.birthField.value,
+      addresses: [],
+    };
+
+    const billingAddress: NewAddress = {
+      key: 'billing',
+      streetName: this.bilStreetField.value,
+      city: this.bilCityField.value,
+      postalCode: this.bilPostalCodeField.value,
+      country: this.bilCountryField.getNode().value,
+    };
+
+    const shippingAddress: NewAddress = {
+      key: 'shipping',
+      streetName: this.shipStreetField.value,
+      city: this.shipCityField.value,
+      postalCode: this.shipPostalCodeField.value,
+      country: this.shipCountryField.getNode().value,
+    };
+
+    newCustomer.addresses.push(billingAddress, shippingAddress);
+
+    if (this.isDefaultBilAdr) {
+      newCustomer.defaultBillingAddress = 0;
+    }
+
+    if (this.isDefaultShipAdr) {
+      newCustomer.defaultShippingAddress = 1;
+    }
+
+    return newCustomer;
   }
 
   private isBirthdayValid(): boolean {
