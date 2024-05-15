@@ -18,13 +18,15 @@ export class PageWrapper extends BaseComponent {
     super({ className: styles.pageWrapper }, new Header());
     this.appendChildren([this.pageContent, new Footer()]);
 
+    const [main, login, signup, notFound] = [new Main(), new Login(), new Signup(), new NotFound()];
+
     routingService.setRouting(
       {
-        [PagesPaths.MAIN]: () => this.goToPage(new Main()),
-        [PagesPaths.LOGIN]: () => this.goToPage(new Login()),
-        [PagesPaths.SIGNUP]: () => this.goToPage(new Signup()),
+        [PagesPaths.MAIN]: () => this.goToPage(main),
+        [PagesPaths.LOGIN]: () => this.goToPage(login),
+        [PagesPaths.SIGNUP]: () => this.goToPage(signup),
       },
-      () => this.goToPage(new NotFound()),
+      () => this.goToPage(notFound),
     );
   }
 
