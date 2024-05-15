@@ -1,13 +1,13 @@
 import { Form } from 'globalTypes/elements';
+import { redirectToMain, saveRefreshToken } from 'pages/pageWrapper.helpers';
 import { FormField } from 'pages/shared/components/formField/formField.component';
 import formFieldStyles from 'pages/shared/components/formField/formField.module.scss';
+import { signupNavLink } from 'pages/shared/components/navLinks/navLinks.component';
 import formStyles from 'pages/shared/styles/form-elements.module.scss';
 import { apiService } from 'services/api.service';
-import { LocalStorageService } from 'services/localStorage.service';
 import { BaseComponent } from 'shared/base/base.component';
-import { a, button, form, h2, span } from 'shared/tags/tags.component';
+import { button, form, h2, span } from 'shared/tags/tags.component';
 import { clientBuildUtil } from 'utils/clientBuild.util';
-import { tokenCache } from 'utils/tokenCache.util';
 
 import { LOGIN_API_ERROR_TEXT, LOGIN_PROPS } from './login.consts';
 import styles from './login.module.scss';
@@ -57,11 +57,7 @@ export class Login extends BaseComponent {
       this.loginForm,
       span(
         { className: formStyles.formFooter, text: 'Don`t have an account? ' },
-        a({
-          className: formStyles.formFooterLink,
-          text: 'Signup',
-          onclick: () => console.log('TODO redirect to RegPage'),
-        }),
+        signupNavLink(formStyles.formFooterLink),
       ),
     ]);
   }
@@ -79,12 +75,8 @@ export class Login extends BaseComponent {
               password: this.passwordField.value,
             })
             .then(() => {
-              // TODO: Redirect to main
-              if (tokenCache.cache.refreshToken) {
-                LocalStorageService.saveData('refreshToken', tokenCache.cache.refreshToken);
-              } else {
-                throw new Error('refreshToken was not found in tokenCache');
-              }
+              saveRefreshToken();
+              redirectToMain();
             })
             .catch(() => {
               this.passwordField.showApiError(LOGIN_API_ERROR_TEXT.password);

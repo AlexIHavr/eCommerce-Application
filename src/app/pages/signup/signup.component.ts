@@ -1,14 +1,13 @@
 import { Fieldset, Form, Select, Span } from 'globalTypes/elements';
 import { NewAddress, NewCustomer } from 'interfaces/api.interface';
-import { PagesPaths } from 'pages/pageWrapper.consts';
+import { redirectToMain, saveRefreshToken } from 'pages/pageWrapper.helpers';
 import { FormField } from 'pages/shared/components/formField/formField.component';
 import formFieldStyles from 'pages/shared/components/formField/formField.module.scss';
+import { loginNavLink } from 'pages/shared/components/navLinks/navLinks.component';
 import formStyles from 'pages/shared/styles/form-elements.module.scss';
 import { apiService } from 'services/api.service';
-import { routingService } from 'services/routing.service';
 import { BaseComponent } from 'shared/base/base.component';
 import {
-  a,
   button,
   div,
   fieldset,
@@ -211,11 +210,7 @@ export class Signup extends BaseComponent {
       this.signupForm,
       span(
         { className: formStyles.formFooter, text: 'Don`t have an account? ' },
-        a({
-          className: formStyles.formFooterLink,
-          text: 'Login',
-          onclick: () => console.log('TODO redirect to LoginPage'),
-        }),
+        loginNavLink(formStyles.formFooterLink),
       ),
     ]);
   }
@@ -244,8 +239,8 @@ export class Signup extends BaseComponent {
           }),
         )
         .then(() => {
-          routingService.navigate(PagesPaths.MAIN);
-          // ? TODO: change info in HEADER (add username or email, change btn login to logout);
+          saveRefreshToken();
+          redirectToMain();
         })
         .catch((res) => {
           const { code, message, detailedErrorMessage } = res.body.errors[0];

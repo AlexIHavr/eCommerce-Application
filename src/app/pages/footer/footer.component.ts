@@ -8,10 +8,17 @@ export class Footer extends BaseComponent {
     super(
       { tag: 'footer', className: styles.footer },
       div({ className: styles.rssLogo }),
-      a({ text: 'AlexIHavr (Team Lead)', href: 'https://github.com/AlexIHavr', target: '_blink' }),
-      a({ text: 'Koshman-Dmitri', href: 'https://github.com/Koshman-Dmitri', target: '_blink' }),
-      a({ text: 'Parxommm', href: 'https://github.com/Parxommm', target: '_blink' }),
-      h3('2024'),
+      div(
+        { className: styles.gitLinks },
+        a({
+          text: 'AlexIHavr (Team Lead)',
+          href: 'https://github.com/AlexIHavr',
+          target: '_blank',
+        }),
+        a({ text: 'Koshman-Dmitri', href: 'https://github.com/Koshman-Dmitri', target: '_blank' }),
+        a({ text: 'Parxommm', href: 'https://github.com/Parxommm', target: '_blank' }),
+      ),
+      h3('2024', styles.year),
     );
   }
 }
