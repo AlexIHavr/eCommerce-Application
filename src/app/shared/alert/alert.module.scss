@@ -1,3 +1,7 @@
+$success-color: #2ec1ac;
+$attention-color: #b88e2f;
+$error-color: #e97171;
+
 .alert {
   position: absolute;
   z-index: 10;
@@ -62,10 +66,10 @@
 }
 
 .success {
-  border-left-color: #2ec1ac;
+  border-left-color: $success-color;
 
   .wrapper {
-    background-color: rgba($color: #2ec1ac, $alpha: 30%);
+    background-color: rgba($color: $success-color, $alpha: 30%);
   }
 
   .infoTitle {
@@ -77,10 +81,10 @@
 }
 
 .attention {
-  border-left-color: #b88e2f;
+  border-left-color: $attention-color;
 
   .wrapper {
-    background-color: rgba($color: #b88e2f, $alpha: 30%);
+    background-color: rgba($color: $attention-color, $alpha: 30%);
   }
 
   .infoTitle {
@@ -92,10 +96,10 @@
 }
 
 .error {
-  border-left-color: #e97171;
+  border-left-color: $error-color;
 
   .wrapper {
-    background-color: rgba($color: #e97171, $alpha: 30%);
+    background-color: rgba($color: $error-color, $alpha: 30%);
   }
 
   .infoTitle {

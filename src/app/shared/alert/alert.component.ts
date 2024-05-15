@@ -5,21 +5,27 @@ import { div, span } from 'shared/tags/tags.component';
 import styles from './alert.module.scss';
 
 class Alert extends BaseComponent {
-  private HIDE_DELAY: number = 2000;
+  private readonly HIDE_DELAY: number;
 
-  private wrapper: Div = div({ className: styles.wrapper });
+  private readonly wrapper: Div;
 
-  private info: Div = div({ className: styles.info });
+  private readonly info: Div;
 
-  private infoTitle: Span = span({ className: styles.infoTitle });
+  private readonly infoTitle: Span;
 
-  private infoText: Span = span({ className: styles.infoText });
+  private readonly infoText: Span;
 
   constructor() {
     super({ className: `${styles.alert} ${styles.hide}` });
+    this.HIDE_DELAY = 3000;
+    this.wrapper = div({ className: styles.wrapper });
+    this.info = div({ className: styles.info });
+    this.infoTitle = span({ className: styles.infoTitle });
+    this.infoText = span({ className: styles.infoText });
+
     this.info.appendChildren([this.infoTitle, this.infoText]);
-    this.wrapper.appendChildren([this.info]);
-    this.appendChildren([this.wrapper]);
+    this.wrapper.append(this.info);
+    this.append(this.wrapper);
   }
 
   public showAlert(type: 'success' | 'error' | 'attention', text: string): void {
