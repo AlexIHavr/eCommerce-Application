@@ -29,9 +29,10 @@ export const SIGNUP_PROPS: Record<string, LoginFieldProps> = {
     labelName: 'First name',
     placeholder: 'Enter your first name',
     maxLength: 30,
-    pattern: '^[a-zA-Zа-яА-ЯёЁ]+$',
+    pattern: '^(?! )(?!.* $)([a-zA-Zа-яА-ЯёЁ\\s]+)$',
     required: true,
-    errorText: '⚠️ At least one character. Only letters allowed',
+    errorText:
+      '⚠️ At least one symbol. Only letters allowed. Don`t leave leading or trailing whitespace',
   },
   lastname: {
     name: 'lastname',
@@ -39,9 +40,10 @@ export const SIGNUP_PROPS: Record<string, LoginFieldProps> = {
     labelName: 'Last name',
     placeholder: 'Enter your last name',
     maxLength: 30,
-    pattern: '^[a-zA-Zа-яА-ЯёЁ]+$',
+    pattern: '^(?! )(?!.* $)([a-zA-Zа-яА-ЯёЁ\\s]+)$',
     required: true,
-    errorText: '⚠️ At least one character. Only letters allowed',
+    errorText:
+      '⚠️ At least one symbol. Only letters allowed. Don`t leave leading or trailing whitespace',
   },
   birthDate: {
     name: 'birth',
@@ -57,9 +59,9 @@ export const SIGNUP_PROPS: Record<string, LoginFieldProps> = {
     labelName: 'Street',
     placeholder: 'Enter your street',
     maxLength: 30,
-    pattern: '^[\\S]+$',
+    pattern: '^(?! )(?!.* $).+$',
     required: true,
-    errorText: '⚠️ Enter at least one character',
+    errorText: '⚠️ Min 1 symbol. Don`t leave whitespace on the edges',
   },
   bilCity: {
     name: 'bil-city',
@@ -67,9 +69,9 @@ export const SIGNUP_PROPS: Record<string, LoginFieldProps> = {
     labelName: 'City',
     placeholder: 'Enter your city',
     maxLength: 30,
-    pattern: '^[a-zA-Zа-яА-ЯёЁ]+$',
+    pattern: '^(?! )(?!.* $)([a-zA-Zа-яА-ЯёЁ\\s]+)$',
     required: true,
-    errorText: '⚠️ At least one character. Only letters allowed',
+    errorText: '⚠️ Min 1 symbol. Only letters. Don`t leave whitespace on the edges',
   },
   bilPostalCode: {
     name: 'bil-postal-code',
@@ -86,9 +88,9 @@ export const SIGNUP_PROPS: Record<string, LoginFieldProps> = {
     labelName: 'Street',
     placeholder: 'Enter your street',
     maxLength: 30,
-    pattern: '^[\\S]+$',
+    pattern: '^(?! )(?!.* $).+$',
     required: true,
-    errorText: '⚠️ Enter at least one character',
+    errorText: '⚠️ Min 1 symbol. Don`t leave whitespace on the edges',
   },
   shipCity: {
     name: 'ship-city',
@@ -96,9 +98,9 @@ export const SIGNUP_PROPS: Record<string, LoginFieldProps> = {
     labelName: 'City',
     placeholder: 'Enter your city',
     maxLength: 30,
-    pattern: '^[a-zA-Zа-яА-ЯёЁ]+$',
+    pattern: '^(?! )(?!.* $)([a-zA-Zа-яА-ЯёЁ\\s]+)$',
     required: true,
-    errorText: '⚠️ At least one character. Only letters allowed',
+    errorText: '⚠️ Min 1 symbol. Only letters. Don`t leave whitespace on the edges',
   },
   shipPostalCode: {
     name: 'ship-postal-code',
