@@ -6,6 +6,7 @@ import formFieldStyles from 'pages/shared/components/formField/formField.module.
 import { loginNavLink } from 'pages/shared/components/navLinks/navLinks.component';
 import formStyles from 'pages/shared/styles/form-elements.module.scss';
 import { apiService } from 'services/api.service';
+import { alertModal } from 'shared/alert/alert.component';
 import { BaseComponent } from 'shared/base/base.component';
 import {
   button,
@@ -241,6 +242,7 @@ export class Signup extends BaseComponent {
         .then(() => {
           saveRefreshToken();
           redirectToMain();
+          alertModal.showAlert('success', 'Registration was completed successfully');
         })
         .catch((res) => {
           const { code, message, detailedErrorMessage } = res.body.errors[0];

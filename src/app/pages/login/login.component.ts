@@ -5,6 +5,7 @@ import formFieldStyles from 'pages/shared/components/formField/formField.module.
 import { signupNavLink } from 'pages/shared/components/navLinks/navLinks.component';
 import formStyles from 'pages/shared/styles/form-elements.module.scss';
 import { apiService } from 'services/api.service';
+import { alertModal } from 'shared/alert/alert.component';
 import { BaseComponent } from 'shared/base/base.component';
 import { button, form, h2, span } from 'shared/tags/tags.component';
 import { clientBuildUtil } from 'utils/clientBuild.util';
@@ -77,6 +78,7 @@ export class Login extends BaseComponent {
             .then(() => {
               saveRefreshToken();
               redirectToMain();
+              alertModal.showAlert('success', 'Login was completed successfully');
             })
             .catch(() => {
               this.passwordField.showApiError(LOGIN_API_ERROR_TEXT.password);
