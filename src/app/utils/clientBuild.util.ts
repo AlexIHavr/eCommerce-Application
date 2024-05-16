@@ -81,9 +81,7 @@ class ClientBuildUtil {
       .withHttpMiddleware(this.httpMiddlewareOptions)
       .withLoggerMiddleware();
 
-    this.ctpClient = this.basicClientBuilder
-      .withAnonymousSessionFlow(this.anonymousAuthMiddlewareOptions)
-      .build();
+    this.ctpClient = this.getClientByLogin();
 
     this.apiRoot = createApiBuilderFromCtpClient(this.ctpClient).withProjectKey({
       projectKey: VITE_CTP_PROJECT_KEY,
@@ -105,13 +103,13 @@ class ClientBuildUtil {
       .build();
   }
 
-  private setClientWithRefreshFlow(refreshToken: string): void {
-    this.refreshAuthMiddlewareOptions.refreshToken = refreshToken;
+  // private setClientWithRefreshFlow(refreshToken: string): void {
+  //   this.refreshAuthMiddlewareOptions.refreshToken = refreshToken;
 
-    this.ctpClient = this.basicClientBuilder
-      .withRefreshTokenFlow(this.refreshAuthMiddlewareOptions)
-      .build();
-  }
+  //   this.ctpClient = this.basicClientBuilder
+  //     .withRefreshTokenFlow(this.refreshAuthMiddlewareOptions)
+  //     .build();
+  // }
 
   private updateApiRoot(): void {
     this.apiRoot = createApiBuilderFromCtpClient(this.ctpClient).withProjectKey({
@@ -120,7 +118,7 @@ class ClientBuildUtil {
   }
 
   public getApiRootByFlow(
-    flow: 'anonymous' | 'password' | 'refresh',
+    flow: 'anonymous' | 'password',
     customerData?: CustomerLoginData,
   ): ByProjectKeyRequestBuilder {
     switch (flow) {
@@ -136,22 +134,25 @@ class ClientBuildUtil {
         }
         break;
 
-      case 'refresh': {
-        const refreshToken = LocalStorageService.getData('refreshToken');
-        if (refreshToken) {
-          this.setClientWithRefreshFlow(refreshToken);
-        } else {
-          throw new Error('refreshToken was not found in local storage');
-        }
-        break;
-      }
-
       default:
         break;
     }
 
     this.updateApiRoot();
     return this.apiRoot;
+  }
+
+  private getClientByLogin(): Client {
+    const refreshToken = LocalStorageService.getData('refreshToken');
+    if (refreshToken) {
+      this.refreshAuthMiddlewareOptions.refreshToken = refreshToken;
+      return this.basicClientBuilder
+        .withRefreshTokenFlow(this.refreshAuthMiddlewareOptions)
+        .build();
+    }
+    return this.basicClientBuilder
+      .withAnonymousSessionFlow(this.anonymousAuthMiddlewareOptions)
+      .build();
   }
 }
 

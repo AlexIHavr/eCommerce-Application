@@ -12,7 +12,7 @@ class App {
 
     routingService.updateLinks();
 
-    apiService.getProject();
+    apiService.apiRoot.me().get().execute(); //* For check correct login (403 - anonymous flow, 200 - login success)
   }
 }
 

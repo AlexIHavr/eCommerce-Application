@@ -43,6 +43,10 @@ export class ApiService {
   public signupCustomer(newCustomer: NewCustomer): ApiClientResponse<CustomerSignInResult> {
     return this.apiRoot.me().signup().post({ body: newCustomer }).execute();
   }
+
+  public logout(): void {
+    this.apiRoot = clientBuildUtil.getApiRootByFlow('anonymous');
+  }
 }
 
 export const apiService = new ApiService();

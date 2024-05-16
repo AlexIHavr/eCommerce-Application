@@ -2,6 +2,7 @@ import { Anchor, Div } from 'globalTypes/elements';
 import { PagesPaths } from 'pages/pageWrapper.consts';
 import { getNavLink, isLogined } from 'pages/pageWrapper.helpers';
 import { loginNavLink, signupNavLink } from 'pages/shared/components/navLinks/navLinks.component';
+import { apiService } from 'services/api.service';
 import { LocalStorageService } from 'services/localStorage.service';
 import { BaseComponent } from 'shared/base/base.component';
 import { div, icon } from 'shared/tags/tags.component';
@@ -35,6 +36,7 @@ export class Header extends BaseComponent {
       onclick: () => {
         LocalStorageService.removeData('refreshToken');
         this.updateNavLinks(PagesPaths.LOGIN);
+        apiService.logout();
       },
     });
 
