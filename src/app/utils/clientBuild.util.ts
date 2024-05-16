@@ -103,14 +103,6 @@ class ClientBuildUtil {
       .build();
   }
 
-  // private setClientWithRefreshFlow(refreshToken: string): void {
-  //   this.refreshAuthMiddlewareOptions.refreshToken = refreshToken;
-
-  //   this.ctpClient = this.basicClientBuilder
-  //     .withRefreshTokenFlow(this.refreshAuthMiddlewareOptions)
-  //     .build();
-  // }
-
   private updateApiRoot(): void {
     this.apiRoot = createApiBuilderFromCtpClient(this.ctpClient).withProjectKey({
       projectKey: VITE_CTP_PROJECT_KEY,
