@@ -4,6 +4,8 @@ import { redirectToMain, saveRefreshToken } from 'pages/pageWrapper.helpers';
 import { FormField } from 'pages/shared/components/formField/formField.component';
 import formFieldStyles from 'pages/shared/components/formField/formField.module.scss';
 import { loginNavLink } from 'pages/shared/components/navLinks/navLinks.component';
+import { SectionTitle } from 'pages/shared/components/sectionTitle/sectionTitle.component';
+import sharedStyles from 'pages/shared/styles/common.module.scss';
 import formStyles from 'pages/shared/styles/form-elements.module.scss';
 import { apiService } from 'services/api.service';
 import { alertModal } from 'shared/alert/alert.component';
@@ -13,7 +15,6 @@ import {
   div,
   fieldset,
   form,
-  h2,
   input,
   label,
   option,
@@ -207,11 +208,14 @@ export class Signup extends BaseComponent {
     );
 
     this.appendChildren([
-      h2('Signup', formStyles.formHeader),
-      this.signupForm,
-      span(
-        { className: formStyles.formFooter, text: 'Don`t have an account? ' },
-        loginNavLink(formStyles.formFooterLink),
+      new SectionTitle('Create An Account'),
+      div(
+        { className: sharedStyles.container },
+        this.signupForm,
+        span(
+          { className: formStyles.formFooter, text: 'Don`t have an account? ' },
+          loginNavLink(formStyles.formFooterLink),
+        ),
       ),
     ]);
   }

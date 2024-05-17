@@ -1,0 +1,19 @@
+.sectionWrapper {
+  position: relative;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  margin-bottom: 40px;
+}
+
+.sectionImage {
+  width: 100%;
+  height: auto;
+}
+
+.sectionTitle {
+  position: absolute;
+  font-size: 1.8rem;
+}

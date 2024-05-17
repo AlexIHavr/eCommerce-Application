@@ -3,11 +3,13 @@ import { redirectToMain, saveRefreshToken } from 'pages/pageWrapper.helpers';
 import { FormField } from 'pages/shared/components/formField/formField.component';
 import formFieldStyles from 'pages/shared/components/formField/formField.module.scss';
 import { signupNavLink } from 'pages/shared/components/navLinks/navLinks.component';
+import { SectionTitle } from 'pages/shared/components/sectionTitle/sectionTitle.component';
+import sharedStyles from 'pages/shared/styles/common.module.scss';
 import formStyles from 'pages/shared/styles/form-elements.module.scss';
 import { apiService } from 'services/api.service';
 import { alertModal } from 'shared/alert/alert.component';
 import { BaseComponent } from 'shared/base/base.component';
-import { button, form, h2, span } from 'shared/tags/tags.component';
+import { button, div, form, span } from 'shared/tags/tags.component';
 import { clientBuildUtil } from 'utils/clientBuild.util';
 
 import { LOGIN_API_ERROR_TEXT, LOGIN_PROPS } from './login.consts';
@@ -54,11 +56,14 @@ export class Login extends BaseComponent {
     );
 
     this.appendChildren([
-      h2('Login', formStyles.formHeader),
-      this.loginForm,
-      span(
-        { className: formStyles.formFooter, text: 'Don`t have an account? ' },
-        signupNavLink(formStyles.formFooterLink),
+      new SectionTitle('Welcome'),
+      div(
+        { className: sharedStyles.container },
+        this.loginForm,
+        span(
+          { className: formStyles.formFooter, text: 'Don`t have an account? ' },
+          signupNavLink(formStyles.formFooterLink),
+        ),
       ),
     ]);
   }
