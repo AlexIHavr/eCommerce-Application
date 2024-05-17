@@ -2,6 +2,7 @@ import { Anchor, Div } from 'globalTypes/elements';
 import { PagesPaths } from 'pages/pageWrapper.consts';
 import { getNavLink, isLogined } from 'pages/pageWrapper.helpers';
 import { loginNavLink, signupNavLink } from 'pages/shared/components/navLinks/navLinks.component';
+import { apiService } from 'services/api.service';
 import { LocalStorageService } from 'services/localStorage.service';
 import { BaseComponent } from 'shared/base/base.component';
 import { div, icon } from 'shared/tags/tags.component';
@@ -31,7 +32,14 @@ export class Header extends BaseComponent {
     this.navLinksWrapper = div({ className: styles.navLinksWrapper });
 
     this.logoutNavLink = getNavLink('Logout', PagesPaths.LOGIN);
-    this.logoutNavLink.setProps({ onclick: () => LocalStorageService.removeData('refreshToken') });
+
+    this.logoutNavLink.setProps({
+      onclick: () => {
+        LocalStorageService.removeData('refreshToken');
+        this.updateNavLinks(PagesPaths.LOGIN);
+        apiService.logout();
+      },
+    });
 
     this.appendChildren([
       div({ className: styles.logo }, icon({}, '&#128241;')),
