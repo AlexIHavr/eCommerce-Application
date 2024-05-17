@@ -1,4 +1,4 @@
-import { Anchor, Div } from 'globalTypes/elements';
+import { Anchor, Div, Li, Ul } from 'globalTypes/elements';
 import { PagesPaths } from 'pages/pageWrapper.consts';
 import { getNavLink, isLogined } from 'pages/pageWrapper.helpers';
 import {
@@ -29,6 +29,10 @@ export class Header extends BaseComponent {
   private readonly navLinksEntries: [string, Anchor][];
 
   private readonly logoutNavLink: Anchor;
+
+  private readonly loginNavLinkWrapper: Li;
+
+  private readonly linkWrapper: Ul;
 
   constructor() {
     super({ tag: 'header', className: styles.header });
@@ -69,6 +73,7 @@ export class Header extends BaseComponent {
         LocalStorageService.removeData('refreshToken');
         this.updateNavLinks(PagesPaths.LOGIN);
         apiService.logout();
+        this.setLoginNavLink();
       },
     });
 
@@ -78,34 +83,47 @@ export class Header extends BaseComponent {
         div({ className: styles.headerInner }, this.homeLink, this.nav, this.sidePanel),
       ),
     ]);
-  }
 
-  public updateNavLinks(url: string): void {
-    this.nav.destroyChildren();
+    this.linkWrapper = ul({ className: styles.navList });
 
-    const linkWrapper = ul({ className: styles.navList });
+    this.loginNavLinkWrapper = li({});
 
-    linkWrapper.appendChildren([
-      ...this.navLinksEntries.map(([path, navLink]) => {
-        if (path === url) navLink.addClass(styles.active);
-        else navLink.removeClass(styles.active);
+    this.setLoginNavLink();
 
-        if (navLink === this.navLinks[PagesPaths.LOGIN] && isLogined()) {
-          return li({}, this.logoutNavLink);
+    this.linkWrapper.appendChildren(
+      this.navLinksEntries.map(([, navLink]) => {
+        if (navLink === this.navLinks[PagesPaths.LOGIN]) {
+          return this.loginNavLinkWrapper;
         }
         return li({}, navLink);
       }),
-    ]);
+    );
 
-    this.nav.append(linkWrapper);
+    this.nav.append(this.linkWrapper);
   }
 
-  public closeBurger(e?: Event): void {
-    if (
-      this.nav.containsClass(styles.mobileMenu) &&
-      !e?.composedPath().includes(this.burger.getNode())
-    ) {
-      if (!e?.composedPath().includes(this.nav.getNode())) this.nav.removeClass(styles.mobileMenu);
+  public updateNavLinks(url: string): void {
+    this.navLinksEntries.forEach(([path, navLink]) => {
+      if (path === url) navLink.addClass(styles.active);
+      else if (navLink.containsClass(styles.active)) {
+        navLink.removeClass(styles.active);
+        this.closeMobileMenu();
+      }
+
+      if (navLink === this.navLinks[PagesPaths.LOGIN]) this.setLoginNavLink();
+    });
+  }
+
+  public closeMobileMenu(): void {
+    if (this.nav.containsClass(styles.mobileMenu)) {
+      this.nav.removeClass(styles.mobileMenu);
     }
+  }
+
+  private setLoginNavLink(): void {
+    this.loginNavLinkWrapper.destroyChildren();
+    this.loginNavLinkWrapper.append(
+      isLogined() ? this.logoutNavLink : this.navLinks[PagesPaths.LOGIN]!,
+    );
   }
 }
