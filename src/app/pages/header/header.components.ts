@@ -32,6 +32,7 @@ export class Header extends BaseComponent {
     this.navLinksWrapper = div({ className: styles.navLinksWrapper });
 
     this.logoutNavLink = getNavLink('Logout', PagesPaths.LOGIN);
+
     this.logoutNavLink.setProps({
       onclick: () => {
         LocalStorageService.removeData('refreshToken');

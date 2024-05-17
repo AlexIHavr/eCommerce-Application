@@ -20,29 +20,24 @@ export class PageWrapper extends BaseComponent {
 
     this.pageContent = div({ className: styles.pageContent });
 
-    const [header, main, login, signup, notFound] = [
-      new Header(),
-      new Main(),
-      new Login(),
-      new Signup(),
-      new NotFound(),
-    ];
+    const [header, main, notFound] = [new Header(), new Main(), new NotFound()];
 
     this.appendChildren([header, this.pageContent, new Footer()]);
 
     routingService.setHooks({
-      after(match) {
+      before(done, match) {
         header.updateNavLinks(match.url);
+        done();
       },
     });
 
     routingService.setRouting({
       [PagesPaths.MAIN]: () => this.goToPage(main),
       [PagesPaths.LOGIN]: () => {
-        this.goToPage(login);
+        this.goToPage(new Login());
         loginRedirect();
       },
-      [PagesPaths.SIGNUP]: () => this.goToPage(signup),
+      [PagesPaths.SIGNUP]: () => this.goToPage(new Signup()),
     });
 
     routingService.setNotFound(() => this.goToPage(notFound));
