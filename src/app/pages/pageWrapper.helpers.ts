@@ -1,6 +1,7 @@
 import { Anchor } from 'globalTypes/elements';
 import { LocalStorageService } from 'services/localStorage.service';
 import { routingService } from 'services/routing.service';
+import { BaseComponent } from 'shared/base/base.component';
 import { a } from 'shared/tags/tags.component';
 import { tokenCache } from 'utils/tokenCache.util';
 
@@ -16,8 +17,13 @@ export function saveRefreshToken(): void {
   LocalStorageService.saveData('refreshToken', tokenCache.cache.refreshToken);
 }
 
-export function getNavLink(title: string, path: PagesPaths, className?: string): Anchor {
-  const homeLink = a({ text: title, href: path, className: className || '' });
+export function getNavLink(
+  title: string,
+  path: PagesPaths,
+  className: string,
+  ...children: BaseComponent[]
+): Anchor {
+  const homeLink = a({ text: title, href: path, className }, ...children);
   homeLink.setAttribute('data-navigo', '');
 
   return homeLink;

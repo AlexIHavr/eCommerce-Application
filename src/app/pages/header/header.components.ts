@@ -1,18 +1,30 @@
 import { Anchor, Div } from 'globalTypes/elements';
 import { PagesPaths } from 'pages/pageWrapper.consts';
 import { getNavLink, isLogined } from 'pages/pageWrapper.helpers';
-import { loginNavLink, signupNavLink } from 'pages/shared/components/navLinks/navLinks.component';
+import {
+  aboutNavLink,
+  catalogNavLink,
+  loginNavLink,
+  signupNavLink,
+} from 'pages/shared/components/navLinks/navLinks.component';
+import sharedStyles from 'pages/shared/styles/common.module.scss';
 import { apiService } from 'services/api.service';
 import { LocalStorageService } from 'services/localStorage.service';
 import { BaseComponent } from 'shared/base/base.component';
-import { div, icon } from 'shared/tags/tags.component';
+import { div, img, li, span, ul } from 'shared/tags/tags.component';
 
 import styles from './header.module.scss';
 
 export class Header extends BaseComponent {
-  private readonly navLinks: Record<PagesPaths, Anchor>;
+  private readonly homeLink: Anchor;
 
-  private readonly navLinksWrapper: Div;
+  private readonly nav: BaseComponent;
+
+  private readonly sidePanel: Div;
+
+  private readonly burger: Div;
+
+  private readonly navLinks: Partial<Record<PagesPaths, Anchor>>;
 
   private readonly navLinksEntries: [string, Anchor][];
 
@@ -21,17 +33,37 @@ export class Header extends BaseComponent {
   constructor() {
     super({ tag: 'header', className: styles.header });
 
-    this.navLinks = {
-      [PagesPaths.MAIN]: getNavLink('Home', PagesPaths.MAIN),
-      [PagesPaths.LOGIN]: loginNavLink(),
-      [PagesPaths.SIGNUP]: signupNavLink(),
-    };
+    this.homeLink = getNavLink(
+      '',
+      PagesPaths.MAIN,
+      styles.titleWrapper,
+      img({ src: '/logo.png', alt: 'Woodstore logo' }),
+      span({ className: styles.title, text: 'Woodstore' }),
+    );
 
+    this.navLinks = {
+      [PagesPaths.CATALOG]: catalogNavLink(styles.listItem),
+      [PagesPaths.ABOUT]: aboutNavLink(styles.listItem),
+      [PagesPaths.SIGNUP]: signupNavLink(styles.listItem),
+      [PagesPaths.LOGIN]: loginNavLink(styles.listItem),
+    };
     this.navLinksEntries = Object.entries(this.navLinks);
 
-    this.navLinksWrapper = div({ className: styles.navLinksWrapper });
+    this.nav = new BaseComponent({ tag: 'nav', className: styles.nav });
+    this.burger = div(
+      {
+        className: styles.burger,
+        onclick: () => {
+          this.nav.toggleClass(styles.mobileMenu);
+        },
+      },
+      div({ className: styles.burgerElem }),
+      div({ className: styles.burgerElem }),
+      div({ className: styles.burgerElem }),
+    );
+    this.sidePanel = div({ className: styles.sidePanel }, this.burger);
 
-    this.logoutNavLink = getNavLink('Logout', PagesPaths.LOGIN);
+    this.logoutNavLink = getNavLink('Logout', PagesPaths.LOGIN, styles.listItem);
     this.logoutNavLink.setProps({
       onclick: () => {
         LocalStorageService.removeData('refreshToken');
@@ -41,24 +73,39 @@ export class Header extends BaseComponent {
     });
 
     this.appendChildren([
-      div({ className: styles.logo }, icon({}, '&#128241;')),
-      this.navLinksWrapper,
-      div({ className: styles.navIcons }, icon({}, '&#128187;'), icon({}, '&#128722;')),
+      div(
+        { className: sharedStyles.container },
+        div({ className: styles.headerInner }, this.homeLink, this.nav, this.sidePanel),
+      ),
     ]);
   }
 
   public updateNavLinks(url: string): void {
-    this.navLinksWrapper.destroyChildren();
+    this.nav.destroyChildren();
 
-    this.navLinksEntries.forEach(([path, navLink]) => {
-      if (navLink === this.navLinks[PagesPaths.LOGIN]) {
-        this.navLinksWrapper.append(isLogined() ? this.logoutNavLink : navLink);
-      } else {
-        this.navLinksWrapper.append(navLink);
-      }
+    const linkWrapper = ul({ className: styles.navList });
 
-      if (path === url) navLink.addClass(styles.active);
-      else navLink.removeClass(styles.active);
-    });
+    linkWrapper.appendChildren([
+      ...this.navLinksEntries.map(([path, navLink]) => {
+        if (path === url) navLink.addClass(styles.active);
+        else navLink.removeClass(styles.active);
+
+        if (navLink === this.navLinks[PagesPaths.LOGIN] && isLogined()) {
+          return li({}, this.logoutNavLink);
+        }
+        return li({}, navLink);
+      }),
+    ]);
+
+    this.nav.append(linkWrapper);
+  }
+
+  public closeBurger(e?: Event): void {
+    if (
+      this.nav.containsClass(styles.mobileMenu) &&
+      !e?.composedPath().includes(this.burger.getNode())
+    ) {
+      if (!e?.composedPath().includes(this.nav.getNode())) this.nav.removeClass(styles.mobileMenu);
+    }
   }
 }
