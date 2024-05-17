@@ -11,6 +11,10 @@
 .sectionImage {
   width: 100%;
   height: auto;
+  min-height: 140px;
+  max-height: 328px;
+
+  object-fit: cover;
 }
 
 .sectionTitle {
