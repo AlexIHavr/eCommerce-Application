@@ -83,7 +83,7 @@ export class Login extends BaseComponent {
             .then(() => {
               saveRefreshToken();
               redirectToMain();
-              alertModal.showAlert('success', 'Login was completed successfully');
+              alertModal.showAlert('success', 'Login successfully');
             })
             .catch(() => {
               this.passwordField.showApiError(LOGIN_API_ERROR_TEXT.password);

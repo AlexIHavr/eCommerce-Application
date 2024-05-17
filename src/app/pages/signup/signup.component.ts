@@ -246,7 +246,7 @@ export class Signup extends BaseComponent {
         .then(() => {
           saveRefreshToken();
           redirectToMain();
-          alertModal.showAlert('success', 'Registration was completed successfully');
+          alertModal.showAlert('success', 'Signed up successfully');
         })
         .catch((res) => {
           const { code, message, detailedErrorMessage } = res.body.errors[0];
