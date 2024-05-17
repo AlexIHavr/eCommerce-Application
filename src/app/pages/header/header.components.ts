@@ -107,8 +107,8 @@ export class Header extends BaseComponent {
       if (path === url) navLink.addClass(styles.active);
       else if (navLink.containsClass(styles.active)) {
         navLink.removeClass(styles.active);
-        this.closeMobileMenu();
       }
+      this.closeMobileMenu();
 
       if (navLink === this.navLinks[PagesPaths.LOGIN]) this.setLoginNavLink();
     });
