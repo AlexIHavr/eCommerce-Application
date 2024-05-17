@@ -1,4 +1,5 @@
 .header {
+  position: relative;
   min-height: 80px;
   font-size: 1.5rem;
   font-weight: 600;
@@ -72,14 +73,19 @@
 }
 
 .sidePanel {
+  z-index: 120;
   display: flex;
+
+  .nav.mobileMenu ~ & {
+    position: fixed;
+    right: 20px;
+  }
 }
 
 .burger {
   cursor: pointer;
 
   position: relative;
-  z-index: 120;
 
   display: none;
   flex-direction: column;
