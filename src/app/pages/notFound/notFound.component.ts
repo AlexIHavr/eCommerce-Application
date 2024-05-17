@@ -1,10 +1,11 @@
+import { SectionTitle } from 'pages/shared/components/sectionTitle/sectionTitle.component';
 import { BaseComponent } from 'shared/base/base.component';
-import { h2 } from 'shared/tags/tags.component';
 
 import styles from './notFound.module.scss';
 
 export class NotFound extends BaseComponent {
   constructor() {
-    super({ className: styles.notFound }, h2('Page is not found'));
+    super({ className: styles.notFound });
+    this.append(new SectionTitle('Page not found'));
   }
 }
