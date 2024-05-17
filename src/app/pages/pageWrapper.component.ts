@@ -30,7 +30,7 @@ export class PageWrapper extends BaseComponent {
 
     this.appendChildren([header, this.pageContent, new Footer()]);
 
-    this.addListener('click', () => header.closeMobileMenu(), { capture: true });
+    this.addListener('click', (e) => header.closeMobileMenu(e), { capture: true });
 
     routingService.setHooks({
       after(match) {

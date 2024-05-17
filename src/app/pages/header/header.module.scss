@@ -60,11 +60,12 @@
   transition: background-color 0.3s ease-in;
 
   &.active {
+    cursor: default;
     text-decoration: underline;
   }
 
   @media (hover: hover) and (pointer: fine) {
-    &:hover {
+    &:hover:not(.active) {
       background-color: var(--secondary-color);
     }
   }

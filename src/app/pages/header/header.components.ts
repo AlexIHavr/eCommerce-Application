@@ -114,9 +114,12 @@ export class Header extends BaseComponent {
     });
   }
 
-  public closeMobileMenu(): void {
-    if (this.nav.containsClass(styles.mobileMenu)) {
-      this.nav.removeClass(styles.mobileMenu);
+  public closeMobileMenu(e?: Event): void {
+    if (
+      this.nav.containsClass(styles.mobileMenu) &&
+      !e?.composedPath().includes(this.burger.getNode())
+    ) {
+      if (!e?.composedPath().includes(this.nav.getNode())) this.nav.removeClass(styles.mobileMenu);
     }
   }
 
