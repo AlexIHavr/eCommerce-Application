@@ -16,7 +16,7 @@ class Alert extends BaseComponent {
   private readonly infoText: Span;
 
   constructor() {
-    super({ className: `${styles.alert} ${styles.hide}` });
+    super({ className: styles.alert });
     this.HIDE_DELAY = 3000;
     this.wrapper = div({ className: styles.wrapper });
     this.info = div({ className: styles.info });
@@ -51,15 +51,11 @@ class Alert extends BaseComponent {
 
     this.infoText.setText(text);
 
-    this.removeClass(styles.hide);
+    this.addClass(styles.show);
 
     setTimeout(() => {
-      this.hideAlert();
+      this.removeClass(styles.show);
     }, this.HIDE_DELAY);
-  }
-
-  private hideAlert(): void {
-    this.addClass(styles.hide);
   }
 }
 

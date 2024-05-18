@@ -1,7 +1,8 @@
 .loginPage {
+  align-self: flex-start;
   width: 100%;
-  padding: 40px 20px;
-  font-size: 36px;
+  padding-bottom: 40px;
+  font-size: 1.8rem;
 }
 
 .loginFormWrapper {
@@ -12,7 +13,6 @@
 
 @media (width <= 600px) {
   .loginPage {
-    padding: 20px 0;
-    font-size: 30px;
+    font-size: 1.5rem;
   }
 }

@@ -1,0 +1,29 @@
+.sectionWrapper {
+  position: relative;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  margin-bottom: 40px;
+}
+
+.sectionImage {
+  width: 100%;
+  height: auto;
+  min-height: 140px;
+  max-height: 328px;
+
+  object-fit: cover;
+}
+
+.sectionTitle {
+  position: absolute;
+  font-size: 1.8rem;
+}
+
+@media (width <= 600px) {
+  .sectionTitle {
+    font-size: 1.4rem;
+  }
+}

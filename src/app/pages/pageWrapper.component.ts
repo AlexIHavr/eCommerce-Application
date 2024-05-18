@@ -6,7 +6,6 @@ import { NotFound } from 'pages/notFound/notFound.component';
 import { Signup } from 'pages/signup/signup.component';
 import { routingService } from 'services/routing.service';
 import { BaseComponent } from 'shared/base/base.component';
-import { div } from 'shared/tags/tags.component';
 
 import { PagesPaths } from './pageWrapper.consts';
 import { loginRedirect } from './pageWrapper.helpers';
@@ -18,11 +17,13 @@ export class PageWrapper extends BaseComponent {
   constructor() {
     super({ className: styles.pageWrapper });
 
-    this.pageContent = div({ className: styles.pageContent });
+    this.pageContent = new BaseComponent({ tag: 'main', className: styles.pageContent });
 
     const [header, main, notFound] = [new Header(), new Main(), new NotFound()];
 
     this.appendChildren([header, this.pageContent, new Footer()]);
+
+    this.addListener('click', (e) => header.closeMobileMenu(e), { capture: true });
 
     routingService.setHooks({
       before(done, match) {

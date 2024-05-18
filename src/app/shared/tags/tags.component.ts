@@ -7,10 +7,13 @@ import {
   Fieldset,
   Form,
   Heading,
+  Image,
   Input,
+  Li,
   Option,
   Select,
   Span,
+  Ul,
 } from 'globalTypes/elements';
 import { BaseComponent } from 'shared/base/base.component';
 import { Props } from 'shared/base/base.types';
@@ -62,3 +65,12 @@ export const select = (props: TagProps<HTMLSelectElement>, ...children: BaseComp
 
 export const option = (props: TagProps<HTMLOptionElement>): Option =>
   new BaseComponent({ ...props, tag: 'option' });
+
+export const img = (props: TagProps<HTMLImageElement>): Image =>
+  new BaseComponent({ ...props, tag: 'img' });
+
+export const ul = (props: TagProps<HTMLUListElement>, ...children: BaseComponent[]): Ul =>
+  new BaseComponent({ ...props, tag: 'ul' }, ...children);
+
+export const li = (props: TagProps<HTMLLIElement>, ...children: BaseComponent[]): Li =>
+  new BaseComponent({ ...props, tag: 'li' }, ...children);
