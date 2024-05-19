@@ -1,10 +1,14 @@
+import sharedStyles from 'pages/shared/styles/common.module.scss';
 import { BaseComponent } from 'shared/base/base.component';
-import { h1 } from 'shared/tags/tags.component';
+import { div, h1 } from 'shared/tags/tags.component';
 
 import styles from './main.module.scss';
 
 export class Main extends BaseComponent {
   constructor() {
-    super({ tag: 'main', className: styles.main }, h1('Main'));
+    super(
+      { className: sharedStyles.container },
+      div({ className: styles.main }, h1('Welcome to The Furniture Store')),
+    );
   }
 }
