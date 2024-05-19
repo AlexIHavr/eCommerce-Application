@@ -1,3 +1,5 @@
+import { About } from 'pages/about/about.component';
+import { Catalog } from 'pages/catalog/catalog.component';
 import { Footer } from 'pages/footer/footer.component';
 import { Header } from 'pages/header/header.components';
 import { Login } from 'pages/login/login.component';
@@ -39,6 +41,8 @@ export class PageWrapper extends BaseComponent {
         loginRedirect();
       },
       [PagesPaths.SIGNUP]: () => this.goToPage(new Signup()),
+      [PagesPaths.CATALOG]: () => this.goToPage(new Catalog()),
+      [PagesPaths.ABOUT]: () => this.goToPage(new About()),
     });
 
     routingService.setNotFound(() => this.goToPage(notFound));
