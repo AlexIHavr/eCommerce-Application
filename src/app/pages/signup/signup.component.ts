@@ -10,6 +10,7 @@ import formStyles from 'pages/shared/styles/form-elements.module.scss';
 import { apiService } from 'services/api.service';
 import { alertModal } from 'shared/alert/alert.component';
 import { BaseComponent } from 'shared/base/base.component';
+import { loader } from 'shared/loader/loader.component';
 import {
   button,
   div,
@@ -235,6 +236,7 @@ export class Signup extends BaseComponent {
       this.shipCityField.isValid() &&
       this.isPostalCodeValid('shipping')
     ) {
+      loader.open();
       apiService
         .signupCustomer(this.getNewCustomerFromForm())
         .then(() =>
@@ -274,6 +276,9 @@ export class Signup extends BaseComponent {
             default:
               this.showCommonError(SIGNUP_API_ERROR_TEXT.serverInternalError);
           }
+        })
+        .finally(() => {
+          loader.close();
         });
     } else {
       this.signupForm.addClass(formFieldStyles.error);

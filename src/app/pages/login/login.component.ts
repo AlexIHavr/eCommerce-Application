@@ -9,6 +9,7 @@ import formStyles from 'pages/shared/styles/form-elements.module.scss';
 import { apiService } from 'services/api.service';
 import { alertModal } from 'shared/alert/alert.component';
 import { BaseComponent } from 'shared/base/base.component';
+import { loader } from 'shared/loader/loader.component';
 import { button, div, form, span } from 'shared/tags/tags.component';
 import { clientBuildUtil } from 'utils/clientBuild.util';
 
@@ -71,6 +72,7 @@ export class Login extends BaseComponent {
   private submitHandler(e: Event): void {
     e.preventDefault();
     if (this.emailField.isValid() && this.passwordField.isValid()) {
+      loader.open();
       apiService.getCustomerByEmail(this.emailField.value).then(({ body }) => {
         if (body.results.length === 0) {
           this.emailField.showApiError(LOGIN_API_ERROR_TEXT.email);
@@ -88,11 +90,15 @@ export class Login extends BaseComponent {
             .catch(() => {
               this.passwordField.showApiError(LOGIN_API_ERROR_TEXT.password);
               apiService.apiRoot = clientBuildUtil.getApiRootByFlow('anonymous');
+            })
+            .finally(() => {
+              loader.close();
             });
         }
       });
     } else {
       this.loginForm.addClass(formFieldStyles.error);
+      loader.close();
     }
   }
 }
