@@ -1,13 +1,19 @@
 .main {
   display: flex;
-  justify-content: center;
 
   width: 100%;
   height: 100%;
-  padding-top: 40px;
+  padding-top: 20px;
 
   text-align: center;
 
   background-image: url('./images/mainImg.jpg');
+  background-position: center top;
   background-size: cover;
+
+  @media (width <= 600px) {
+    .mainTitle {
+      font-size: 1.6rem;
+    }
+  }
 }
