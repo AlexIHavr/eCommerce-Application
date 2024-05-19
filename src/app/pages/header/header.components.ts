@@ -42,7 +42,7 @@ export class Header extends BaseComponent {
       PagesPaths.MAIN,
       styles.titleWrapper,
       img({ src: '/logo.png', alt: 'Woodstore logo' }),
-      span({ className: styles.title, text: 'Woodstore' }),
+      span({ className: styles.title, text: 'Furniture' }),
     );
 
     this.navLinks = {

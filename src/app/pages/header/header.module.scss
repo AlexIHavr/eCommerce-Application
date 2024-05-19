@@ -37,6 +37,7 @@
   align-items: center;
 
   height: 100%;
+  margin-top: 5px;
 
   text-align: center;
 
@@ -51,23 +52,32 @@
 
 .listItem {
   display: inline-block;
-
   padding: 10px;
 
-  line-height: 30px;
+  &::after {
+    content: '';
 
-  border-radius: 50%;
+    display: block;
 
-  transition: background-color 0.3s ease-in;
+    width: 0%;
+    height: 3px;
+
+    background-color: var(--base-text-color);
+
+    transition: width 0.4s;
+  }
 
   &.active {
     cursor: default;
-    text-decoration: underline;
+
+    &::after {
+      width: 100%;
+    }
   }
 
   @media (hover: hover) and (pointer: fine) {
-    &:hover:not(.active) {
-      background-color: var(--secondary-color);
+    &:hover::after {
+      width: 100%;
     }
   }
 }
@@ -157,7 +167,6 @@
 
   .navList {
     flex-direction: column;
-    width: 100%;
 
     li:nth-last-child(2) {
       margin-top: 20px;
