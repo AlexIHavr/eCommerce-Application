@@ -4,23 +4,27 @@
   inset: 0;
 
   overflow: hidden;
-  display: flex;
+  display: none;
   align-items: center;
   justify-content: center;
 
   .loaderIcon {
-    --loader-size: 60px;
+    $loader-size: 60px;
 
     z-index: 100;
 
-    width: var(--loader-size);
-    height: var(--loader-size);
+    width: $loader-size;
+    height: $loader-size;
 
     border: 5px solid var(--base-text-color);
     border-right-color: transparent;
     border-radius: 50%;
 
     animation: loader-rotate 1.2s linear infinite;
+  }
+
+  &.show {
+    display: flex;
   }
 }
 

@@ -9,16 +9,15 @@ import {
   Heading,
   Image,
   Input,
-  Li,
+  LI,
   Option,
   Select,
   Span,
-  Ul,
+  UL,
 } from 'globalTypes/elements';
 import { BaseComponent } from 'shared/base/base.component';
-import { Props } from 'shared/base/base.types';
 
-type TagProps<T extends HTMLElement = HTMLElement> = Omit<Props<T>, 'tag'>;
+import { TagProps } from './tags.types';
 
 export const h1 = (text: string, className: string = ''): Heading =>
   new BaseComponent({ tag: 'h1', className, text });
@@ -39,9 +38,6 @@ export const label = (
 
 export const input = (props: TagProps<HTMLInputElement>): Input =>
   new BaseComponent({ ...props, tag: 'input' });
-
-export const icon = (props: TagProps, code: string): BaseComponent =>
-  new BaseComponent({ ...props, tag: 'i', innerHTML: code });
 
 export const div = (props: TagProps<HTMLDivElement>, ...children: BaseComponent[]): Div =>
   new BaseComponent(props, ...children);
@@ -69,8 +65,8 @@ export const option = (props: TagProps<HTMLOptionElement>): Option =>
 export const img = (props: TagProps<HTMLImageElement>): Image =>
   new BaseComponent({ ...props, tag: 'img' });
 
-export const ul = (props: TagProps<HTMLUListElement>, ...children: BaseComponent[]): Ul =>
+export const ul = (props: TagProps<HTMLUListElement>, ...children: BaseComponent[]): UL =>
   new BaseComponent({ ...props, tag: 'ul' }, ...children);
 
-export const li = (props: TagProps<HTMLLIElement>, ...children: BaseComponent[]): Li =>
+export const li = (props: TagProps<HTMLLIElement>, ...children: BaseComponent[]): LI =>
   new BaseComponent({ ...props, tag: 'li' }, ...children);

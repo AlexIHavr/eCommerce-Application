@@ -14,17 +14,19 @@ class Loader extends BaseComponent {
   public open(): void {
     if (this.isOpened) return;
 
-    document.body.append(this.getNode());
-    this.isOpened = true;
+    this.addClass(styles.show);
 
-    document.body?.addEventListener('keydown', onErrorEventHandler);
+    document.body.addEventListener('keydown', onErrorEventHandler);
+
+    this.isOpened = true;
   }
 
   public close(): void {
-    this.destroy();
-    this.isOpened = false;
+    this.removeClass(styles.show);
 
-    document.body?.removeEventListener('keydown', onErrorEventHandler);
+    document.body.removeEventListener('keydown', onErrorEventHandler);
+
+    this.isOpened = false;
   }
 }
 

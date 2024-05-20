@@ -28,38 +28,32 @@ describe('check login regex', () => {
 
 describe('check signup regex', () => {
   test('check first name, last name, cities', () => {
-    const firstNamePattern = SIGNUP_PROPS.firstname.pattern ?? '';
-    const lastNamePattern = SIGNUP_PROPS.lastname.pattern ?? '';
-    const bilCityPattern = SIGNUP_PROPS.bilCity.pattern ?? '';
-    const shipCityPattern = SIGNUP_PROPS.shipCity.pattern ?? '';
+    const firstNamePattern = SIGNUP_PROPS.firstName.pattern ?? '';
+    const lastNamePattern = SIGNUP_PROPS.lastName.pattern ?? '';
+    const addressCityPattern = SIGNUP_PROPS.addressCity.pattern ?? '';
 
     ['aAA1', 'a_A', '  '].forEach((value) => {
       expect(value.match(firstNamePattern)).toBeNull();
       expect(value.match(lastNamePattern)).toBeNull();
-      expect(value.match(bilCityPattern)).toBeNull();
-      expect(value.match(shipCityPattern)).toBeNull();
+      expect(value.match(addressCityPattern)).toBeNull();
     });
 
     ['a', 'a a'].forEach((value) => {
       expect(value.match(firstNamePattern)).not.toBeNull();
       expect(value.match(lastNamePattern)).not.toBeNull();
-      expect(value.match(bilCityPattern)).not.toBeNull();
-      expect(value.match(shipCityPattern)).not.toBeNull();
+      expect(value.match(addressCityPattern)).not.toBeNull();
     });
   });
 
   test('check streets', () => {
-    const bilStreetPattern = SIGNUP_PROPS.bilStreet.pattern ?? '';
-    const shipStreetPattern = SIGNUP_PROPS.shipStreet.pattern ?? '';
+    const addressStreetPattern = SIGNUP_PROPS.addressStreet.pattern ?? '';
 
     ['A', '1', '_'].forEach((value) => {
-      expect(value.match(bilStreetPattern)).not.toBeNull();
-      expect(value.match(shipStreetPattern)).not.toBeNull();
+      expect(value.match(addressStreetPattern)).not.toBeNull();
     });
 
     ['  ', ''].forEach((value) => {
-      expect(value.match(bilStreetPattern)).toBeNull();
-      expect(value.match(shipStreetPattern)).toBeNull();
+      expect(value.match(addressStreetPattern)).toBeNull();
     });
   });
 });

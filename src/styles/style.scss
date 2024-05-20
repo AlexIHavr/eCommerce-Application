@@ -1,7 +1,7 @@
 :root {
   /* Common */
   --base-text-color: black;
-  --secondary-color: #c0c0c0;
+  --secondary-color: silver;
 
   /* Login-Registration forms */
   --input-border-color: gray;
@@ -37,7 +37,6 @@ html {
 
 body {
   height: 100%;
-  font-weight: 400;
   font-style: normal;
   color: var(--base-text-color);
 }

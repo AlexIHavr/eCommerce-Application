@@ -16,20 +16,29 @@ import styles from './pageWrapper.module.scss';
 export class PageWrapper extends BaseComponent {
   private readonly pageContent;
 
+  private readonly header: Header;
+
   constructor() {
     super({ className: styles.pageWrapper });
 
     this.pageContent = new BaseComponent({ tag: 'main', className: styles.pageContent });
 
-    const [header, main, notFound] = [new Header(), new Main(), new NotFound()];
+    this.header = new Header();
 
-    this.appendChildren([header, this.pageContent, new Footer()]);
+    this.appendChildren([this.header, this.pageContent, new Footer()]);
 
-    this.addListener('click', (e) => header.closeMobileMenu(e));
+    this.addListener('click', (event) => this.header.closeMobileMenu(event));
+
+    this.initRoutingService();
+  }
+
+  private initRoutingService(): void {
+    const main = new Main();
+    const notFound = new NotFound();
 
     routingService.setHooks({
-      before(done, match) {
-        header.updateNavLinks(match.url);
+      before: (done, match) => {
+        this.header.updateNavLinks(match.url);
         done();
       },
     });
@@ -37,16 +46,18 @@ export class PageWrapper extends BaseComponent {
     routingService.setRouting({
       [PagesPaths.MAIN]: () => this.goToPage(main),
       [PagesPaths.HOME]: () => this.goToPage(main),
-      [PagesPaths.LOGIN]: () => {
-        this.goToPage(new Login());
-        loginRedirect();
-      },
+      [PagesPaths.LOGIN]: () => this.goToLogin(),
       [PagesPaths.SIGNUP]: () => this.goToPage(new Signup()),
       [PagesPaths.CATALOG]: () => this.goToPage(new Catalog()),
       [PagesPaths.ABOUT]: () => this.goToPage(new About()),
     });
 
     routingService.setNotFound(() => this.goToPage(notFound));
+  }
+
+  private goToLogin(): void {
+    this.goToPage(new Login());
+    loginRedirect();
   }
 
   private goToPage(page: BaseComponent): void {

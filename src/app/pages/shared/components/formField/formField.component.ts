@@ -3,27 +3,21 @@ import { BaseComponent } from 'shared/base/base.component';
 import { div, input, span } from 'shared/tags/tags.component';
 
 import styles from './formField.module.scss';
-import { LoginFieldProps } from './formField.types';
+import { FormFieldProps } from './formField.types';
 
 export class FormField extends BaseComponent {
   private readonly input: Input;
 
   private readonly errorText: Span;
 
-  private passwordButton: Div | null;
+  private passwordButton?: Div;
 
-  private readonly pattern: string;
-
-  private readonly errorTextInitValue: string;
-
-  constructor(props: LoginFieldProps) {
+  constructor(private readonly props: FormFieldProps) {
     super({ tag: 'label', className: styles.formLabel, text: props.labelName });
 
-    this.pattern = props.pattern || '';
-    this.errorTextInitValue = props.errorText || '';
     this.input = input({ ...props, className: styles.formInput });
     this.errorText = span({ className: styles.formErrorText, text: props.errorText });
-    this.passwordButton = null;
+
     this.appendChildren([this.input, this.errorText]);
 
     if (props.type === 'password') this.addPasswordButton();
@@ -38,7 +32,7 @@ export class FormField extends BaseComponent {
   }
 
   public isValid(): boolean {
-    return Boolean(this.value.match(this.pattern));
+    return Boolean(this.value.match(this.props.pattern || ''));
   }
 
   public setErrorText(text: string): void {
@@ -57,7 +51,7 @@ export class FormField extends BaseComponent {
       'input',
       () => {
         this.removeClass(styles.apiError);
-        this.setErrorText(this.errorTextInitValue);
+        this.setErrorText(this.props.errorText || '');
       },
       { once: true },
     );
@@ -68,13 +62,15 @@ export class FormField extends BaseComponent {
       className: styles.btnPassVis,
       onclick: () => this.togglePasswordVisibility(),
     });
+
     this.append(this.passwordButton);
   }
 
   private togglePasswordVisibility(): void {
     this.passwordButton?.toggleClass(styles.open);
-    const currentType = this.input.getAttribute('type');
-    const newType = currentType === 'password' ? 'text' : 'password';
+
+    const newType = this.input.getAttribute('type') === 'password' ? 'text' : 'password';
+
     this.input.setAttribute('type', newType);
   }
 }

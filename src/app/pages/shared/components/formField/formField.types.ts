@@ -1,4 +1,4 @@
-export type LoginFieldProps = {
+export type FormFieldProps = {
   name: string;
   type: string;
   labelName: string;

@@ -1,18 +1,18 @@
+@import '/src/styles/global';
+
 .loginPage {
   align-self: flex-start;
   width: 100%;
   padding-bottom: 40px;
   font-size: 1.8rem;
-}
 
-.loginFormWrapper {
-  width: 100%;
-  max-width: 400px;
-  margin: 0 auto;
-}
+  .loginFormWrapper {
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto;
+  }
 
-@media (width <= 600px) {
-  .loginPage {
+  @media (width <= $medium-width) {
     font-size: 1.5rem;
   }
 }
