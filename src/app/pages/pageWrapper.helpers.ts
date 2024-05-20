@@ -8,7 +8,7 @@ import { tokenCache } from 'utils/tokenCache.util';
 import { PagesPaths } from './pageWrapper.consts';
 
 export function redirectToMain(): void {
-  routingService.navigate(PagesPaths.MAIN);
+  routingService.navigate(PagesPaths.HOME);
 }
 
 export function saveRefreshToken(): void {

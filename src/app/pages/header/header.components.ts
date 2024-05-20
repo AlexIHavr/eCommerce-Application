@@ -39,7 +39,7 @@ export class Header extends BaseComponent {
 
     this.homeLink = getNavLink(
       '',
-      PagesPaths.MAIN,
+      PagesPaths.HOME,
       styles.titleWrapper,
       div({ className: styles.logo }),
       span({ className: styles.title, text: 'Furniture' }),

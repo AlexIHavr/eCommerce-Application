@@ -14,7 +14,7 @@ export class NotFound extends BaseComponent {
       new SectionTitle('Page not found'),
       div(
         { className: styles.mainLink },
-        getNavLink('Go to Main', PagesPaths.MAIN, sharedStyles.formFooterLink),
+        getNavLink('Go to Main', PagesPaths.HOME, sharedStyles.formFooterLink),
       ),
     );
   }
