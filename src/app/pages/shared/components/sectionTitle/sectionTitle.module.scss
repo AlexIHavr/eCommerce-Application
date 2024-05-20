@@ -1,3 +1,5 @@
+@import '/src/styles/global';
+
 .sectionWrapper {
   position: relative;
 
@@ -6,24 +8,22 @@
   justify-content: center;
 
   margin-bottom: 40px;
-}
 
-.sectionImage {
-  width: 100%;
-  height: auto;
-  min-height: 140px;
-  max-height: 250px;
+  .sectionImage {
+    width: 100%;
+    height: auto;
+    min-height: 140px;
+    max-height: 250px;
 
-  object-fit: cover;
-}
+    object-fit: cover;
+  }
 
-.sectionTitle {
-  position: absolute;
-  font-size: 1.8rem;
-}
-
-@media (width <= 600px) {
   .sectionTitle {
-    font-size: 1.4rem;
+    position: absolute;
+    font-size: 1.8rem;
+
+    @media (width <= $medium-width) {
+      font-size: 1.4rem;
+    }
   }
 }

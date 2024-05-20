@@ -1,61 +1,35 @@
-import { Div, Span } from 'globalTypes/elements';
+import { Span } from 'globalTypes/elements';
 import { BaseComponent } from 'shared/base/base.component';
 import { div, span } from 'shared/tags/tags.component';
+import { capitalizeFirstLetter } from 'utils/strings.util';
 
 import styles from './alert.module.scss';
 
 class Alert extends BaseComponent {
-  private readonly HIDE_DELAY: number;
-
-  private readonly wrapper: Div;
-
-  private readonly info: Div;
-
   private readonly infoTitle: Span;
 
   private readonly infoText: Span;
 
   constructor() {
-    super({ className: styles.alert });
-    this.HIDE_DELAY = 3000;
-    this.wrapper = div({ className: styles.wrapper });
-    this.info = div({ className: styles.info });
+    super({ className: styles.alert, onanimationend: () => this.removeClass(styles.show) });
+
     this.infoTitle = span({ className: styles.infoTitle });
     this.infoText = span({ className: styles.infoText });
 
-    this.info.appendChildren([this.infoTitle, this.infoText]);
-    this.wrapper.append(this.info);
-    this.append(this.wrapper);
+    this.append(
+      div(
+        { className: styles.wrapper },
+        div({ className: styles.info }, this.infoTitle, this.infoText),
+      ),
+    );
   }
 
   public showAlert(type: 'success' | 'error' | 'attention', text: string): void {
-    switch (type) {
-      case 'success':
-        this.addClass(styles.success);
-        this.infoTitle.setText('Success');
-        break;
-
-      case 'attention':
-        this.addClass(styles.attention);
-        this.infoTitle.setText('Attention');
-        break;
-
-      case 'error':
-        this.addClass(styles.error);
-        this.infoTitle.setText('Error');
-        break;
-
-      default:
-        break;
-    }
-
+    this.infoTitle.setText(capitalizeFirstLetter(type));
     this.infoText.setText(text);
 
+    this.addClass(styles[type]);
     this.addClass(styles.show);
-
-    setTimeout(() => {
-      this.removeClass(styles.show);
-    }, this.HIDE_DELAY);
   }
 }
 

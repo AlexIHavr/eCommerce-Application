@@ -7,7 +7,7 @@ import {
 import { TokenCache } from '@commercetools/sdk-client-v2';
 import { ApiClientResponse } from 'globalTypes/api.type';
 import { CustomerLoginData, NewCustomer } from 'interfaces/api.interface';
-import { clientBuildUtil } from 'utils/clientBuild.util';
+import { clientBuild } from 'utils/clientBuild.util';
 import { tokenCache } from 'utils/tokenCache.util';
 
 export class ApiService {
@@ -16,7 +16,7 @@ export class ApiService {
   public tokenCache: TokenCache;
 
   constructor() {
-    this.apiRoot = clientBuildUtil.apiRoot;
+    this.apiRoot = clientBuild.apiRoot;
     this.tokenCache = tokenCache;
   }
 
@@ -29,7 +29,8 @@ export class ApiService {
   }
 
   public loginCustomer(newCustomer: CustomerLoginData): ApiClientResponse<CustomerSignInResult> {
-    this.apiRoot = clientBuildUtil.getApiRootByFlow('password', newCustomer);
+    this.apiRoot = clientBuild.getApiRootByPasswordFlow(newCustomer);
+
     return this.apiRoot.login().post({ body: newCustomer }).execute();
   }
 
@@ -45,7 +46,7 @@ export class ApiService {
   }
 
   public logout(): void {
-    this.apiRoot = clientBuildUtil.getApiRootByFlow('anonymous');
+    this.apiRoot = clientBuild.getApiRootByAnonymousFlow();
   }
 }
 

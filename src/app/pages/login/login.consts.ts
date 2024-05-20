@@ -1,6 +1,8 @@
-import { LoginFieldProps } from 'pages/shared/components/formField/formField.types';
+import { FormFieldProps } from 'pages/shared/components/formField/formField.types';
 
-export const LOGIN_PROPS: Record<string, LoginFieldProps> = {
+import { LoginField } from './login.types';
+
+export const LOGIN_PROPS: Record<LoginField, FormFieldProps> = {
   email: {
     name: 'login-email',
     type: 'text',
@@ -26,7 +28,7 @@ export const LOGIN_PROPS: Record<string, LoginFieldProps> = {
   },
 };
 
-export const LOGIN_API_ERROR_TEXT: Record<'email' | 'password', string> = {
+export const LOGIN_API_ERROR_TEXT = {
   email: '⚠️ Login failed: No such user',
   password: '⚠️ Login failed: Wrong password',
 };

@@ -11,5 +11,5 @@ export type Fieldset = BaseComponent<HTMLFieldSetElement>;
 export type Select = BaseComponent<HTMLSelectElement>;
 export type Option = BaseComponent<HTMLOptionElement>;
 export type Image = BaseComponent<HTMLImageElement>;
-export type Ul = BaseComponent<HTMLUListElement>;
-export type Li = BaseComponent<HTMLLIElement>;
+export type UL = BaseComponent<HTMLUListElement>;
+export type LI = BaseComponent<HTMLLIElement>;
