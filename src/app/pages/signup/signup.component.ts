@@ -214,7 +214,7 @@ export class Signup extends BaseComponent {
         { className: sharedStyles.container },
         this.signupForm,
         span(
-          { className: formStyles.formFooter, text: 'Don`t have an account? ' },
+          { className: formStyles.formFooter, text: 'Already have an account? ' },
           loginNavLink(formStyles.formFooterLink),
         ),
       ),

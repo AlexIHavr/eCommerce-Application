@@ -12,6 +12,7 @@ export const SIGNUP_PROPS: Record<string, LoginFieldProps> = {
     pattern: '^[\\w]+@([\\w\\-]+\\.)+[a-z]{2,4}$',
     required: true,
     errorText: '⚠️ Enter correct email. No whitespaces allowed',
+    autocomplete: 'username',
   },
   password: {
     name: 'sign-password',
@@ -22,6 +23,7 @@ export const SIGNUP_PROPS: Record<string, LoginFieldProps> = {
     pattern: '(?=^[a-zA-Zа-яА-ЯёЁ\\d]{8,}$)(?=.*\\d)(?=.*[a-zа-яё])(?=.*[A-ZА-ЯЁ]).*',
     required: true,
     errorText: '⚠️ Min 8 letters/digits. At least one digit, one lowercase and uppercase letter',
+    autocomplete: 'current-password',
   },
   firstname: {
     name: 'firstname',

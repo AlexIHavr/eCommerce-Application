@@ -10,6 +10,7 @@ export const LOGIN_PROPS: Record<string, LoginFieldProps> = {
     pattern: '^[\\w]+@([\\w\\-]+\\.)+[a-z]{2,4}$',
     required: true,
     errorText: '⚠️ Enter correct email. No whitespaces allowed',
+    autocomplete: 'username',
   },
   password: {
     name: 'login-password',
@@ -21,6 +22,7 @@ export const LOGIN_PROPS: Record<string, LoginFieldProps> = {
     required: true,
     errorText:
       '⚠️ At least one lowercase, uppercase letter and digit. Only letters and digits. Min 8 chars',
+    autocomplete: 'current-password',
   },
 };
 
