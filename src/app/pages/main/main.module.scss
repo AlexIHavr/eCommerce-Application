@@ -21,6 +21,16 @@
     border-radius: 10px;
   }
 
+  .navLinks {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+
+    margin-top: 20px;
+
+    font-size: 1.2em;
+  }
+
   @media (width <= 600px) {
     .mainTitle {
       font-size: 1.6rem;
