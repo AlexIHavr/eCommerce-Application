@@ -73,29 +73,31 @@ export class Login extends BaseComponent {
     e.preventDefault();
     if (this.emailField.isValid() && this.passwordField.isValid()) {
       loader.open();
-      apiService.getCustomerByEmail(this.emailField.value).then(({ body }) => {
-        if (body.results.length === 0) {
-          this.emailField.showApiError(LOGIN_API_ERROR_TEXT.email);
-        } else {
-          apiService
-            .loginCustomer({
-              email: this.emailField.value,
-              password: this.passwordField.value,
-            })
-            .then(() => {
-              saveRefreshToken();
-              redirectToMain();
-              alertModal.showAlert('success', 'Login successfully');
-            })
-            .catch(() => {
-              this.passwordField.showApiError(LOGIN_API_ERROR_TEXT.password);
-              apiService.apiRoot = clientBuildUtil.getApiRootByFlow('anonymous');
-            })
-            .finally(() => {
-              loader.close();
-            });
-        }
-      });
+      apiService
+        .getCustomerByEmail(this.emailField.value)
+        .then(({ body }) => {
+          if (body.results.length === 0) {
+            this.emailField.showApiError(LOGIN_API_ERROR_TEXT.email);
+          } else {
+            apiService
+              .loginCustomer({
+                email: this.emailField.value,
+                password: this.passwordField.value,
+              })
+              .then(() => {
+                saveRefreshToken();
+                redirectToMain();
+                alertModal.showAlert('success', 'Login successfully');
+              })
+              .catch(() => {
+                this.passwordField.showApiError(LOGIN_API_ERROR_TEXT.password);
+                apiService.apiRoot = clientBuildUtil.getApiRootByFlow('anonymous');
+              });
+          }
+        })
+        .finally(() => {
+          loader.close();
+        });
     } else {
       this.loginForm.addClass(formFieldStyles.error);
       loader.close();

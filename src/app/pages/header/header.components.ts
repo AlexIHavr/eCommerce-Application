@@ -11,7 +11,7 @@ import sharedStyles from 'pages/shared/styles/common.module.scss';
 import { apiService } from 'services/api.service';
 import { LocalStorageService } from 'services/localStorage.service';
 import { BaseComponent } from 'shared/base/base.component';
-import { div, img, li, span, ul } from 'shared/tags/tags.component';
+import { div, li, span, ul } from 'shared/tags/tags.component';
 
 import styles from './header.module.scss';
 
@@ -41,7 +41,7 @@ export class Header extends BaseComponent {
       '',
       PagesPaths.MAIN,
       styles.titleWrapper,
-      img({ src: '/logo.png', alt: 'Woodstore logo' }),
+      div({ className: styles.logo }),
       span({ className: styles.title, text: 'Furniture' }),
     );
 
