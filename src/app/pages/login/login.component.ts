@@ -1,5 +1,5 @@
 import { Form } from 'globalTypes/elements';
-import { redirectToMain, saveRefreshToken } from 'pages/pageWrapper.helpers';
+import { successLogin } from 'pages/pageWrapper.helpers';
 import { FormField } from 'pages/shared/components/formField/formField.component';
 import formFieldStyles from 'pages/shared/components/formField/formField.module.scss';
 import { signupNavLink } from 'pages/shared/components/navLinks/navLinks.component';
@@ -7,7 +7,6 @@ import { SectionTitle } from 'pages/shared/components/sectionTitle/sectionTitle.
 import sharedStyles from 'pages/shared/styles/common.module.scss';
 import formStyles from 'pages/shared/styles/formElements.module.scss';
 import { apiService } from 'services/api.service';
-import { alertModal } from 'shared/alert/alert.component';
 import { BaseComponent } from 'shared/base/base.component';
 import { loader } from 'shared/loader/loader.component';
 import { button, div, form, span } from 'shared/tags/tags.component';
@@ -92,11 +91,7 @@ export class Login extends BaseComponent {
         email: this.emailField.value,
         password: this.passwordField.value,
       })
-      .then(() => {
-        saveRefreshToken();
-        redirectToMain();
-        alertModal.showAlert('success', 'Login successfully');
-      })
+      .then(() => successLogin('Login successfully'))
       .catch(() => {
         this.passwordField.showApiError(LOGIN_API_ERROR_TEXT.password);
         apiService.apiRoot = clientBuild.getApiRootByAnonymousFlow();

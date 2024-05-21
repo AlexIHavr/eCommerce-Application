@@ -2,7 +2,7 @@ import { ErrorResponse } from '@commercetools/platform-sdk';
 import { ClientResponse } from '@commercetools/sdk-client-v2';
 import { Form, Span } from 'globalTypes/elements';
 import { NewCustomer } from 'interfaces/api.interface';
-import { redirectToMain, saveRefreshToken } from 'pages/pageWrapper.helpers';
+import { successLogin } from 'pages/pageWrapper.helpers';
 import { FormField } from 'pages/shared/components/formField/formField.component';
 import formFieldStyles from 'pages/shared/components/formField/formField.module.scss';
 import { loginNavLink } from 'pages/shared/components/navLinks/navLinks.component';
@@ -11,7 +11,6 @@ import sharedStyles from 'pages/shared/styles/common.module.scss';
 import formStyles from 'pages/shared/styles/formElements.module.scss';
 import { AddressForm } from 'pages/signup/components/addressForm/addressForm.component';
 import { apiService } from 'services/api.service';
-import { alertModal } from 'shared/alert/alert.component';
 import { BaseComponent } from 'shared/base/base.component';
 import { loader } from 'shared/loader/loader.component';
 import { button, div, form, input, label, span } from 'shared/tags/tags.component';
@@ -137,11 +136,7 @@ export class Signup extends BaseComponent {
           password: this.passwordField.value,
         }),
       )
-      .then(() => {
-        saveRefreshToken();
-        redirectToMain();
-        alertModal.showAlert('success', 'Signed up successfully');
-      })
+      .then(() => successLogin('Signed up successfully'))
       .catch((res) => this.showSignupErrors(res))
       .finally(() => {
         loader.close();
