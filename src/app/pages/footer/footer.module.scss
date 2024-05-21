@@ -9,7 +9,7 @@
   .text {
     padding-top: 10px;
     padding-left: 10px;
-    border-top: 1px solid var(--base-text-color);
+    border-top: 1px solid var(--base-color);
   }
 
   @media (width <= $small-width) {

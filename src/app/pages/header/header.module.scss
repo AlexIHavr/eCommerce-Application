@@ -13,7 +13,7 @@
 
     height: 100%;
 
-    color: var(--base-text-color);
+    color: var(--base-color);
 
     .titleWrapper {
       display: flex;
@@ -67,7 +67,7 @@
             width: 0%;
             height: 3px;
 
-            background-color: var(--base-text-color);
+            background-color: var(--base-color);
 
             transition: width 0.4s;
           }
@@ -120,7 +120,7 @@
           width: 100%;
           height: 2px;
 
-          background-color: black;
+          background-color: var(--base-color);
 
           transition:
             transform 0.3s linear,
