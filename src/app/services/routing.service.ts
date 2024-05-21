@@ -5,7 +5,7 @@ class RoutingService {
   private router: Navigo;
 
   constructor() {
-    this.router = new Navigo(import.meta.env.BASE_URL);
+    this.router = new Navigo(import.meta.env.BASE_URL, { noMatchWarning: true });
   }
 
   public setRouting(map: Record<string, ActionFunc>): void {

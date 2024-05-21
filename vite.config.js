@@ -12,4 +12,8 @@ export default defineConfig({
   build: {
     sourcemap: true,
   },
+  test: {
+    environment: 'jsdom',
+    testTimeout: 10000,
+  },
 });

@@ -1,10 +1,10 @@
 import { SectionTitle } from 'pages/shared/components/sectionTitle/sectionTitle.component';
 import { BaseComponent } from 'shared/base/base.component';
 
-import styles from './notFound.module.scss';
+import styles from './catalog.module.scss';
 
-export class NotFound extends BaseComponent {
+export class Catalog extends BaseComponent {
   constructor() {
-    super({ className: styles.notFound }, new SectionTitle('Page not found'));
+    super({ className: styles.catalog }, new SectionTitle('Catalog'));
   }
 }

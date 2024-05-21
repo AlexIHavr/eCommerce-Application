@@ -10,6 +10,27 @@
   *:disabled & {
     pointer-events: none;
   }
+
+  .btnPassVis {
+    cursor: pointer;
+
+    position: absolute;
+    top: 56%;
+    right: 10px;
+    transform: translateY(-50%);
+
+    width: 20px;
+    height: 20px;
+
+    background-image: url('./images/eye-close.png');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+
+    &.open {
+      background-image: url('./images/eye-open.png');
+    }
+  }
 }
 
 .formInput {
@@ -24,7 +45,7 @@
 
   &:disabled {
     opacity: 0.7;
-    background-color: rgb(128 128 128 / 25%);
+    background-color: var(--input-disabled-color);
   }
 
   &[type='password'] {
@@ -42,6 +63,28 @@
     border: 2px solid var(--input-error-border-color);
     animation: invalid-input 0.4s 1;
     animation-fill-mode: backwards;
+  }
+}
+
+.formErrorText {
+  cursor: default;
+
+  display: block;
+
+  height: 20px;
+
+  font-size: 0.65em;
+  font-weight: 600;
+  line-height: 1.2;
+  color: var(--text-error-color);
+
+  visibility: hidden;
+
+  .apiError &,
+  .error .formLabel[area-invalid='true'] &,
+  .error .formInput:invalid + &,
+  .selfError .formInput:invalid + & {
+    visibility: visible;
   }
 }
 
@@ -69,47 +112,4 @@
   100% {
     transform: translateX(0);
   }
-}
-
-.formErrorText {
-  cursor: default;
-
-  display: block;
-
-  height: 20px;
-
-  font-size: 0.65em;
-  font-weight: 600;
-  line-height: 1.2;
-  color: var(--text-error-color);
-
-  visibility: hidden;
-
-  .apiError &,
-  .error .formLabel[area-invalid='true'] &,
-  .error .formInput:invalid + &,
-  .selfError .formInput:invalid + & {
-    visibility: visible;
-  }
-}
-
-.btnPassVis {
-  cursor: pointer;
-
-  position: absolute;
-  top: 56%;
-  right: 10px;
-  transform: translateY(-50%);
-
-  width: 20px;
-  height: 20px;
-
-  background-image: url('./images/eye-close.png');
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: cover;
-}
-
-.btnPassVis.open {
-  background-image: url('./images/eye-open.png');
 }

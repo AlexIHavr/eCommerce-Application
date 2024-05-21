@@ -1,29 +1,22 @@
-import { Fieldset, Form, Select, Span } from 'globalTypes/elements';
-import { NewAddress, NewCustomer } from 'interfaces/api.interface';
-import { redirectToMain, saveRefreshToken } from 'pages/pageWrapper.helpers';
+import { ErrorResponse } from '@commercetools/platform-sdk';
+import { ClientResponse } from '@commercetools/sdk-client-v2';
+import { Form, Span } from 'globalTypes/elements';
+import { NewCustomer } from 'interfaces/api.interface';
+import { successLogin } from 'pages/pageWrapper.helpers';
 import { FormField } from 'pages/shared/components/formField/formField.component';
 import formFieldStyles from 'pages/shared/components/formField/formField.module.scss';
 import { loginNavLink } from 'pages/shared/components/navLinks/navLinks.component';
 import { SectionTitle } from 'pages/shared/components/sectionTitle/sectionTitle.component';
 import sharedStyles from 'pages/shared/styles/common.module.scss';
-import formStyles from 'pages/shared/styles/form-elements.module.scss';
+import formStyles from 'pages/shared/styles/formElements.module.scss';
+import { AddressForm } from 'pages/signup/components/addressForm/addressForm.component';
 import { apiService } from 'services/api.service';
-import { alertModal } from 'shared/alert/alert.component';
 import { BaseComponent } from 'shared/base/base.component';
-import {
-  button,
-  div,
-  fieldset,
-  form,
-  input,
-  label,
-  option,
-  select,
-  span,
-} from 'shared/tags/tags.component';
+import { loader } from 'shared/loader/loader.component';
+import { button, div, form, input, label, span } from 'shared/tags/tags.component';
 
 import {
-  POSTALCODE_PROPS,
+  COMMON_ERROR_VISIBLE_TIME,
   SIGNUP_API_ERROR_TEXT,
   SIGNUP_PROPS,
   USER_AVAILABLE_AGE,
@@ -43,95 +36,27 @@ export class Signup extends BaseComponent {
 
   private readonly birthField: FormField;
 
-  private readonly bilFieldset: Fieldset;
-
-  private readonly bilStreetField: FormField;
-
-  private readonly bilCityField: FormField;
-
-  private readonly bilPostalCodeField: FormField;
-
-  private readonly bilCountryField: Select;
-
-  private readonly shipFieldset: Fieldset;
-
-  private readonly shipStreetField: FormField;
-
-  private readonly shipCityField: FormField;
-
-  private readonly shipPostalCodeField: FormField;
-
-  private readonly shipCountryField: Select;
-
   private readonly commonTextError: Span;
 
-  private isSameAddress: boolean;
+  private readonly bilAddressForm: AddressForm;
 
-  private isDefaultBilAdr: boolean;
+  private readonly shipAddressForm: AddressForm;
 
-  private isDefaultShipAdr: boolean;
+  private isSameAddress: boolean = false;
 
   constructor() {
     super({ className: styles.signupPage });
-    this.isSameAddress = false;
-    this.isDefaultBilAdr = false;
-    this.isDefaultShipAdr = false;
 
     this.emailField = new FormField(SIGNUP_PROPS.email);
     this.passwordField = new FormField(SIGNUP_PROPS.password);
-    this.firstNameField = new FormField(SIGNUP_PROPS.firstname);
-    this.lastNameField = new FormField(SIGNUP_PROPS.lastname);
+    this.firstNameField = new FormField(SIGNUP_PROPS.firstName);
+    this.lastNameField = new FormField(SIGNUP_PROPS.lastName);
+
     this.birthField = new FormField(SIGNUP_PROPS.birthDate);
-    this.bilStreetField = new FormField(SIGNUP_PROPS.bilStreet);
-    this.bilCityField = new FormField(SIGNUP_PROPS.bilCity);
-    this.bilPostalCodeField = new FormField(SIGNUP_PROPS.bilPostalCode);
-    this.shipStreetField = new FormField(SIGNUP_PROPS.shipStreet);
-    this.shipCityField = new FormField(SIGNUP_PROPS.shipCity);
-    this.shipPostalCodeField = new FormField(SIGNUP_PROPS.shipPostalCode);
-
     this.birthField.addListener('input', () => this.isBirthdayValid());
-    this.bilPostalCodeField.addListener('input', () => this.isPostalCodeValid('billing'));
-    this.shipPostalCodeField.addListener('input', () => this.isPostalCodeValid('shipping'));
 
-    this.bilCountryField = select(
-      {
-        className: styles.select,
-        name: 'ship-country',
-        onchange: () => this.isPostalCodeValid('billing'),
-      },
-      option({ value: 'BY', text: 'Belarus' }),
-      option({ value: 'UA', text: 'Ukraine' }),
-    );
-
-    this.shipCountryField = select(
-      {
-        className: styles.select,
-        name: 'bil-country',
-        onchange: () => this.isPostalCodeValid('shipping'),
-      },
-      option({ value: 'BY', text: 'Belarus' }),
-      option({ value: 'UA', text: 'Ukraine' }),
-    );
-
-    this.bilFieldset = fieldset(
-      { className: styles.billingFieldset },
-      span({ className: styles.formText, text: 'Billing' }),
-      this.bilStreetField,
-      this.bilCityField,
-      this.bilPostalCodeField,
-      label({ className: formFieldStyles.formLabel, text: 'Country' }),
-      this.bilCountryField,
-    );
-
-    this.shipFieldset = fieldset(
-      { className: styles.shippingFieldset },
-      span({ className: styles.formText, text: 'Shipping' }),
-      this.shipStreetField,
-      this.shipCityField,
-      this.shipPostalCodeField,
-      label({ className: formFieldStyles.formLabel, text: 'Country' }),
-      this.shipCountryField,
-    );
+    this.bilAddressForm = new AddressForm('billing');
+    this.shipAddressForm = new AddressForm('shipping');
 
     this.commonTextError = span({ className: styles.commonErrorText, text: 'Error text' });
 
@@ -159,51 +84,13 @@ export class Signup extends BaseComponent {
         }),
       ),
       div({ className: styles.hr }),
-      div(
-        { className: styles.addressWrapper },
-        div(
-          {},
-          this.bilFieldset,
-          label(
-            {
-              className: styles.checkboxLabel,
-              text: 'Set as default address',
-            },
-            input({
-              className: styles.formCheckbox,
-              type: 'checkbox',
-              name: 'defaultBilling',
-              onclick: () => {
-                this.isDefaultBilAdr = !this.isDefaultBilAdr;
-              },
-            }),
-          ),
-        ),
-        div(
-          {},
-          this.shipFieldset,
-          label(
-            {
-              className: styles.checkboxLabel,
-              text: 'Set as default address',
-            },
-            input({
-              className: styles.formCheckbox,
-              type: 'checkbox',
-              name: 'defaultShipping',
-              onclick: () => {
-                this.isDefaultShipAdr = !this.isDefaultShipAdr;
-              },
-            }),
-          ),
-        ),
-      ),
+      div({ className: styles.addressWrapper }, this.bilAddressForm, this.shipAddressForm),
       this.commonTextError,
       button({
         className: formStyles.formButton,
         text: 'Signup',
         type: 'submit',
-        onclick: (e) => this.submitHandler(e),
+        onclick: (event) => this.submitHandler(event),
       }),
     );
 
@@ -213,70 +100,78 @@ export class Signup extends BaseComponent {
         { className: sharedStyles.container },
         this.signupForm,
         span(
-          { className: formStyles.formFooter, text: 'Don`t have an account? ' },
+          { className: formStyles.formFooter, text: 'Already have an account? ' },
           loginNavLink(formStyles.formFooterLink),
         ),
       ),
     ]);
   }
 
-  private submitHandler(e: Event): void {
-    e.preventDefault();
+  private submitHandler(event: Event): void {
+    event.preventDefault();
+
     if (
       this.emailField.isValid() &&
       this.passwordField.isValid() &&
       this.firstNameField.isValid() &&
       this.lastNameField.isValid() &&
       this.isBirthdayValid() &&
-      this.bilStreetField.isValid() &&
-      this.bilCityField.isValid() &&
-      this.isPostalCodeValid('billing') &&
-      this.shipStreetField.isValid() &&
-      this.shipCityField.isValid() &&
-      this.isPostalCodeValid('shipping')
+      this.bilAddressForm.isValid() &&
+      this.shipAddressForm.isValid()
     ) {
-      apiService
-        .signupCustomer(this.getNewCustomerFromForm())
-        .then(() =>
-          apiService.loginCustomer({
-            email: this.emailField.value,
-            password: this.passwordField.value,
-          }),
-        )
-        .then(() => {
-          saveRefreshToken();
-          redirectToMain();
-          alertModal.showAlert('success', 'Signed up successfully');
-        })
-        .catch((res) => {
-          const { code, message, detailedErrorMessage } = res.body.errors[0];
-
-          switch (code) {
-            case 'InvalidOperation':
-              if (message === 'The provided value is not a valid email') {
-                this.emailField.showApiError(SIGNUP_API_ERROR_TEXT.emptyEmail);
-              }
-              if (message === `'password' should not be empty.`) {
-                this.passwordField.showApiError(SIGNUP_API_ERROR_TEXT.emptyPassword);
-              }
-              break;
-            case 'InvalidJsonInput':
-              if (String(detailedErrorMessage).startsWith('dateOfBirth')) {
-                this.birthField.showApiError(SIGNUP_API_ERROR_TEXT.emptyDateOfBirth);
-              }
-              if (String(detailedErrorMessage).startsWith('addresses')) {
-                this.showCommonError(SIGNUP_API_ERROR_TEXT.badCountryValue);
-              }
-              break;
-            case 'DuplicateField':
-              this.emailField.showApiError(SIGNUP_API_ERROR_TEXT.existedEmail);
-              break;
-            default:
-              this.showCommonError(SIGNUP_API_ERROR_TEXT.serverInternalError);
-          }
-        });
+      this.sendSignup();
     } else {
       this.signupForm.addClass(formFieldStyles.error);
+    }
+  }
+
+  private sendSignup(): void {
+    loader.open();
+
+    apiService
+      .signupCustomer(this.getNewCustomerFromForm())
+      .then(() =>
+        apiService.loginCustomer({
+          email: this.emailField.value,
+          password: this.passwordField.value,
+        }),
+      )
+      .then(() => successLogin('Signed up successfully'))
+      .catch((res) => this.showSignupErrors(res))
+      .finally(() => {
+        loader.close();
+      });
+  }
+
+  private showSignupErrors(res: ClientResponse<ErrorResponse>): void {
+    if (!res.body?.errors?.length) return;
+
+    const { code, message, detailedErrorMessage } = res.body.errors[0];
+
+    switch (code) {
+      case 'InvalidOperation':
+        if (message === 'The provided value is not a valid email') {
+          this.emailField.showApiError(SIGNUP_API_ERROR_TEXT.emptyEmail);
+        } else if (message === `'password' should not be empty.`) {
+          this.passwordField.showApiError(SIGNUP_API_ERROR_TEXT.emptyPassword);
+        }
+        break;
+
+      case 'InvalidJsonInput':
+        if (String(detailedErrorMessage).startsWith('dateOfBirth')) {
+          this.birthField.showApiError(SIGNUP_API_ERROR_TEXT.emptyDateOfBirth);
+        }
+        if (String(detailedErrorMessage).startsWith('addresses')) {
+          this.showCommonError(SIGNUP_API_ERROR_TEXT.badCountryValue);
+        }
+        break;
+
+      case 'DuplicateField':
+        this.emailField.showApiError(SIGNUP_API_ERROR_TEXT.existedEmail);
+        break;
+
+      default:
+        this.showCommonError(SIGNUP_API_ERROR_TEXT.serverInternalError);
     }
   }
 
@@ -290,29 +185,13 @@ export class Signup extends BaseComponent {
       addresses: [],
     };
 
-    const billingAddress: NewAddress = {
-      key: 'billing',
-      streetName: this.bilStreetField.value,
-      city: this.bilCityField.value,
-      postalCode: this.bilPostalCodeField.value,
-      country: this.bilCountryField.getNode().value,
-    };
+    newCustomer.addresses.push(this.bilAddressForm.getAddress(), this.shipAddressForm.getAddress());
 
-    const shippingAddress: NewAddress = {
-      key: 'shipping',
-      streetName: this.shipStreetField.value,
-      city: this.shipCityField.value,
-      postalCode: this.shipPostalCodeField.value,
-      country: this.shipCountryField.getNode().value,
-    };
-
-    newCustomer.addresses.push(billingAddress, shippingAddress);
-
-    if (this.isDefaultBilAdr) {
+    if (this.bilAddressForm.getDefaultAddress()) {
       newCustomer.defaultBillingAddress = 0;
     }
 
-    if (this.isDefaultShipAdr) {
+    if (this.shipAddressForm.getDefaultAddress()) {
       newCustomer.defaultShippingAddress = 1;
     }
 
@@ -330,6 +209,7 @@ export class Signup extends BaseComponent {
       this.birthField.removeAttribute('area-invalid');
       return true;
     }
+
     this.birthField.setAttribute('area-invalid', 'true');
     return false;
   }
@@ -338,48 +218,28 @@ export class Signup extends BaseComponent {
     this.isSameAddress = !this.isSameAddress;
     this.copyAddress();
 
+    const bilFieldset = this.bilAddressForm.getAddressFieldset();
+    const shipFieldset = this.shipAddressForm.getAddressFieldset();
+
     if (this.isSameAddress) {
-      this.shipFieldset.setAttribute('disabled', '');
-      this.bilFieldset.addListener('input', this.copyAddress);
+      shipFieldset.setAttribute('disabled', '');
+      bilFieldset.addListener('input', this.copyAddress);
     } else {
-      this.shipFieldset.removeAttribute('disabled');
-      this.bilFieldset.removeListener('input', this.copyAddress);
+      shipFieldset.removeAttribute('disabled');
+      bilFieldset.removeListener('input', this.copyAddress);
     }
   }
 
   private copyAddress = (): void => {
-    this.shipStreetField.value = this.bilStreetField.value;
-    this.shipCityField.value = this.bilCityField.value;
-    this.shipPostalCodeField.value = this.bilPostalCodeField.value;
-    this.shipCountryField.getNode().value = this.bilCountryField.getNode().value;
+    this.shipAddressForm.streetFieldValue = this.bilAddressForm.streetFieldValue;
+    this.shipAddressForm.cityFieldValue = this.bilAddressForm.cityFieldValue;
+    this.shipAddressForm.postalCodeFieldValue = this.bilAddressForm.postalCodeFieldValue;
+    this.shipAddressForm.countryFieldValue = this.bilAddressForm.countryFieldValue;
   };
-
-  private isPostalCodeValid(address: 'billing' | 'shipping'): boolean {
-    let countryInput;
-    let postalCodeInput;
-
-    if (address === 'billing') {
-      countryInput = this.bilCountryField;
-      postalCodeInput = this.bilPostalCodeField;
-    } else {
-      countryInput = this.shipCountryField;
-      postalCodeInput = this.shipPostalCodeField;
-    }
-
-    const countryValue = countryInput.getNode().value;
-    const postalCodeValue = postalCodeInput.value;
-    const country = POSTALCODE_PROPS[countryValue];
-
-    if (!country) return false;
-    postalCodeInput.setPattern(`${country.pattern}`);
-    postalCodeInput.setErrorText(`${country.errorText}`);
-
-    return Boolean(postalCodeValue.match(`${country.pattern}`));
-  }
 
   private showCommonError(errorText: string): void {
     this.commonTextError.addClass(styles.visible);
     this.commonTextError.setText(errorText);
-    setTimeout(() => this.commonTextError.removeClass(styles.visible), 4000);
+    setTimeout(() => this.commonTextError.removeClass(styles.visible), COMMON_ERROR_VISIBLE_TIME);
   }
 }

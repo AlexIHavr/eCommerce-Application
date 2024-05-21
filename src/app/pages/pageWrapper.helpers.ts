@@ -1,6 +1,7 @@
 import { Anchor } from 'globalTypes/elements';
 import { LocalStorageService } from 'services/localStorage.service';
 import { routingService } from 'services/routing.service';
+import { alertModal } from 'shared/alert/alert.component';
 import { BaseComponent } from 'shared/base/base.component';
 import { a } from 'shared/tags/tags.component';
 import { tokenCache } from 'utils/tokenCache.util';
@@ -8,13 +9,7 @@ import { tokenCache } from 'utils/tokenCache.util';
 import { PagesPaths } from './pageWrapper.consts';
 
 export function redirectToMain(): void {
-  routingService.navigate(PagesPaths.MAIN);
-}
-
-export function saveRefreshToken(): void {
-  if (!tokenCache.cache.refreshToken) return;
-
-  LocalStorageService.saveData('refreshToken', tokenCache.cache.refreshToken);
+  routingService.navigate(PagesPaths.HOME);
 }
 
 export function getNavLink(
@@ -37,4 +32,13 @@ export function loginRedirect(): void {
   if (!isLogined()) return;
 
   redirectToMain();
+}
+
+export function successLogin(title: string): void {
+  if (!tokenCache.cache.refreshToken) return;
+
+  LocalStorageService.saveData('refreshToken', tokenCache.cache.refreshToken);
+
+  redirectToMain();
+  alertModal.showAlert('success', title);
 }

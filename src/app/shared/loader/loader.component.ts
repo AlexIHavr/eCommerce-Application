@@ -1,6 +1,7 @@
 import { BaseComponent } from 'shared/base/base.component';
 import { div } from 'shared/tags/tags.component';
 
+import { onErrorEventHandler } from './loader.helpers';
 import styles from './loader.module.scss';
 
 class Loader extends BaseComponent {
@@ -13,12 +14,18 @@ class Loader extends BaseComponent {
   public open(): void {
     if (this.isOpened) return;
 
-    document.body.append(this.getNode());
+    this.addClass(styles.show);
+
+    document.body.addEventListener('keydown', onErrorEventHandler);
+
     this.isOpened = true;
   }
 
   public close(): void {
-    this.destroy();
+    this.removeClass(styles.show);
+
+    document.body.removeEventListener('keydown', onErrorEventHandler);
+
     this.isOpened = false;
   }
 }

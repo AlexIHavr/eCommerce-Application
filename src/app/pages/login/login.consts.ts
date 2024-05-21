@@ -1,6 +1,6 @@
-import { LoginFieldProps } from 'pages/shared/components/formField/formField.types';
+import { FormFieldsProps } from 'pages/shared/components/formField/formField.types';
 
-export const LOGIN_PROPS: Record<string, LoginFieldProps> = {
+export const LOGIN_PROPS = {
   email: {
     name: 'login-email',
     type: 'text',
@@ -9,7 +9,8 @@ export const LOGIN_PROPS: Record<string, LoginFieldProps> = {
     maxLength: 30,
     pattern: '^[\\w]+@([\\w\\-]+\\.)+[a-z]{2,4}$',
     required: true,
-    errorText: '⚠️ Enter correct email. No whitespaces allowed',
+    errorText: '❌ Enter correct email. No whitespaces allowed',
+    autocomplete: 'username',
   },
   password: {
     name: 'login-password',
@@ -20,11 +21,12 @@ export const LOGIN_PROPS: Record<string, LoginFieldProps> = {
     pattern: '(?=^[a-zA-Zа-яА-ЯёЁ\\d]{8,}$)(?=.*\\d)(?=.*[a-zа-яё])(?=.*[A-ZА-ЯЁ]).*',
     required: true,
     errorText:
-      '⚠️ At least one lowercase, uppercase letter and digit. Only letters and digits. Min 8 chars',
+      '❌ At least one lowercase, uppercase letter and digit. Only letters and digits. Min 8 chars',
+    autocomplete: 'current-password',
   },
-};
+} as const satisfies FormFieldsProps;
 
-export const LOGIN_API_ERROR_TEXT: Record<'email' | 'password', string> = {
-  email: '⚠️ Login failed: No such user',
-  password: '⚠️ Login failed: Wrong password',
-};
+export const LOGIN_API_ERROR_TEXT = {
+  email: '❌ Login failed: No such user',
+  password: '❌ Login failed: Wrong password',
+} as const;

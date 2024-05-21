@@ -1,4 +1,4 @@
-export type LoginFieldProps = {
+export type FormFieldProps = {
   name: string;
   type: string;
   labelName: string;
@@ -11,3 +11,5 @@ export type LoginFieldProps = {
   required?: boolean;
   errorText?: string;
 };
+
+export type FormFieldsProps = Record<string, FormFieldProps>;

@@ -1,8 +1,13 @@
-export interface NewCustomer {
+import { Address, Country } from 'globalTypes/api.type';
+
+export interface CustomerLoginData {
   email: string;
+  password: string;
+}
+
+export interface NewCustomer extends CustomerLoginData {
   firstName: string;
   lastName: string;
-  password: string;
   dateOfBirth: string; //* format (YYYY-MM-DD), for example: "2018-10-12"
   addresses: NewAddress[];
   defaultBillingAddress?: number; //* index in addresses field
@@ -10,14 +15,9 @@ export interface NewCustomer {
 }
 
 export interface NewAddress {
-  key: 'billing' | 'shipping';
+  key: Address;
   streetName: string;
   city: string;
   postalCode: string;
-  country: string; //* 'BY' | 'UA'
-}
-
-export interface CustomerLoginData {
-  email: string;
-  password: string;
+  country: Country;
 }

@@ -1,12 +1,14 @@
 :root {
   /* Common */
-  --base-text-color: black;
-  --secondary-color: #d9a364;
+  --base-color: black;
+  --secondary-color: silver;
+  --background-color: white;
 
   /* Login-Registration forms */
   --input-border-color: gray;
   --input-focus-border-color: black;
   --input-error-border-color: crimson;
+  --input-disabled-color: rgb(128 128 128 / 25%);
   --text-error-color: crimson;
   --button-text-color: white;
   --form-link-color: green;
@@ -37,7 +39,6 @@ html {
 
 body {
   height: 100%;
-  font-weight: 400;
   font-style: normal;
-  color: var(--base-text-color);
+  color: var(--base-color);
 }

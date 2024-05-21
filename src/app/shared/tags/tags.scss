@@ -27,6 +27,8 @@ input {
 }
 
 button {
+  $background-button-color: black;
+
   cursor: pointer;
 
   display: block;
@@ -37,10 +39,10 @@ button {
   font-weight: bold;
   color: var(--button-text-color);
 
-  background-color: rgb(0 0 0 / 90%);
+  background-color: rgba($background-button-color, 90%);
   border: unset;
   border-radius: 7px;
-  box-shadow: 1px 1px 2px black;
+  box-shadow: 1px 1px 2px var(--base-color);
 
   transition:
     background-color 0.3s ease-in-out,
@@ -57,7 +59,7 @@ button {
 
   @media (hover: hover) and (pointer: fine) {
     &:hover {
-      background-color: rgb(0 0 0 / 75%);
+      background-color: rgba($background-button-color, 75%);
     }
   }
 }

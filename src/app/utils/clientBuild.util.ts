@@ -24,10 +24,10 @@ const {
   VITE_CTP_SCOPES,
 } = import.meta.env;
 
-class ClientBuildUtil {
-  private ctpClient: Client;
-
+class ClientBuild {
   public apiRoot: ByProjectKeyRequestBuilder;
+
+  private ctpClient: Client;
 
   private httpMiddlewareOptions: HttpMiddlewareOptions = {
     host: VITE_CTP_API_URL,
@@ -88,6 +88,20 @@ class ClientBuildUtil {
     });
   }
 
+  public getApiRootByAnonymousFlow(): ByProjectKeyRequestBuilder {
+    this.setClientWithAnonymousFlow();
+    this.updateApiRoot();
+
+    return this.apiRoot;
+  }
+
+  public getApiRootByPasswordFlow(customerData: CustomerLoginData): ByProjectKeyRequestBuilder {
+    this.setClientWithPasswordFlow(customerData);
+    this.updateApiRoot();
+
+    return this.apiRoot;
+  }
+
   private setClientWithAnonymousFlow(): void {
     this.ctpClient = this.basicClientBuilder
       .withAnonymousSessionFlow(this.anonymousAuthMiddlewareOptions)
@@ -109,43 +123,21 @@ class ClientBuildUtil {
     });
   }
 
-  public getApiRootByFlow(
-    flow: 'anonymous' | 'password',
-    customerData?: CustomerLoginData,
-  ): ByProjectKeyRequestBuilder {
-    switch (flow) {
-      case 'anonymous':
-        this.setClientWithAnonymousFlow();
-        break;
-
-      case 'password':
-        if (customerData) {
-          this.setClientWithPasswordFlow(customerData);
-        } else {
-          throw new Error('customerData was not passed');
-        }
-        break;
-
-      default:
-        break;
-    }
-
-    this.updateApiRoot();
-    return this.apiRoot;
-  }
-
   private getClientByLogin(): Client {
     const refreshToken = LocalStorageService.getData('refreshToken');
+
     if (refreshToken) {
       this.refreshAuthMiddlewareOptions.refreshToken = refreshToken;
+
       return this.basicClientBuilder
         .withRefreshTokenFlow(this.refreshAuthMiddlewareOptions)
         .build();
     }
+
     return this.basicClientBuilder
       .withAnonymousSessionFlow(this.anonymousAuthMiddlewareOptions)
       .build();
   }
 }
 
-export const clientBuildUtil = new ClientBuildUtil();
+export const clientBuild = new ClientBuild();

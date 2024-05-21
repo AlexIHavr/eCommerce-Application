@@ -1,5 +1,6 @@
 export enum PagesPaths {
-  MAIN = '',
+  HOME = '',
+  MAIN = 'main',
   CATALOG = 'catalog',
   ABOUT = 'about',
   SIGNUP = 'signup',
