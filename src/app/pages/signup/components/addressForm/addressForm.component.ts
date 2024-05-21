@@ -130,10 +130,11 @@ export class AddressForm extends BaseComponent {
     const postalCodeInput = this.postalCodeField;
 
     const countryValue = this.countryField.getNode().value;
-    const postalCodeValue = postalCodeInput.value;
-    const country = COUNTRIES_PROPS[countryValue];
 
-    if (!country) return false;
+    if (!(countryValue in COUNTRIES_PROPS)) return false;
+
+    const postalCodeValue = postalCodeInput.value;
+    const country = COUNTRIES_PROPS[countryValue as keyof typeof COUNTRIES_PROPS];
 
     postalCodeInput.setPattern(`${country.pattern}`);
     postalCodeInput.setErrorText(`${country.errorText}`);

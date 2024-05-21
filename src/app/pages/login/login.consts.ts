@@ -1,8 +1,6 @@
-import { FormFieldProps } from 'pages/shared/components/formField/formField.types';
+import { FormFieldsProps } from 'pages/shared/components/formField/formField.types';
 
-import { LoginField } from './login.types';
-
-export const LOGIN_PROPS: Record<LoginField, FormFieldProps> = {
+export const LOGIN_PROPS = {
   email: {
     name: 'login-email',
     type: 'text',
@@ -26,9 +24,9 @@ export const LOGIN_PROPS: Record<LoginField, FormFieldProps> = {
       '❌ At least one lowercase, uppercase letter and digit. Only letters and digits. Min 8 chars',
     autocomplete: 'current-password',
   },
-};
+} as const satisfies FormFieldsProps;
 
 export const LOGIN_API_ERROR_TEXT = {
   email: '❌ Login failed: No such user',
   password: '❌ Login failed: Wrong password',
-};
+} as const;

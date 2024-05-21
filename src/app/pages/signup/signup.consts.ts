@@ -1,22 +1,13 @@
-import { Country } from 'globalTypes/api.type';
 import { LOGIN_PROPS } from 'pages/login/login.consts';
-import { LoginField } from 'pages/login/login.types';
-import { FormFieldProps } from 'pages/shared/components/formField/formField.types';
+import { FormFieldsProps } from 'pages/shared/components/formField/formField.types';
+
+import { CountriesProps } from './sigup.types';
 
 export const COMMON_ERROR_VISIBLE_TIME = 4000;
 
 export const USER_AVAILABLE_AGE = 13;
 
-export const SIGNUP_PROPS: Record<
-  | LoginField
-  | 'firstName'
-  | 'lastName'
-  | 'birthDate'
-  | 'addressStreet'
-  | 'addressCity'
-  | 'addressPostalCode',
-  FormFieldProps
-> = {
+export const SIGNUP_PROPS = {
   ...LOGIN_PROPS,
   firstName: {
     name: 'firstName',
@@ -77,12 +68,9 @@ export const SIGNUP_PROPS: Record<
     required: true,
     errorText: '❌ Belarus postal code must have 6 digits, starting with "2"',
   },
-};
+} as const satisfies FormFieldsProps;
 
-export const COUNTRIES_PROPS: Record<
-  string,
-  Partial<FormFieldProps> & { title: string; country: Country }
-> = {
+export const COUNTRIES_PROPS = {
   BY: {
     country: 'BY',
     title: 'Belarus',
@@ -95,7 +83,7 @@ export const COUNTRIES_PROPS: Record<
     pattern: '^\\d{5}$',
     errorText: '❌ Ukraine postal code must have exactly 5 digits',
   },
-};
+} as const satisfies CountriesProps;
 
 export const SIGNUP_API_ERROR_TEXT = {
   existedEmail: '❌ Signup failed: this email has already exist. Try another email',
@@ -104,4 +92,4 @@ export const SIGNUP_API_ERROR_TEXT = {
   emptyDateOfBirth: '❌ Please enter valid date of birth',
   badCountryValue: '❌ Invalid country value',
   serverInternalError: '❌ Signup failed: Technical issues. Try again later',
-};
+} as const;

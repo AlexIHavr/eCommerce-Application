@@ -11,3 +11,5 @@ export type FormFieldProps = {
   required?: boolean;
   errorText?: string;
 };
+
+export type FormFieldsProps = Record<string, FormFieldProps>;
