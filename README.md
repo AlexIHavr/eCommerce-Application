@@ -26,7 +26,7 @@ The application is powered by CommerceTools 🌐, a leading provider of commerce
 - **Single Page Application (SPA)**
 - **CommerceTools API**
 - **Vite**
-- **Utils: eslint, prettier, jest**
+- **Utils: eslint, stylelint, prettier, vitest, navigo**
 
 ## Available scripts
 
@@ -82,18 +82,6 @@ To run the tests:
 
 ```bash
 > npm run test
-```
-
-To run the tests with watch mode
-
-```bash
-> npm run test:watch
-```
-
-Deploy production build:
-
-```bash
-> npm run deploy
 ```
 
 ## How to start development

@@ -1,0 +1,29 @@
+@import '/src/styles/global';
+
+.sectionWrapper {
+  position: relative;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  margin-bottom: 40px;
+
+  .sectionImage {
+    width: 100%;
+    height: auto;
+    min-height: 140px;
+    max-height: 250px;
+
+    object-fit: cover;
+  }
+
+  .sectionTitle {
+    position: absolute;
+    font-size: 1.8rem;
+
+    @media (width <= $medium-width) {
+      font-size: 1.4rem;
+    }
+  }
+}
