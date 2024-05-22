@@ -10,8 +10,9 @@ import { routingService } from 'services/routing.service';
 import { BaseComponent } from 'shared/base/base.component';
 
 import { PagesPaths } from './pageWrapper.consts';
-import { loginRedirect } from './pageWrapper.helpers';
+import { isLogined, loginRedirect } from './pageWrapper.helpers';
 import styles from './pageWrapper.module.scss';
+import { Profile } from './profile/profile.component';
 
 export class PageWrapper extends BaseComponent {
   private readonly pageContent;
@@ -50,6 +51,7 @@ export class PageWrapper extends BaseComponent {
       [PagesPaths.SIGNUP]: () => this.goToPage(new Signup()),
       [PagesPaths.CATALOG]: () => this.goToPage(new Catalog()),
       [PagesPaths.ABOUT]: () => this.goToPage(new About()),
+      [PagesPaths.PROFILE]: () => this.goToProfile(),
     });
 
     routingService.setNotFound(() => this.goToPage(notFound));
@@ -58,6 +60,14 @@ export class PageWrapper extends BaseComponent {
   private goToLogin(): void {
     this.goToPage(new Login());
     loginRedirect();
+  }
+
+  private goToProfile(): void {
+    if (isLogined()) {
+      this.goToPage(new Profile());
+    } else {
+      routingService.navigate(PagesPaths.LOGIN);
+    }
   }
 
   private goToPage(page: BaseComponent): void {

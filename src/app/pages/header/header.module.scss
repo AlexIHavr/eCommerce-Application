@@ -92,6 +92,8 @@
     .sidePanel {
       z-index: 120;
       display: flex;
+      gap: 10px;
+      align-items: center;
 
       .nav.mobileMenu ~ & {
         position: fixed;
@@ -130,6 +132,29 @@
 
         .burgerElem:nth-child(2)::after {
           position: absolute;
+        }
+      }
+
+      .profile {
+        cursor: pointer;
+
+        width: 40px;
+        height: 40px;
+
+        visibility: visible;
+        background: url('./images/profile-icon.svg') center no-repeat;
+        border-radius: 50%;
+
+        transition: background-color 0.3s ease-in;
+
+        &.hidden {
+          visibility: hidden;
+        }
+
+        @media (hover: hover) and (pointer: fine) {
+          &:hover {
+            background-color: var(--secondary-color);
+          }
         }
       }
     }
