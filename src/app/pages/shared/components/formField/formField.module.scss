@@ -11,6 +11,10 @@
     pointer-events: none;
   }
 
+  .noEdit & {
+    cursor: default;
+  }
+
   .btnPassVis {
     cursor: pointer;
 
@@ -30,6 +34,25 @@
     &.open {
       background-image: url('./images/eye-open.png');
     }
+
+    .noEdit & {
+      display: none;
+    }
+  }
+}
+
+.textValue {
+  cursor: default;
+
+  display: none;
+
+  margin: 16.7px 10px;
+
+  font-size: 0.9em;
+  font-weight: normal;
+
+  .noEdit & {
+    display: block;
   }
 }
 
@@ -56,6 +79,10 @@
     padding-right: 36px;
   }
 
+  .noEdit & {
+    display: none;
+  }
+
   .apiError &,
   .selfError &:invalid,
   .error &:invalid,
@@ -79,6 +106,10 @@
   color: var(--text-error-color);
 
   visibility: hidden;
+
+  .noEdit & {
+    visibility: hidden !important;
+  }
 
   .apiError &,
   .error .formLabel[area-invalid='true'] &,
