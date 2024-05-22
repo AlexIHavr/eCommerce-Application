@@ -6,7 +6,7 @@
   align-items: center;
   justify-content: space-around;
 
-  height: 100px;
+  height: 109px;
   margin-top: -40px;
   padding: 10px;
 
@@ -14,41 +14,60 @@
 
   background-color: var(--secondary-background-color);
 
-  .filterFieldWrapper {
+  .filterFieldForm {
     display: flex;
     gap: 20px;
     align-items: center;
-
-    .filterField {
-      display: flex;
-      gap: 10px;
-      align-items: center;
-
-      .priceInput {
-        width: 80px;
-        font-size: $text-font-size;
-      }
-    }
+    height: 100%;
 
     .filterSubmitBtn {
       font-size: $text-font-size;
     }
+  }
 
-    .icon {
-      height: 30px;
+  .icon {
+    height: 30px;
+  }
+
+  .filterField {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    height: 100%;
+
+    .priceInput {
+      width: 80px;
+      font-size: $text-font-size;
     }
 
     .multipleSelect {
-      padding: 0 10px;
+      scrollbar-width: thin;
+
+      overflow-y: auto;
+
+      height: 100%;
+      padding: 5px 10px;
 
       font-size: $text-font-size;
       font-weight: bold;
 
+      background-color: var(--background-color);
       border: 2px solid var(--input-border-color);
       border-radius: 5px;
 
-      &::-webkit-scrollbar {
-        display: none;
+      &:has(:checked) {
+        border-color: var(--input-focus-border-color);
+      }
+
+      .multipleSelectLabel {
+        display: flex;
+        flex-direction: row-reverse;
+        gap: 5px;
+        justify-content: flex-end;
+
+        .selectCheckbox {
+          width: 15px;
+        }
       }
     }
 

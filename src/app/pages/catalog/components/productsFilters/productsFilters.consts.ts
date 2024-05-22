@@ -1,7 +1,5 @@
 import { FormFieldsProps } from 'pages/shared/components/formField/formField.types';
 
-export const MULTIPLY_SELECT_SIZE = 3;
-
 export const PRODUCT_FILTER_PROPS = {
   priceFrom: {
     name: 'price-from',
