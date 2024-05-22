@@ -10,7 +10,7 @@ import { routingService } from 'services/routing.service';
 import { BaseComponent } from 'shared/base/base.component';
 
 import { PagesPaths } from './pageWrapper.consts';
-import { loginRedirect } from './pageWrapper.helpers';
+import { isLogined, redirectToMain } from './pageWrapper.helpers';
 import styles from './pageWrapper.module.scss';
 
 export class PageWrapper extends BaseComponent {
@@ -56,8 +56,11 @@ export class PageWrapper extends BaseComponent {
   }
 
   private goToLogin(): void {
-    this.goToPage(new Login());
-    loginRedirect();
+    if (isLogined()) {
+      redirectToMain();
+    } else {
+      this.goToPage(new Login());
+    }
   }
 
   private goToPage(page: BaseComponent): void {

@@ -1,4 +1,4 @@
-export enum PagesPaths {
+export const enum PagesPaths {
   HOME = '',
   MAIN = 'main',
   CATALOG = 'catalog',

@@ -28,12 +28,6 @@ export function isLogined(): boolean {
   return Boolean(LocalStorageService.getData('refreshToken'));
 }
 
-export function loginRedirect(): void {
-  if (!isLogined()) return;
-
-  redirectToMain();
-}
-
 export function successLogin(title: string): void {
   if (!tokenCache.cache.refreshToken) return;
 
