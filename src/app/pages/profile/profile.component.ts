@@ -14,7 +14,7 @@ const MOCK = {
   firstname: 'Firstname',
   lastname: 'Lastname',
   email: 'dimatest@dimatest.com',
-  birthDate: '2024-22-05',
+  birthDate: '2024-05-22',
 };
 
 export class Profile extends BaseComponent {

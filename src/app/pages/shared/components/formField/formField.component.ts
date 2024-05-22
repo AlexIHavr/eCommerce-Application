@@ -42,6 +42,22 @@ export class FormField extends BaseComponent {
     return Boolean(this.value.match(this.props.pattern || ''));
   }
 
+  public isBirthdayValid(validAge: number): boolean {
+    const birth = new Date(this.value);
+    birth.setHours(0);
+
+    const validationDate = new Date();
+    validationDate.setFullYear(new Date().getFullYear() - validAge);
+
+    if (birth < validationDate) {
+      this.removeAttribute('area-invalid');
+      return true;
+    }
+
+    this.setAttribute('area-invalid', 'true');
+    return false;
+  }
+
   public setErrorText(text: string): void {
     this.errorText.setText(text);
   }

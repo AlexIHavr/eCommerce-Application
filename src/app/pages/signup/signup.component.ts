@@ -53,7 +53,7 @@ export class Signup extends BaseComponent {
     this.lastNameField = new FormField(SIGNUP_PROPS.lastName);
 
     this.birthField = new FormField(SIGNUP_PROPS.birthDate);
-    this.birthField.addListener('input', () => this.isBirthdayValid());
+    this.birthField.addListener('input', () => this.birthField.isBirthdayValid(USER_AVAILABLE_AGE));
 
     this.bilAddressForm = new AddressForm('billing');
     this.shipAddressForm = new AddressForm('shipping');
@@ -115,7 +115,7 @@ export class Signup extends BaseComponent {
       this.passwordField.isValid() &&
       this.firstNameField.isValid() &&
       this.lastNameField.isValid() &&
-      this.isBirthdayValid() &&
+      this.birthField.isBirthdayValid(USER_AVAILABLE_AGE) &&
       this.bilAddressForm.isValid() &&
       this.shipAddressForm.isValid()
     ) {
@@ -196,22 +196,6 @@ export class Signup extends BaseComponent {
     }
 
     return newCustomer;
-  }
-
-  private isBirthdayValid(): boolean {
-    const birth = new Date(this.birthField.value);
-    birth.setHours(0);
-
-    const validationDate = new Date();
-    validationDate.setFullYear(new Date().getFullYear() - USER_AVAILABLE_AGE);
-
-    if (birth < validationDate) {
-      this.birthField.removeAttribute('area-invalid');
-      return true;
-    }
-
-    this.birthField.setAttribute('area-invalid', 'true');
-    return false;
   }
 
   private sameAddressHandler(): void {
