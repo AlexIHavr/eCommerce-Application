@@ -1,4 +1,6 @@
-.productFilter {
+@import '/src/styles/global';
+
+.productsFilters {
   $text-font-size: 0.8em;
 
   display: flex;
@@ -6,7 +8,6 @@
   align-items: center;
   justify-content: space-around;
 
-  height: 109px;
   margin-top: -40px;
   padding: 10px;
 
@@ -14,29 +15,64 @@
 
   background-color: var(--secondary-background-color);
 
+  .filteredCount {
+    user-select: none;
+
+    display: flex;
+    flex-flow: row-reverse wrap-reverse;
+    gap: 10px;
+    align-items: center;
+    justify-content: center;
+
+    @media (width <= $middle-width) {
+      cursor: pointer;
+
+      &:has(~ .show) {
+        color: var(--form-checkbox-color);
+      }
+    }
+  }
+
   .filterFieldForm {
     display: flex;
     gap: 20px;
     align-items: center;
-    height: 100%;
 
     .filterSubmitBtn {
       font-size: $text-font-size;
     }
+
+    @media (width <= $middle-width) {
+      display: none;
+      flex-direction: column;
+      align-items: flex-start;
+
+      &.show {
+        display: flex;
+      }
+
+      .filterFieldTitle {
+        width: 80px;
+      }
+    }
   }
 
   .icon {
+    align-self: center;
     height: 30px;
+
+    @media (width <= $medium-width) {
+      height: 25px;
+    }
   }
 
   .filterField {
     display: flex;
     gap: 10px;
     align-items: center;
-    height: 100%;
 
     .priceInput {
-      width: 80px;
+      width: 100px;
       font-size: $text-font-size;
     }
 
@@ -45,7 +81,7 @@
 
       overflow-y: auto;
 
-      height: 100%;
+      max-height: 89px;
       padding: 5px 10px;
 
       font-size: $text-font-size;
@@ -56,17 +92,25 @@
       border-radius: 5px;
 
       &:has(:checked) {
-        border-color: var(--input-focus-border-color);
+        border-color: var(--form-checkbox-color);
       }
 
       .multipleSelectLabel {
+        user-select: none;
+
         display: flex;
         flex-direction: row-reverse;
         gap: 5px;
+        align-items: center;
         justify-content: flex-end;
 
         .selectCheckbox {
           width: 15px;
+          height: 25px;
+
+          @media (width <= $medium-width) {
+            width: 13px;
+          }
         }
       }
     }
@@ -81,7 +125,7 @@
       align-items: center;
       justify-content: center;
 
-      min-width: 100px;
+      min-width: 105px;
       padding: 5px 0;
 
       font-size: $text-font-size;
@@ -92,7 +136,7 @@
       border-radius: 10px;
 
       &:has(.asc, .desc) {
-        border-color: var(--input-focus-border-color);
+        border-color: var(--form-checkbox-color);
       }
 
       .arrowIcon {
@@ -113,10 +157,22 @@
           display: block;
         }
       }
+
+      @media (width <= $medium-width) {
+        min-width: 90px;
+      }
     }
 
     .searchInput {
       font-size: $text-font-size;
     }
+  }
+
+  @media (width <= $huge-width) {
+    flex-direction: column;
+  }
+
+  @media (width <= $medium-width) {
+    font-size: 0.8em;
   }
 }
