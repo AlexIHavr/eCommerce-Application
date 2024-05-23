@@ -21,6 +21,6 @@ export const PRODUCTS_FILTERS_PROPS = {
 } as const satisfies FormFieldsProps;
 
 export const PRODUCTS_OPTIONS = {
-  size: ['S', 'M', 'L'],
+  brand: ['Brand1', 'Brand2', 'Brand3'],
   color: ['Black', 'Red', 'Yellow', 'Green', 'White'],
 } as const satisfies Record<string, string[]>;

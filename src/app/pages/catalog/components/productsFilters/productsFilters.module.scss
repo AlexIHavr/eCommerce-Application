@@ -11,6 +11,7 @@
   margin-top: -40px;
   padding: 10px;
 
+  font-size: $text-font-size;
   font-weight: bold;
 
   background-color: var(--secondary-background-color);
@@ -38,10 +39,6 @@
     gap: 20px;
     align-items: center;
 
-    .filterSubmitBtn {
-      font-size: $text-font-size;
-    }
-
     @media (width <= $middle-width) {
       display: none;
       flex-direction: column;
@@ -59,11 +56,7 @@
 
   .icon {
     align-self: center;
-    height: 30px;
-
-    @media (width <= $medium-width) {
-      height: 25px;
-    }
+    height: 23px;
   }
 
   .filterField {
@@ -73,7 +66,6 @@
 
     .priceInput {
       width: 100px;
-      font-size: $text-font-size;
       border-color: var(--form-checkbox-color);
 
       &:placeholder-shown {
@@ -110,12 +102,8 @@
         justify-content: flex-end;
 
         .selectCheckbox {
-          width: 15px;
+          width: 13px;
           height: 25px;
-
-          @media (width <= $medium-width) {
-            width: 13px;
-          }
         }
       }
     }
@@ -130,7 +118,7 @@
       align-items: center;
       justify-content: center;
 
-      min-width: 105px;
+      min-width: 90px;
       padding: 5px 0;
 
       font-size: $text-font-size;
@@ -162,10 +150,6 @@
           display: block;
         }
       }
-
-      @media (width <= $medium-width) {
-        min-width: 90px;
-      }
     }
 
     .searchInput {
@@ -175,9 +159,5 @@
 
   @media (width <= $huge-width) {
     flex-direction: column;
-  }
-
-  @media (width <= $medium-width) {
-    font-size: 0.8em;
   }
 }

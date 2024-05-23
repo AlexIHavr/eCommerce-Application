@@ -22,7 +22,7 @@ export class ProductsFilters extends BaseComponent {
   constructor() {
     super({ className: styles.productsFilters });
 
-    this.inputOptions = { color: [], size: [] };
+    this.inputOptions = { color: [], brand: [] };
 
     this.priceFromInput = input({
       className: styles.priceInput,
@@ -39,8 +39,8 @@ export class ProductsFilters extends BaseComponent {
       div({ className: styles.filterField, text: 'Price' }, this.priceFromInput, this.priceToInput),
       div(
         { className: styles.filterField },
-        div({ className: styles.filterFieldTitle, text: 'Size' }),
-        this.getMultipleSelect('size'),
+        div({ className: styles.filterFieldTitle, text: 'Brand' }),
+        this.getMultipleSelect('brand'),
       ),
       div(
         { className: styles.filterField },
@@ -48,7 +48,6 @@ export class ProductsFilters extends BaseComponent {
         this.getMultipleSelect('color'),
       ),
       button({
-        className: styles.filterSubmitBtn,
         type: 'submit',
         text: 'Apply',
         onclick: (event) => this.submitFilter(event),
@@ -101,11 +100,6 @@ export class ProductsFilters extends BaseComponent {
   private submitFilter(event: MouseEvent): void {
     event.preventDefault();
     // TODO: SUBMIT FILTER
-    console.log(
-      this.priceFromInput.getNode().value,
-      this.priceToInput.getNode().value,
-      this.inputOptions.size,
-      this.inputOptions.color,
-    );
+    console.log(this);
   }
 }

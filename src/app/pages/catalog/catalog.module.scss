@@ -47,9 +47,5 @@
         flex-direction: column;
       }
     }
-
-    @media (width <= $medium-width) {
-      font-size: 0.8em;
-    }
   }
 }
