@@ -108,7 +108,7 @@
   visibility: hidden;
 
   .noEdit & {
-    visibility: hidden !important;
+    display: none;
   }
 
   .apiError &,
@@ -116,6 +116,19 @@
   .error .formInput:invalid + &,
   .selfError .formInput:invalid + & {
     visibility: visible;
+  }
+}
+
+.noEdit {
+  select {
+    pointer-events: none;
+    border-color: transparent;
+  }
+
+  input[type='checkbox'],
+  button {
+    pointer-events: none;
+    filter: grayscale(1);
   }
 }
 

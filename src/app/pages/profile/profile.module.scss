@@ -5,11 +5,17 @@
   font-size: 1.8rem;
 
   .profileWrapper {
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+    justify-content: space-between;
+
     width: 100%;
     margin: 0 auto;
 
     .userInfoForm {
-      max-width: 400px;
+      width: 100%;
+      max-width: 360px;
       padding: 10px;
       padding-top: 20px;
 
@@ -27,5 +33,57 @@
 
 .startEditBtn {
   max-width: 200px;
-  background-color: mediumaquamarine;
+  background-color: coral;
+}
+
+.addressWrapper {
+  width: 100%;
+
+  .tableTitle {
+    font-size: 0.8em;
+    text-align: center;
+  }
+
+  .table {
+    border-collapse: collapse;
+    width: 100%;
+    font-size: 0.6em;
+    border: 1px solid #ddd;
+
+    & td {
+      padding: 5px;
+      word-break: break-word;
+      border: 1px solid #ddd;
+    }
+
+    & label {
+      max-width: 200px;
+      margin-bottom: unset;
+      font-size: 1em;
+    }
+
+    & tr {
+      display: grid;
+      grid-template-columns: 90px 140px 1fr 1fr 140px 130px 90px;
+    }
+
+    .tableHeader {
+      font-size: 0.9em;
+      font-weight: bold;
+      text-align: center;
+      background: #efefef;
+
+      & > * {
+        padding: 5px;
+        border: 1px solid #ddd;
+      }
+    }
+  }
+
+  .rowAddBtn {
+    max-width: 80px;
+    margin: 10px auto 0;
+    font-size: 0.4em;
+    background-color: mediumseagreen;
+  }
 }

@@ -13,6 +13,9 @@ import {
   Option,
   Select,
   Span,
+  Table,
+  Td,
+  Tr,
   UL,
 } from 'globalTypes/elements';
 import { BaseComponent } from 'shared/base/base.component';
@@ -70,3 +73,12 @@ export const ul = (props: TagProps<HTMLUListElement>, ...children: BaseComponent
 
 export const li = (props: TagProps<HTMLLIElement>, ...children: BaseComponent[]): LI =>
   new BaseComponent({ ...props, tag: 'li' }, ...children);
+
+export const table = (props: TagProps<HTMLTableElement>, ...children: BaseComponent[]): Table =>
+  new BaseComponent({ ...props, tag: 'table' }, ...children);
+
+export const tr = (props: TagProps<HTMLTableRowElement>, ...children: BaseComponent[]): Tr =>
+  new BaseComponent({ ...props, tag: 'tr' }, ...children);
+
+export const td = (props: TagProps<HTMLTableElement>, ...children: BaseComponent[]): Td =>
+  new BaseComponent({ ...props, tag: 'td' }, ...children);
