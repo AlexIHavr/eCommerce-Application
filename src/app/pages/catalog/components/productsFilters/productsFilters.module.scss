@@ -24,33 +24,20 @@
     gap: 10px;
     align-items: center;
     justify-content: center;
-
-    @media (width <= $middle-width) {
-      cursor: pointer;
-
-      &:has(~ .show) {
-        color: var(--form-checkbox-color);
-      }
-    }
   }
 
   .filterFieldForm {
     display: flex;
-    gap: 20px;
+    gap: 10px;
     align-items: center;
 
-    @media (width <= $middle-width) {
-      display: none;
+    .submitFilterBtn {
+      min-width: 100px;
+      padding: 5px 10px;
+    }
+
+    @media (width <= $medium-width) {
       flex-direction: column;
-      align-items: flex-start;
-
-      &.show {
-        display: flex;
-      }
-
-      .filterFieldTitle {
-        width: 80px;
-      }
     }
   }
 
@@ -60,12 +47,16 @@
   }
 
   .filterField {
+    $select-width: 90px;
+
     display: flex;
     gap: 10px;
     align-items: center;
 
     .priceInput {
       width: 100px;
+      padding: 5px 10px;
+      font-size: $text-font-size;
       border-color: var(--form-checkbox-color);
 
       &:placeholder-shown {
@@ -73,16 +64,21 @@
       }
     }
 
-    .multipleSelect {
-      scrollbar-width: thin;
+    .filterFieldTitle {
+      cursor: pointer;
+      user-select: none;
 
-      overflow-y: auto;
+      position: relative;
 
-      max-height: 89px;
+      display: flex;
+      gap: 5px;
+      align-items: center;
+      justify-content: space-between;
+
+      min-width: $select-width;
       padding: 5px 10px;
 
       font-size: $text-font-size;
-      font-weight: bold;
 
       background-color: var(--background-color);
       border: 2px solid var(--input-border-color);
@@ -92,18 +88,58 @@
         border-color: var(--form-checkbox-color);
       }
 
-      .multipleSelectLabel {
-        user-select: none;
+      .selectIcon {
+        height: 10px;
+        transition: rotate 0.2s;
+      }
 
-        display: flex;
-        flex-direction: row-reverse;
-        gap: 5px;
-        align-items: center;
-        justify-content: flex-end;
+      .multipleSelect {
+        position: absolute;
+        z-index: 1;
+        top: 100%;
+        left: -2px;
 
-        .selectCheckbox {
-          width: 13px;
-          height: 25px;
+        display: none;
+        flex-direction: column;
+
+        width: $select-width;
+        padding: 10px 0 10px 5px;
+
+        font-weight: bold;
+
+        background-color: var(--background-color);
+        border: 2px solid var(--input-border-color);
+        border-radius: 5px;
+
+        &:has(:checked) {
+          border-color: var(--form-checkbox-color);
+        }
+
+        .multipleSelectLabel {
+          user-select: none;
+
+          display: flex;
+          flex-direction: row-reverse;
+          gap: 5px;
+          align-items: center;
+          justify-content: flex-end;
+
+          .selectCheckbox {
+            width: 13px;
+            height: 20px;
+          }
+        }
+      }
+    }
+
+    &.show {
+      .filterFieldTitle {
+        .icon {
+          rotate: 180deg;
+        }
+
+        .multipleSelect {
+          display: flex;
         }
       }
     }
@@ -118,7 +154,7 @@
       align-items: center;
       justify-content: center;
 
-      min-width: 90px;
+      min-width: $select-width;
       padding: 5px 0;
 
       font-size: $text-font-size;
@@ -126,7 +162,7 @@
 
       background-color: var(--background-color);
       border: 2px solid var(--input-border-color);
-      border-radius: 10px;
+      border-radius: 5px;
 
       &:has(.asc, .desc) {
         border-color: var(--form-checkbox-color);
@@ -153,6 +189,7 @@
     }
 
     .searchInput {
+      padding: 5px 10px;
       font-size: $text-font-size;
     }
   }

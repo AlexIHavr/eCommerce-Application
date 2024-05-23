@@ -1,9 +1,11 @@
 import { Div, Input } from 'globalTypes/elements';
 import { BaseComponent } from 'shared/base/base.component';
 import { button, div, form, img, input, label } from 'shared/tags/tags.component';
+import { capitalizeFirstLetter } from 'utils/strings.util';
 
 import filterIcon from './images/filterIcon.png';
 import searchIcon from './images/searchIcon.png';
+import selectArrowIcon from './images/selectArrowIcon.png';
 import sortIcon from './images/sortIcon.png';
 import { PRODUCTS_FILTERS_PROPS, PRODUCTS_OPTIONS } from './productsFilters.consts';
 import { getSortField } from './productsFilters.helpers';
@@ -18,6 +20,8 @@ export class ProductsFilters extends BaseComponent {
   private readonly filteredCount: Div;
 
   private readonly inputOptions: Record<OptionsType, Input[]>;
+
+  private selectFields: Div[] = [];
 
   constructor() {
     super({ className: styles.productsFilters });
@@ -37,17 +41,10 @@ export class ProductsFilters extends BaseComponent {
     const filterFieldForm = form(
       { className: styles.filterFieldForm },
       div({ className: styles.filterField, text: 'Price' }, this.priceFromInput, this.priceToInput),
-      div(
-        { className: styles.filterField },
-        div({ className: styles.filterFieldTitle, text: 'Brand' }),
-        this.getMultipleSelect('brand'),
-      ),
-      div(
-        { className: styles.filterField },
-        div({ className: styles.filterFieldTitle, text: 'Color' }),
-        this.getMultipleSelect('color'),
-      ),
+      this.getMultipleSelectField('brand'),
+      this.getMultipleSelectField('color'),
       button({
+        className: styles.submitFilterBtn,
         type: 'submit',
         text: 'Apply',
         onclick: (event) => this.submitFilter(event),
@@ -55,11 +52,7 @@ export class ProductsFilters extends BaseComponent {
     );
 
     this.filteredCount = div(
-      {
-        className: styles.filteredCount,
-        text: '5 / 20',
-        onclick: () => filterFieldForm.toggleClass(styles.show),
-      },
+      { className: styles.filteredCount, text: '5 / 20' },
       img({ className: styles.icon, src: filterIcon, alt: 'filter-icon' }),
     );
 
@@ -78,10 +71,20 @@ export class ProductsFilters extends BaseComponent {
         input({ className: styles.searchInput, ...PRODUCTS_FILTERS_PROPS.search }),
       ),
     ]);
+
+    window.addEventListener('click', (event) => this.hideSelectFields(event));
   }
 
-  private getMultipleSelect(optionsType: OptionsType): Div {
-    return div(
+  private hideSelectFields(event: MouseEvent): void {
+    this.selectFields.forEach((selectField) => {
+      if (!event.composedPath().includes(selectField.getNode())) {
+        selectField.removeClass(styles.show);
+      }
+    });
+  }
+
+  private getMultipleSelectField(optionsType: OptionsType): Div {
+    const multipleSelect = div(
       { className: styles.multipleSelect },
       ...PRODUCTS_OPTIONS[optionsType].map((option) => {
         const inputOption = input({
@@ -95,6 +98,34 @@ export class ProductsFilters extends BaseComponent {
         return label({ className: styles.multipleSelectLabel, text: option }, inputOption);
       }),
     );
+
+    const selectIcon = img({
+      className: styles.icon,
+      src: selectArrowIcon,
+      alt: 'select-array-icon',
+    });
+    selectIcon.addClass(styles.selectIcon);
+
+    const multipleSelectField = div(
+      { className: styles.filterField },
+      div(
+        {
+          className: styles.filterFieldTitle,
+          text: capitalizeFirstLetter(optionsType),
+          onclick: (event) => {
+            if (!event.composedPath().includes(multipleSelect.getNode())) {
+              multipleSelectField.toggleClass(styles.show);
+            }
+          },
+        },
+        selectIcon,
+        multipleSelect,
+      ),
+    );
+
+    this.selectFields.push(multipleSelectField);
+
+    return multipleSelectField;
   }
 
   private submitFilter(event: MouseEvent): void {

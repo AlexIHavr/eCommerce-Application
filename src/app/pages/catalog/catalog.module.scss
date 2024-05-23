@@ -31,7 +31,7 @@
           max-height: 250px;
           border-radius: 10px;
 
-          @media (width <= $medium-width) {
+          @media (width <= $huge-width) {
             max-height: 200px;
           }
         }
