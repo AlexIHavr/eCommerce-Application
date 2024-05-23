@@ -5,17 +5,15 @@ export const PRODUCTS_FILTERS_PROPS = {
     name: 'price-from',
     type: 'number',
     placeholder: 'From',
-    pattern: '^[1-9][0-9]*$',
   },
   priceTo: {
     name: 'price-to',
     type: 'number',
     placeholder: 'To',
-    pattern: '^[1-9][0-9]*$',
   },
   search: {
     name: 'search',
-    type: 'search',
+    type: 'text',
     placeholder: 'Search',
   },
 } as const satisfies FormFieldsProps;

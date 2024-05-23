@@ -6,9 +6,9 @@ import { div, h3 } from 'shared/tags/tags.component';
 
 import { getCategory } from './catalog.helpers';
 import styles from './catalog.module.scss';
-import bedroomImage from './images/bedroomImage.jpg';
-import diningImage from './images/diningImage.jpg';
-import livingImage from './images/livingImage.jpg';
+import bedsImage from './images/bedsImage.jpg';
+import chairsImage from './images/chairsImage.jpg';
+import sofasImage from './images/sofasImage.jpg';
 
 export class Catalog extends BaseComponent {
   constructor() {
@@ -23,9 +23,9 @@ export class Catalog extends BaseComponent {
           h3('Select category'),
           div(
             { className: styles.categories },
-            getCategory('Dining', diningImage),
-            getCategory('Living', livingImage),
-            getCategory('Bedroom', bedroomImage),
+            getCategory('Chairs', chairsImage),
+            getCategory('Sofas', sofasImage),
+            getCategory('Beds', bedsImage),
           ),
         ),
       ),
