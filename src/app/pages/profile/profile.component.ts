@@ -42,13 +42,13 @@ const ADDRESS_MOCK_2: TableRowProps = {
 };
 
 const ADDRESS_MOCK_3: TableRowProps = {
-  type: 'shipping',
+  type: 'billing',
   city: 'Asdasdasda',
   street: 'Asdasd',
   postalCode: '01234',
   country: 'UA',
   addressId: 'test',
-  defaultBilAddress: '',
+  defaultBilAddress: 'test',
   defaultShipAddress: '',
 };
 
@@ -67,11 +67,13 @@ export class Profile extends BaseComponent {
 
   private readonly birthField: FormField;
 
-  private adresses: TableRow[];
+  private addresses: TableRow[];
+
+  private counter = 0;
 
   constructor() {
     super({ className: styles.profilePage }, new SectionTitle('Profile'));
-    this.adresses = [];
+    this.addresses = [];
 
     this.firstNameField = new FormField(SIGNUP_PROPS.firstName, MOCK.firstname);
     this.lastNameField = new FormField(SIGNUP_PROPS.lastName, MOCK.lastname);
@@ -131,11 +133,23 @@ export class Profile extends BaseComponent {
     ]);
 
     // TEST
-    const address1 = new TableRow(ADDRESS_MOCK_1, this.deleteRowAddress.bind(this));
-    const address2 = new TableRow(ADDRESS_MOCK_2, this.deleteRowAddress.bind(this));
-    const address3 = new TableRow(ADDRESS_MOCK_3, this.deleteRowAddress.bind(this));
+    const address1 = new TableRow(
+      ADDRESS_MOCK_1,
+      this.deleteRowAddress.bind(this),
+      this.defaultHandler.bind(this),
+    );
+    const address2 = new TableRow(
+      ADDRESS_MOCK_2,
+      this.deleteRowAddress.bind(this),
+      this.defaultHandler.bind(this),
+    );
+    const address3 = new TableRow(
+      ADDRESS_MOCK_3,
+      this.deleteRowAddress.bind(this),
+      this.defaultHandler.bind(this),
+    );
     this.addressTable.appendChildren([address1, address2, address3]);
-    this.adresses.push(address1, address2, address3);
+    this.addresses.push(address1, address2, address3);
   }
 
   private startEdit(): void {
@@ -149,19 +163,31 @@ export class Profile extends BaseComponent {
       street: '',
       postalCode: '',
       country: 'BY',
-      addressId: '',
-      defaultBilAddress: null,
-      defaultShipAddress: null,
+      addressId: `newAddress${this.counter}`,
     };
-    const newAddress = new TableRow(emptyProps, this.deleteRowAddress.bind(this));
+    const newAddress = new TableRow(
+      emptyProps,
+      this.deleteRowAddress.bind(this),
+      this.defaultHandler.bind(this),
+    );
 
     this.addressTable.append(newAddress);
-    this.adresses.push(newAddress);
+    this.addresses.push(newAddress);
+    this.counter += 1;
   }
 
   private deleteRowAddress(id: string): void {
-    const delAddrIndex = this.adresses.findIndex((address) => address.addressId === id);
-    this.adresses[delAddrIndex].destroy();
-    this.adresses.splice(delAddrIndex, 1);
+    const delAddrIndex = this.addresses.findIndex((address) => address.addressId === id);
+    this.addresses[delAddrIndex].destroy();
+    this.addresses.splice(delAddrIndex, 1);
+  }
+
+  private defaultHandler(id: string): void {
+    const defaultAddress = this.addresses.find((address) => address.addressId === id);
+    this.addresses
+      .filter((addr) => addr.type === defaultAddress?.type)
+      .forEach((addr) => {
+        if (addr !== defaultAddress) addr.resetDefault();
+      });
   }
 }

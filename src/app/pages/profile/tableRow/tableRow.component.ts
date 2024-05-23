@@ -23,25 +23,40 @@ export class TableRow extends BaseComponent {
 
   public readonly deleteBtn: Button;
 
-  public isDefaultAddress: boolean = false;
+  public isDefaultAddress: boolean;
 
   public addressId: string;
 
-  constructor(props: TableRowProps, removeRow: (id: string) => void) {
+  public type: string;
+
+  constructor(
+    props: TableRowProps,
+    removeRow: (id: string) => void,
+    defaultHandler: (id: string) => void,
+  ) {
     super({ tag: 'tr', className: `${styles.row} ${formFieldStyles.error}` });
+
     this.addressId = props.addressId;
+    this.type = props.type;
+    this.isDefaultAddress =
+      props.type === 'billing'
+        ? props.addressId === props.defaultBilAddress
+        : props.addressId === props.defaultShipAddress;
+
+    if (this.isDefaultAddress) this.addClass(styles.default);
 
     this.defaultField = input({
       className: styles.formCheckbox,
       type: 'checkbox',
-      name: `default-${props.type}`,
-      checked:
-        props.type === 'billing'
-          ? props.addressId === props.defaultBilAddress
-          : props.addressId === props.defaultShipAddress,
+      checked: this.isDefaultAddress,
       onclick: () => {
         this.isDefaultAddress = !this.isDefaultAddress;
-        console.log('TODO change default');
+        if (this.isDefaultAddress) {
+          this.addClass(styles.default);
+          defaultHandler(props.addressId);
+        } else {
+          this.removeClass(styles.default);
+        }
       },
     });
 
@@ -59,6 +74,7 @@ export class TableRow extends BaseComponent {
       {
         className: styles.select,
         name: 'type',
+        onchange: () => this.typeChangeHandler(),
       },
       option({ value: 'billing', text: 'Billing', selected: props.type === 'billing' }),
       option({ value: 'shipping', text: 'Shipping', selected: props.type === 'shipping' }),
@@ -111,5 +127,16 @@ export class TableRow extends BaseComponent {
     this.postalCodeField.setErrorText(`${country.errorText}`);
 
     return Boolean(postalCodeValue.match(`${country.pattern}`));
+  }
+
+  private typeChangeHandler(): void {
+    this.type = this.typeField.getNode().value;
+    this.resetDefault();
+  }
+
+  public resetDefault(): void {
+    this.defaultField.getNode().checked = false;
+    this.isDefaultAddress = false;
+    this.removeClass(styles.default);
   }
 }

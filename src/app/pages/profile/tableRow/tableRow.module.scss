@@ -54,6 +54,10 @@
   & input:valid + span {
     display: none;
   }
+
+  &.default {
+    background-color: lightsteelblue;
+  }
 }
 
 .deleteButton {

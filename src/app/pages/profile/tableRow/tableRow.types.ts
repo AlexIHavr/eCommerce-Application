@@ -5,6 +5,6 @@ export type TableRowProps = {
   postalCode: string;
   country: 'BY' | 'UA';
   addressId: string;
-  defaultBilAddress: string | null;
-  defaultShipAddress: string | null;
+  defaultBilAddress?: string;
+  defaultShipAddress?: string;
 };
