@@ -74,6 +74,11 @@
     .priceInput {
       width: 100px;
       font-size: $text-font-size;
+      border-color: var(--form-checkbox-color);
+
+      &:placeholder-shown {
+        border-color: var(--input-border-color);
+      }
     }
 
     .multipleSelect {
