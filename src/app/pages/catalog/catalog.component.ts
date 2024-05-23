@@ -2,9 +2,13 @@ import { ProductsFilters } from 'pages/catalog/components/productsFilters/produc
 import { SectionTitle } from 'pages/shared/components/sectionTitle/sectionTitle.component';
 import sharedStyles from 'pages/shared/styles/common.module.scss';
 import { BaseComponent } from 'shared/base/base.component';
-import { div } from 'shared/tags/tags.component';
+import { div, h3 } from 'shared/tags/tags.component';
 
+import { getCategory } from './catalog.helpers';
 import styles from './catalog.module.scss';
+import bedroomImage from './images/bedroomImage.jpg';
+import diningImage from './images/diningImage.jpg';
+import livingImage from './images/livingImage.jpg';
 
 export class Catalog extends BaseComponent {
   constructor() {
@@ -12,7 +16,19 @@ export class Catalog extends BaseComponent {
       { className: styles.catalog },
       new SectionTitle('Catalog'),
       new ProductsFilters(),
-      div({ className: sharedStyles.container }),
+      div(
+        { className: sharedStyles.container },
+        div(
+          { className: styles.categoriesWrapper },
+          h3('Select category'),
+          div(
+            { className: styles.categories },
+            getCategory('Dining', diningImage),
+            getCategory('Living', livingImage),
+            getCategory('Bedroom', bedroomImage),
+          ),
+        ),
+      ),
     );
   }
 }
