@@ -1,3 +1,3 @@
 import { Match } from 'navigo';
 
-export type MatchFunc = (match?: Match) => void;
+export type MatchFunc = (match: Match) => void;

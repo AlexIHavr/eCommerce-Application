@@ -1,3 +1,4 @@
+import { Match } from 'navigo';
 import { About } from 'pages/about/about.component';
 import { Catalog } from 'pages/catalog/catalog.component';
 import { Footer } from 'pages/footer/footer.component';
@@ -10,14 +11,18 @@ import { routingService } from 'services/routing.service';
 import { BaseComponent } from 'shared/base/base.component';
 
 import { Category } from './category/category.component';
-import { CategoriesTypes, PagesPaths } from './pageWrapper.consts';
+import { CATEGORIES_TYPES_VALUES, CategoriesTypes, PagesPaths } from './pageWrapper.consts';
 import { isLogined, redirectToMain } from './pageWrapper.helpers';
 import styles from './pageWrapper.module.scss';
+import { IProductParams } from './pageWrapper.types';
+import { Product } from './product/product.component';
 
 export class PageWrapper extends BaseComponent {
   private readonly pageContent;
 
   private readonly header: Header;
+
+  private readonly notFound: NotFound;
 
   constructor() {
     super({ className: styles.pageWrapper });
@@ -25,6 +30,8 @@ export class PageWrapper extends BaseComponent {
     this.pageContent = new BaseComponent({ tag: 'main', className: styles.pageContent });
 
     this.header = new Header();
+
+    this.notFound = new NotFound();
 
     this.appendChildren([this.header, this.pageContent, new Footer()]);
 
@@ -35,7 +42,6 @@ export class PageWrapper extends BaseComponent {
 
   private initRoutingService(): void {
     const main = new Main();
-    const notFound = new NotFound();
 
     routingService.setHooks({
       before: (done, match) => {
@@ -54,10 +60,10 @@ export class PageWrapper extends BaseComponent {
       [PagesPaths.CHAIRS]: () => this.goToPage(new Category(CategoriesTypes.CHAIRS)),
       [PagesPaths.SOFAS]: () => this.goToPage(new Category(CategoriesTypes.SOFAS)),
       [PagesPaths.BEDS]: () => this.goToPage(new Category(CategoriesTypes.BEDS)),
-      [PagesPaths.PRODUCT]: (data) => console.log(data?.data),
+      [PagesPaths.PRODUCT]: (match) => this.goToProduct(match),
     });
 
-    routingService.setNotFound(() => this.goToPage(notFound));
+    routingService.setNotFound(() => this.goToPage(this.notFound));
   }
 
   private goToLogin(): void {
@@ -65,6 +71,18 @@ export class PageWrapper extends BaseComponent {
       redirectToMain();
     } else {
       this.goToPage(new Login());
+    }
+  }
+
+  private goToProduct({ data }: Match): void {
+    if (!data) return;
+
+    const params = data as IProductParams;
+
+    if (!CATEGORIES_TYPES_VALUES.includes(params.category as CategoriesTypes)) {
+      this.goToPage(this.notFound);
+    } else {
+      this.goToPage(new Product(params));
     }
   }
 
