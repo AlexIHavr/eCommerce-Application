@@ -9,28 +9,30 @@ import styles from './category.module.scss';
 const CURRENCY = 'BYN';
 
 export function getProducts(category: CategoriesTypes): Anchor[] {
-  return PRODUCTS_CARDS.map(({ id, name, src, price, discount, description }) => {
-    const priceWithDiscount = discount
-      ? `${Number(price) - (Number(price) * Number(discount)) / 100} ${CURRENCY}`
-      : `${price} ${CURRENCY}`;
+  return PRODUCTS_CARDS.filter(({ type }) => type === category).map(
+    ({ id, name, src, price, discount, description }) => {
+      const priceWithDiscount = discount
+        ? `${Number(price) - (Number(price) * Number(discount)) / 100} ${CURRENCY}`
+        : `${price} ${CURRENCY}`;
 
-    const prices = div({ className: styles.cardPrices }, div({ text: priceWithDiscount }));
+      const prices = div({ className: styles.cardPrices }, div({ text: priceWithDiscount }));
 
-    const productCard = getNavLink(
-      '',
-      `${PagesPaths.CATALOG}/${category}/${id}`,
-      styles.productCard,
-      img({ className: styles.cardImg, src, alt: 'product-card-img' }),
-      h3(name, styles.cardName),
-      div({ className: styles.cardDescription, text: description }),
-      prices,
-    );
+      const productCard = getNavLink(
+        '',
+        `${PagesPaths.CATALOG}/${category}/${id}`,
+        styles.productCard,
+        img({ className: styles.cardImg, src, alt: 'product-card-img' }),
+        h3(name, styles.cardName),
+        div({ className: styles.cardDescription, text: description }),
+        prices,
+      );
 
-    if (discount) {
-      prices.append(div({ className: styles.discountPrice, text: `${price} ${CURRENCY}` }));
-      productCard.append(div({ className: styles.discountLabel, text: `-${discount}%` }));
-    }
+      if (discount) {
+        prices.append(div({ className: styles.discountPrice, text: `${price} ${CURRENCY}` }));
+        productCard.append(div({ className: styles.discountLabel, text: `-${discount}%` }));
+      }
 
-    return productCard;
-  });
+      return productCard;
+    },
+  );
 }

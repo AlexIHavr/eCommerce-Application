@@ -1,3 +1,5 @@
+import { CategoriesTypes } from 'pages/pageWrapper.consts';
+
 export interface ProductCard {
   id: string;
   name: string;
@@ -7,4 +9,5 @@ export interface ProductCard {
   brand: string;
   color: string;
   discount?: string;
+  type: CategoriesTypes;
 }
