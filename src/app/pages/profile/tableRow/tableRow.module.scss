@@ -54,6 +54,7 @@
 
   & span {
     height: unset;
+    margin-top: 3px;
   }
 
   & input:valid + span {
@@ -75,4 +76,10 @@
   line-height: 30px;
 
   background-color: var(--button-remove-color);
+
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      background-color: rgb(220 20 60 / 60%);
+    }
+  }
 }

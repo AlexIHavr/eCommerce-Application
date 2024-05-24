@@ -128,10 +128,15 @@
     border-color: transparent;
   }
 
-  input[type='checkbox'],
-  button {
+  input[type='checkbox'] {
     pointer-events: none;
     filter: grayscale(1);
+  }
+
+  button {
+    pointer-events: none;
+    color: gray;
+    background-color: rgb(200 200 200) !important;
   }
 }
 

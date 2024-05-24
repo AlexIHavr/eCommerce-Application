@@ -1,5 +1,8 @@
 @import '/src/styles/global';
 
+$table-border-color: #ddd;
+$table-header-color: #efefef;
+
 .profilePage {
   align-self: flex-start;
   width: 100%;
@@ -29,10 +32,6 @@
       border: 2px solid var(--secondary-color);
       border-radius: 10px;
 
-      input {
-        background-color: beige;
-      }
-
       @media (width <= $profile-medium-width) {
         max-width: 400px;
       }
@@ -59,7 +58,9 @@
 
   & button {
     margin: 0;
-    transition: opacity 0.2s ease-in;
+    transition:
+      opacity 0.2s ease-in,
+      transform 0.1s ease-in;
 
     @media (hover: hover) and (pointer: fine) {
       &:hover {
@@ -71,7 +72,7 @@
   .startEditBtn {
     display: block;
     max-width: 120px;
-    background-color: var(--button-edit-color);
+    background-color: var(--base-color);
 
     .edit ~ & {
       display: none;
@@ -137,12 +138,12 @@
     border-collapse: collapse;
     width: 100%;
     font-size: 0.6em;
-    border: 1px solid #ddd;
+    border: 1px solid $table-border-color;
 
     & td {
       padding: 5px;
       word-break: break-word;
-      border: 1px solid #ddd;
+      border: 1px solid $table-border-color;
     }
 
     & label {
@@ -168,11 +169,11 @@
       font-size: 0.9em;
       font-weight: bold;
       text-align: center;
-      background: #efefef;
+      background: $table-header-color;
 
       & > * {
         padding: 5px;
-        border: 1px solid #ddd;
+        border: 1px solid $table-border-color;
       }
     }
   }
@@ -185,7 +186,9 @@
 
     background-color: var(--button-do-color);
 
-    transition: opacity 0.2s ease-in;
+    transition:
+      opacity 0.2s ease-in,
+      transform 0.1s ease-in;
 
     @media (hover: hover) and (pointer: fine) {
       &:hover {
