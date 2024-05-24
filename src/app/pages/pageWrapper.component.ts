@@ -11,8 +11,9 @@ import { routingService } from 'services/routing.service';
 import { BaseComponent } from 'shared/base/base.component';
 
 import { Category } from './category/category.component';
-import { CATEGORIES_TYPES_VALUES, CategoriesTypes, PagesPaths } from './pageWrapper.consts';
-import { isLogined, redirectToMain } from './pageWrapper.helpers';
+import { PRODUCTS_CARDS } from './category/category.consts';
+import { PagesPaths } from './pageWrapper.consts';
+import { isIncorrectCategoryPath, isLogined, redirectToMain } from './pageWrapper.helpers';
 import styles from './pageWrapper.module.scss';
 import { CategoryParams, ProductParams } from './pageWrapper.types';
 import { Product } from './product/product.component';
@@ -77,7 +78,7 @@ export class PageWrapper extends BaseComponent {
 
     const params = data as CategoryParams;
 
-    if (!CATEGORIES_TYPES_VALUES.includes(params.category as CategoriesTypes)) {
+    if (isIncorrectCategoryPath(params.category)) {
       this.goToPage(this.notFound);
     } else {
       this.goToPage(new Category(params));
@@ -89,7 +90,10 @@ export class PageWrapper extends BaseComponent {
 
     const params = data as ProductParams;
 
-    if (!CATEGORIES_TYPES_VALUES.includes(params.category as CategoriesTypes)) {
+    if (
+      isIncorrectCategoryPath(params.category) ||
+      !PRODUCTS_CARDS.find(({ id }) => id === params.id)
+    ) {
       this.goToPage(this.notFound);
     } else {
       this.goToPage(new Product(params));

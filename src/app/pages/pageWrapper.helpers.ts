@@ -6,7 +6,7 @@ import { BaseComponent } from 'shared/base/base.component';
 import { a } from 'shared/tags/tags.component';
 import { tokenCache } from 'utils/tokenCache.util';
 
-import { PagesPaths } from './pageWrapper.consts';
+import { CATEGORIES_TYPES_VALUES, CategoriesTypes, PagesPaths } from './pageWrapper.consts';
 
 export function redirectToMain(): void {
   routingService.navigate(PagesPaths.HOME);
@@ -35,4 +35,8 @@ export function successLogin(title: string): void {
 
   redirectToMain();
   alertModal.showAlert('success', title);
+}
+
+export function isIncorrectCategoryPath(category: CategoriesTypes): boolean {
+  return !CATEGORIES_TYPES_VALUES.includes(category);
 }
