@@ -12,7 +12,7 @@ import styles from './category.module.scss';
 export class Category extends BaseComponent {
   constructor(type: CategoriesTypes) {
     super(
-      {},
+      { className: styles.category },
       new SectionTitle(capitalizeFirstLetter(type)),
       new ProductsFilters(),
       div(

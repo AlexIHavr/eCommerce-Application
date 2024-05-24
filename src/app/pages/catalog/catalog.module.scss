@@ -1,6 +1,8 @@
 @import '/src/styles/global';
 
 .catalog {
+  width: 100%;
+
   .categoriesWrapper {
     display: flex;
     flex-direction: column;
