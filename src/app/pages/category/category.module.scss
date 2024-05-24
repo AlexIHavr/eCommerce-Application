@@ -1,19 +1,33 @@
 .productsList {
+  $card-max-width: 250px;
+  $cards-gap: 20px;
+  $cards-count-in-row: 4;
+
   display: flex;
+  flex-wrap: wrap;
+  gap: $cards-gap;
+  justify-content: center;
+
+  max-width: calc($cards-count-in-row * ($card-max-width + $cards-gap));
+  margin: 0 auto;
   padding: 40px 0;
 
   .productCard {
+    cursor: pointer;
+
     position: relative;
 
     display: flex;
     flex-direction: column;
     gap: 10px;
 
-    max-width: 250px;
+    max-width: $card-max-width;
 
     font-size: 0.8em;
 
     background-color: var(--product-card-color);
+
+    transition: scale 0.3s;
 
     .cardImg {
       width: 100%;
@@ -62,6 +76,12 @@
 
       background-color: var(--discount-label-color);
       border-radius: 50%;
+    }
+
+    @media (hover: hover) and (pointer: fine) {
+      &:hover {
+        scale: 1.05;
+      }
     }
   }
 }
