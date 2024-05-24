@@ -124,6 +124,7 @@
 .noEdit {
   select {
     pointer-events: none;
+    background-color: transparent;
     border-color: transparent;
   }
 
