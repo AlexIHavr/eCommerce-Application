@@ -1,9 +1,6 @@
 @import '/src/styles/global';
 
 .catalog {
-  align-self: flex-start;
-  width: 100%;
-
   .categoriesWrapper {
     display: flex;
     flex-direction: column;

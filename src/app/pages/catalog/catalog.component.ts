@@ -1,4 +1,4 @@
-import { ProductsFilters } from 'pages/catalog/components/productsFilters/productsFilters.component';
+import { PagesPaths } from 'pages/pageWrapper.consts';
 import { SectionTitle } from 'pages/shared/components/sectionTitle/sectionTitle.component';
 import sharedStyles from 'pages/shared/styles/common.module.scss';
 import { BaseComponent } from 'shared/base/base.component';
@@ -15,7 +15,6 @@ export class Catalog extends BaseComponent {
     super(
       { className: styles.catalog },
       new SectionTitle('Catalog'),
-      new ProductsFilters(),
       div(
         { className: sharedStyles.container },
         div(
@@ -23,9 +22,9 @@ export class Catalog extends BaseComponent {
           h3('Select category'),
           div(
             { className: styles.categories },
-            getCategory('Chairs', chairsImage),
-            getCategory('Sofas', sofasImage),
-            getCategory('Beds', bedsImage),
+            getCategory(PagesPaths.CHAIRS, 'Chairs', chairsImage),
+            getCategory(PagesPaths.SOFAS, 'Sofas', sofasImage),
+            getCategory(PagesPaths.BEDS, 'Beds', bedsImage),
           ),
         ),
       ),

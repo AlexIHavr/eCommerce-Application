@@ -9,7 +9,8 @@ import { Signup } from 'pages/signup/signup.component';
 import { routingService } from 'services/routing.service';
 import { BaseComponent } from 'shared/base/base.component';
 
-import { PagesPaths } from './pageWrapper.consts';
+import { Category } from './category/category.component';
+import { CategoriesTypes, PagesPaths } from './pageWrapper.consts';
 import { isLogined, redirectToMain } from './pageWrapper.helpers';
 import styles from './pageWrapper.module.scss';
 
@@ -50,6 +51,9 @@ export class PageWrapper extends BaseComponent {
       [PagesPaths.SIGNUP]: () => this.goToPage(new Signup()),
       [PagesPaths.CATALOG]: () => this.goToPage(new Catalog()),
       [PagesPaths.ABOUT]: () => this.goToPage(new About()),
+      [PagesPaths.CHAIRS]: () => this.goToPage(new Category(CategoriesTypes.CHAIRS)),
+      [PagesPaths.SOFAS]: () => this.goToPage(new Category(CategoriesTypes.SOFAS)),
+      [PagesPaths.BEDS]: () => this.goToPage(new Category(CategoriesTypes.BEDS)),
     });
 
     routingService.setNotFound(() => this.goToPage(notFound));
