@@ -83,6 +83,7 @@
     display: none;
   }
 
+  .mismatchPassword &,
   .apiError &,
   .selfError &:invalid,
   .error &:invalid,
@@ -111,6 +112,7 @@
     display: none;
   }
 
+  .mismatchPassword &,
   .apiError &,
   .error .formLabel[area-invalid='true'] &,
   .error .formInput:invalid + &,

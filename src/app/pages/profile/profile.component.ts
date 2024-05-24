@@ -8,6 +8,7 @@ import { SIGNUP_PROPS, USER_AVAILABLE_AGE } from 'pages/signup/signup.consts';
 import { BaseComponent } from 'shared/base/base.component';
 import { button, div, form, table, td, tr } from 'shared/tags/tags.component';
 
+import { PasswordChange } from './passwordChange/passwordChange.component';
 import styles from './profile.module.scss';
 import { TableRow } from './tableRow/tableRow.component';
 import { TableRowProps } from './tableRow/tableRow.types';
@@ -145,6 +146,12 @@ export class Profile extends BaseComponent {
         this.profileWrapper,
         div(
           { className: styles.btnWrapper },
+          button({
+            className: `${formStyles.formButton} ${styles.passwordEditBtn}`,
+            text: 'Change password',
+            type: 'button',
+            onclick: () => this.append(new PasswordChange()),
+          }),
           this.saveChangesBtn,
           button({
             className: `${formStyles.formButton} ${styles.cancelEditBtn}`,
