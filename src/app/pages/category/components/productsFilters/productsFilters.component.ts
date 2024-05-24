@@ -72,7 +72,7 @@ export class ProductsFilters extends BaseComponent {
       ),
     ]);
 
-    window.addEventListener('click', (event) => this.hideSelectFields(event));
+    window.onclick = (event): void => this.hideSelectFields(event);
   }
 
   private hideSelectFields(event: MouseEvent): void {
