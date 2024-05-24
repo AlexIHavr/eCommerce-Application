@@ -5,4 +5,5 @@ export enum PagesPaths {
   ABOUT = 'about',
   SIGNUP = 'signup',
   LOGIN = 'login',
+  PROFILE = 'profile',
 }

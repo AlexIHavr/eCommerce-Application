@@ -5,6 +5,7 @@ import {
   aboutNavLink,
   catalogNavLink,
   loginNavLink,
+  profileNavLink,
   signupNavLink,
 } from 'pages/shared/components/navLinks/navLinks.component';
 import sharedStyles from 'pages/shared/styles/common.module.scss';
@@ -27,6 +28,8 @@ export class Header extends BaseComponent {
   private readonly logoutNavLink: Anchor;
 
   private readonly loginNavLinkWrapper: LI;
+
+  private readonly profileLink: Anchor;
 
   constructor() {
     super({ tag: 'header', className: styles.header });
@@ -56,8 +59,6 @@ export class Header extends BaseComponent {
 
     this.loginNavLinkWrapper = li({});
 
-    this.setLinkWrapper();
-
     const homeLink = getNavLink(
       '',
       PagesPaths.HOME,
@@ -66,6 +67,10 @@ export class Header extends BaseComponent {
       span({ className: styles.title, text: 'Furniture' }),
     );
 
+    this.profileLink = profileNavLink(styles.profile);
+
+    this.setLinkWrapper();
+
     this.appendChildren([
       div(
         { className: sharedStyles.container },
@@ -73,7 +78,7 @@ export class Header extends BaseComponent {
           { className: styles.headerInner },
           homeLink,
           this.nav,
-          div({ className: styles.sidePanel }, this.burger),
+          div({ className: styles.sidePanel }, this.profileLink, this.burger),
         ),
       ),
     ]);
@@ -122,6 +127,12 @@ export class Header extends BaseComponent {
     this.loginNavLinkWrapper.append(
       isLogined() ? this.logoutNavLink : this.navLinks[PagesPaths.LOGIN]!,
     );
+
+    if (isLogined()) {
+      this.profileLink.removeClass(styles.hidden);
+    } else {
+      this.profileLink.addClass(styles.hidden);
+    }
   }
 
   private onLogoutEvent(): void {
