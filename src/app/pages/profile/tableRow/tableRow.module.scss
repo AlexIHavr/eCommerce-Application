@@ -1,3 +1,5 @@
+@import '/src/styles/global';
+
 .formCheckbox {
   cursor: pointer;
   width: 20px;
@@ -26,22 +28,19 @@
     background-color: var(--input-disabled-color);
   }
 
-  @media (width <= 830px) {
+  @media (width <= $profile-medium-width) {
     font-size: 16px;
   }
 }
 
 .row {
   input {
-    margin-top: 0;
+    margin: 0 auto;
     padding: 4px 10px;
   }
 
-  & td:first-child,
-  & td:last-child {
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  & td {
+    align-content: center;
   }
 
   & div {
@@ -62,13 +61,14 @@
   }
 
   &.default {
-    background-color: lightsteelblue;
+    background-color: var(--row-default-color);
   }
 }
 
 .deleteButton {
   max-width: 40px;
   height: 30px;
+  margin: 0 auto;
   padding: 0;
 
   font-size: 0.8em;
