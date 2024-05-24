@@ -72,7 +72,7 @@ export class Profile extends BaseComponent {
 
   private addresses: TableRow[];
 
-  private counter = 0;
+  private newAddressCounter = 0;
 
   constructor() {
     super({ className: styles.profilePage }, new SectionTitle('Profile'));
@@ -125,7 +125,7 @@ export class Profile extends BaseComponent {
         this.addressTable,
         button({
           className: `${formStyles.formButton} ${styles.rowAddBtn}`,
-          text: '+ Add',
+          text: 'Add',
           type: 'button',
           onclick: () => this.addNewRowAddress(),
         }),
@@ -210,7 +210,7 @@ export class Profile extends BaseComponent {
       street: '',
       postalCode: '',
       country: 'BY',
-      addressId: `newAddress${this.counter}`,
+      addressId: `newAddress${this.newAddressCounter}`,
     };
     const newAddress = new TableRow(
       emptyProps,
@@ -220,7 +220,7 @@ export class Profile extends BaseComponent {
 
     this.addressTable.append(newAddress);
     this.addresses.push(newAddress);
-    this.counter += 1;
+    this.newAddressCounter += 1;
   }
 
   private deleteRowAddress(id: string): void {
