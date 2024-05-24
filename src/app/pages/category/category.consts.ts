@@ -3,6 +3,7 @@ import sofaImage from './images/sofaImg.jpg';
 
 export const PRODUCTS_CARDS: ProductCard[] = [
   {
+    id: '1',
     name: 'Cozy sofa',
     description: 'This is the first card',
     src: sofaImage,
@@ -12,6 +13,7 @@ export const PRODUCTS_CARDS: ProductCard[] = [
     color: 'white',
   },
   {
+    id: '2',
     name: 'Cozy sofa',
     description: 'This is the first card',
     src: sofaImage,
@@ -21,6 +23,7 @@ export const PRODUCTS_CARDS: ProductCard[] = [
     color: 'white',
   },
   {
+    id: '3',
     name: 'Cozy sofa',
     description: 'This is the first card',
     src: sofaImage,
@@ -30,6 +33,7 @@ export const PRODUCTS_CARDS: ProductCard[] = [
     color: 'white',
   },
   {
+    id: '4',
     name: 'Cozy sofa',
     description: 'This is the first card',
     src: sofaImage,
@@ -39,6 +43,7 @@ export const PRODUCTS_CARDS: ProductCard[] = [
     color: 'white',
   },
   {
+    id: '5',
     name: 'Cozy sofa',
     description: 'This is the first card',
     src: sofaImage,
@@ -48,6 +53,7 @@ export const PRODUCTS_CARDS: ProductCard[] = [
     color: 'white',
   },
   {
+    id: '6',
     name: 'Cozy sofa',
     description: 'This is the first card',
     src: sofaImage,
@@ -57,6 +63,7 @@ export const PRODUCTS_CARDS: ProductCard[] = [
     color: 'white',
   },
   {
+    id: '7',
     name: 'Cozy sofa',
     description: 'This is the first card',
     src: sofaImage,
@@ -66,6 +73,7 @@ export const PRODUCTS_CARDS: ProductCard[] = [
     color: 'white',
   },
   {
+    id: '8',
     name: 'Cozy sofa',
     description: 'This is the first card',
     src: sofaImage,

@@ -14,4 +14,5 @@ export const enum PagesPaths {
   CHAIRS = `${PagesPaths.CATALOG}/${CategoriesTypes.CHAIRS}`,
   SOFAS = `${PagesPaths.CATALOG}/${CategoriesTypes.SOFAS}`,
   BEDS = `${PagesPaths.CATALOG}/${CategoriesTypes.BEDS}`,
+  PRODUCT = `${PagesPaths.CATALOG}/:category/:id`,
 }

@@ -54,6 +54,7 @@ export class PageWrapper extends BaseComponent {
       [PagesPaths.CHAIRS]: () => this.goToPage(new Category(CategoriesTypes.CHAIRS)),
       [PagesPaths.SOFAS]: () => this.goToPage(new Category(CategoriesTypes.SOFAS)),
       [PagesPaths.BEDS]: () => this.goToPage(new Category(CategoriesTypes.BEDS)),
+      [PagesPaths.PRODUCT]: (data) => console.log(data?.data),
     });
 
     routingService.setNotFound(() => this.goToPage(notFound));
