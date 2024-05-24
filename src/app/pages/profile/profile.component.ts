@@ -1,4 +1,4 @@
-import { Div, Form, Table } from 'globalTypes/elements';
+import { Button, Div, Form, Table } from 'globalTypes/elements';
 import { FormField } from 'pages/shared/components/formField/formField.component';
 import formFieldStyles from 'pages/shared/components/formField/formField.module.scss';
 import { SectionTitle } from 'pages/shared/components/sectionTitle/sectionTitle.component';
@@ -67,6 +67,8 @@ export class Profile extends BaseComponent {
 
   private readonly birthField: FormField;
 
+  private readonly saveChangesBtn: Button;
+
   private addresses: TableRow[];
 
   private counter = 0;
@@ -82,7 +84,12 @@ export class Profile extends BaseComponent {
     this.birthField.addListener('input', () => this.birthField.isBirthdayValid(USER_AVAILABLE_AGE));
 
     this.userInfoForm = form(
-      { className: `${styles.userInfoForm} ${formFieldStyles.error}` },
+      {
+        className: `${styles.userInfoForm} ${formFieldStyles.error}`,
+        oninput: () => {
+          this.saveChangesBtn.removeAttribute('disabled');
+        },
+      },
       this.firstNameField,
       this.lastNameField,
       this.emailField,
@@ -106,8 +113,13 @@ export class Profile extends BaseComponent {
     this.profileWrapper = div(
       { className: `${styles.profileWrapper} ${formFieldStyles.noEdit}` },
       this.userInfoForm,
-      div(
-        { className: styles.addressWrapper },
+      form(
+        {
+          className: styles.addressWrapper,
+          oninput: () => {
+            this.saveChangesBtn.removeAttribute('disabled');
+          },
+        },
         div({ className: styles.tableTitle, text: 'Addresses' }),
         this.addressTable,
         button({
@@ -119,16 +131,34 @@ export class Profile extends BaseComponent {
       ),
     );
 
+    this.saveChangesBtn = button({
+      className: `${formStyles.formButton} ${styles.saveEditBtn}`,
+      text: 'Save changes',
+      type: 'button',
+      disabled: true,
+      onclick: () => console.log('TODO SAVE CHANGES'),
+    });
+
     this.appendChildren([
       div(
         { className: sharedStyles.container },
         this.profileWrapper,
-        button({
-          className: `${formStyles.formButton} ${styles.startEditBtn}`,
-          text: 'Edit',
-          type: 'button',
-          onclick: () => this.startEdit(),
-        }),
+        div(
+          { className: styles.btnWrapper },
+          this.saveChangesBtn,
+          button({
+            className: `${formStyles.formButton} ${styles.cancelEditBtn}`,
+            text: 'Cancel',
+            type: 'button',
+            onclick: () => this.stopEdit(),
+          }),
+          button({
+            className: `${formStyles.formButton} ${styles.startEditBtn}`,
+            text: 'Edit',
+            type: 'button',
+            onclick: () => this.startEdit(),
+          }),
+        ),
       ),
     ]);
 
@@ -153,7 +183,14 @@ export class Profile extends BaseComponent {
   }
 
   private startEdit(): void {
-    this.profileWrapper.toggleClass(formFieldStyles.noEdit);
+    this.profileWrapper.removeClass(formFieldStyles.noEdit);
+    this.profileWrapper.addClass(styles.edit);
+  }
+
+  private stopEdit(): void {
+    this.profileWrapper.addClass(formFieldStyles.noEdit);
+    this.profileWrapper.removeClass(styles.edit);
+    this.saveChangesBtn.setAttribute('disabled', '');
   }
 
   private addNewRowAddress(): void {
@@ -180,6 +217,7 @@ export class Profile extends BaseComponent {
     const delAddrIndex = this.addresses.findIndex((address) => address.addressId === id);
     this.addresses[delAddrIndex].destroy();
     this.addresses.splice(delAddrIndex, 1);
+    this.saveChangesBtn.removeAttribute('disabled');
   }
 
   private defaultHandler(id: string): void {
