@@ -88,12 +88,12 @@ export class TableRow extends BaseComponent {
       },
       option({
         value: COUNTRIES_PROPS.BY.country,
-        text: COUNTRIES_PROPS.BY.title,
+        text: COUNTRIES_PROPS.BY.country,
         selected: props.country === 'BY',
       }),
       option({
         value: COUNTRIES_PROPS.UA.country,
-        text: COUNTRIES_PROPS.UA.title,
+        text: COUNTRIES_PROPS.UA.country,
         selected: props.country === 'UA',
       }),
     );

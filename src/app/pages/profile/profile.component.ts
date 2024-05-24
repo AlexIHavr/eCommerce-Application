@@ -152,13 +152,16 @@ export class Profile extends BaseComponent {
             type: 'button',
             onclick: () => this.append(new PasswordChange()),
           }),
-          this.saveChangesBtn,
-          button({
-            className: `${formStyles.formButton} ${styles.cancelEditBtn}`,
-            text: 'Cancel',
-            type: 'button',
-            onclick: () => this.stopEdit(),
-          }),
+          div(
+            { className: styles.saveCancelWrapper },
+            this.saveChangesBtn,
+            button({
+              className: `${formStyles.formButton} ${styles.cancelEditBtn}`,
+              text: 'Cancel',
+              type: 'button',
+              onclick: () => this.stopEdit(),
+            }),
+          ),
           button({
             className: `${formStyles.formButton} ${styles.startEditBtn}`,
             text: 'Edit',
