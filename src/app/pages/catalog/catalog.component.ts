@@ -1,4 +1,4 @@
-import { PagesPaths } from 'pages/pageWrapper.consts';
+import { CategoriesTypes } from 'pages/pageWrapper.consts';
 import { SectionTitle } from 'pages/shared/components/sectionTitle/sectionTitle.component';
 import sharedStyles from 'pages/shared/styles/common.module.scss';
 import { BaseComponent } from 'shared/base/base.component';
@@ -22,9 +22,9 @@ export class Catalog extends BaseComponent {
           h3('Select category'),
           div(
             { className: styles.categories },
-            getCategory(PagesPaths.CHAIRS, 'Chairs', chairsImage),
-            getCategory(PagesPaths.SOFAS, 'Sofas', sofasImage),
-            getCategory(PagesPaths.BEDS, 'Beds', bedsImage),
+            getCategory(CategoriesTypes.CHAIRS, 'Chairs', chairsImage),
+            getCategory(CategoriesTypes.SOFAS, 'Sofas', sofasImage),
+            getCategory(CategoriesTypes.BEDS, 'Beds', bedsImage),
           ),
         ),
       ),

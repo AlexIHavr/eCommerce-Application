@@ -1,3 +1,9 @@
-import { ProductParams } from './pageWrapper.consts';
+import { CatalogParams, CategoriesTypes } from './pageWrapper.consts';
 
-export type IProductParams = Record<ProductParams, string>;
+export type CategoryParams = {
+  [CatalogParams.CATEGORY]: CategoriesTypes;
+};
+
+export type ProductParams = CategoryParams & {
+  [CatalogParams.ID]: string;
+};

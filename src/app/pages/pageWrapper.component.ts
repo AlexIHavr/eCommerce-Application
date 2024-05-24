@@ -14,7 +14,7 @@ import { Category } from './category/category.component';
 import { CATEGORIES_TYPES_VALUES, CategoriesTypes, PagesPaths } from './pageWrapper.consts';
 import { isLogined, redirectToMain } from './pageWrapper.helpers';
 import styles from './pageWrapper.module.scss';
-import { IProductParams } from './pageWrapper.types';
+import { CategoryParams, ProductParams } from './pageWrapper.types';
 import { Product } from './product/product.component';
 
 export class PageWrapper extends BaseComponent {
@@ -57,9 +57,7 @@ export class PageWrapper extends BaseComponent {
       [PagesPaths.SIGNUP]: () => this.goToPage(new Signup()),
       [PagesPaths.CATALOG]: () => this.goToPage(new Catalog()),
       [PagesPaths.ABOUT]: () => this.goToPage(new About()),
-      [PagesPaths.CHAIRS]: () => this.goToPage(new Category(CategoriesTypes.CHAIRS)),
-      [PagesPaths.SOFAS]: () => this.goToPage(new Category(CategoriesTypes.SOFAS)),
-      [PagesPaths.BEDS]: () => this.goToPage(new Category(CategoriesTypes.BEDS)),
+      [PagesPaths.CATEGORY]: (match) => this.goToCategory(match),
       [PagesPaths.PRODUCT]: (match) => this.goToProduct(match),
     });
 
@@ -74,10 +72,22 @@ export class PageWrapper extends BaseComponent {
     }
   }
 
+  private goToCategory({ data }: Match): void {
+    if (!data) return;
+
+    const params = data as CategoryParams;
+
+    if (!CATEGORIES_TYPES_VALUES.includes(params.category as CategoriesTypes)) {
+      this.goToPage(this.notFound);
+    } else {
+      this.goToPage(new Category(params));
+    }
+  }
+
   private goToProduct({ data }: Match): void {
     if (!data) return;
 
-    const params = data as IProductParams;
+    const params = data as ProductParams;
 
     if (!CATEGORIES_TYPES_VALUES.includes(params.category as CategoriesTypes)) {
       this.goToPage(this.notFound);

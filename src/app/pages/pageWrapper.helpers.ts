@@ -14,7 +14,7 @@ export function redirectToMain(): void {
 
 export function getNavLink(
   title: string,
-  path: PagesPaths,
+  path: string,
   className: string,
   ...children: BaseComponent[]
 ): Anchor {
