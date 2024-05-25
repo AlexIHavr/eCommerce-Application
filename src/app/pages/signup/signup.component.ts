@@ -136,7 +136,7 @@ export class Signup extends BaseComponent {
           password: this.passwordField.value,
         }),
       )
-      .then(() => successLogin('Signed up successfully'))
+      .then((data) => successLogin('Signed up successfully', data.body.customer.id))
       .catch((res) => this.showSignupErrors(res))
       .finally(() => {
         loader.close();

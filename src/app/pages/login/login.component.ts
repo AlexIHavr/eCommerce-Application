@@ -91,7 +91,7 @@ export class Login extends BaseComponent {
         email: this.emailField.value,
         password: this.passwordField.value,
       })
-      .then(() => successLogin('Login successfully'))
+      .then((data) => successLogin('Login successfully', data.body.customer.id))
       .catch(() => {
         this.passwordField.showApiError(LOGIN_API_ERROR_TEXT.password);
         apiService.apiRoot = clientBuild.getApiRootByAnonymousFlow();

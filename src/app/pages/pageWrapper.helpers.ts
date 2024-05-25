@@ -34,10 +34,11 @@ export function loginRedirect(): void {
   redirectToMain();
 }
 
-export function successLogin(title: string): void {
+export function successLogin(title: string, customerId: string): void {
   if (!tokenCache.cache.refreshToken) return;
 
   LocalStorageService.saveData('refreshToken', tokenCache.cache.refreshToken);
+  LocalStorageService.saveData('customerId', customerId);
 
   redirectToMain();
   alertModal.showAlert('success', title);
