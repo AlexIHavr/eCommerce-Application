@@ -10,3 +10,14 @@
     font-size: 1.5rem;
   }
 }
+
+.noUserError {
+  padding: 20px;
+  font-size: 1.5rem;
+  color: var(--text-error-color);
+  text-align: center;
+
+  @media (width <= $profile-medium-width) {
+    font-size: 1rem;
+  }
+}

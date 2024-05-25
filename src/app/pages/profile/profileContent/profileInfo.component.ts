@@ -11,46 +11,7 @@ import { BaseComponent } from 'shared/base/base.component';
 import { button, div, form, table, td, tr } from 'shared/tags/tags.component';
 
 import styles from './profileInfo.module.scss';
-
-const MOCK = {
-  firstname: 'Firstname',
-  lastname: 'Lastname',
-  email: 'dimatest@dimatest.com',
-  birthDate: '2024-05-22',
-};
-
-const ADDRESS_MOCK_1: TableRowProps = {
-  type: 'shipping',
-  city: 'Cityname',
-  street: 'Streetname',
-  postalCode: '222111',
-  country: 'BY',
-  addressId: 'mock_ship_id',
-  defaultBilAddress: '',
-  defaultShipAddress: 'mock_ship_id',
-};
-
-const ADDRESS_MOCK_2: TableRowProps = {
-  type: 'billing',
-  city: 'City',
-  street: 'Street',
-  postalCode: '111222',
-  country: 'UA',
-  addressId: 'mock_bill_id',
-  defaultBilAddress: '',
-  defaultShipAddress: '',
-};
-
-const ADDRESS_MOCK_3: TableRowProps = {
-  type: 'billing',
-  city: 'Asdasdasda',
-  street: 'Asdasd',
-  postalCode: '01234',
-  country: 'UA',
-  addressId: 'test',
-  defaultBilAddress: 'test',
-  defaultShipAddress: '',
-};
+import { ProfileInfoProps } from './profileInfo.types';
 
 export class ProfileInfo extends BaseComponent {
   private readonly profileWrapper: Div;
@@ -75,14 +36,14 @@ export class ProfileInfo extends BaseComponent {
 
   private newAddressCounter = 0;
 
-  constructor() {
+  constructor(props: ProfileInfoProps) {
     super({ className: sharedStyles.container });
     this.addresses = [];
 
-    this.firstNameField = new FormField(SIGNUP_PROPS.firstName, MOCK.firstname);
-    this.lastNameField = new FormField(SIGNUP_PROPS.lastName, MOCK.lastname);
-    this.emailField = new FormField(SIGNUP_PROPS.email, MOCK.email);
-    this.birthField = new FormField(SIGNUP_PROPS.birthDate, MOCK.birthDate);
+    this.firstNameField = new FormField(SIGNUP_PROPS.firstName, props.firstName);
+    this.lastNameField = new FormField(SIGNUP_PROPS.lastName, props.lastName);
+    this.emailField = new FormField(SIGNUP_PROPS.email, props.email);
+    this.birthField = new FormField(SIGNUP_PROPS.birthDate, props.dateOfBirth);
     this.birthField.addListener('input', () => this.birthField.isBirthdayValid(USER_AVAILABLE_AGE));
 
     this.userInfoForm = form(
@@ -172,24 +133,7 @@ export class ProfileInfo extends BaseComponent {
       ),
     ]);
 
-    // TEST
-    const address1 = new TableRow(
-      ADDRESS_MOCK_1,
-      this.deleteRowAddress.bind(this),
-      this.defaultHandler.bind(this),
-    );
-    const address2 = new TableRow(
-      ADDRESS_MOCK_2,
-      this.deleteRowAddress.bind(this),
-      this.defaultHandler.bind(this),
-    );
-    const address3 = new TableRow(
-      ADDRESS_MOCK_3,
-      this.deleteRowAddress.bind(this),
-      this.defaultHandler.bind(this),
-    );
-    this.addressTable.appendChildren([address1, address2, address3]);
-    this.addresses.push(address1, address2, address3);
+    this.renderAddresses(props.addresses);
   }
 
   private startEdit(): void {
@@ -201,6 +145,20 @@ export class ProfileInfo extends BaseComponent {
     this.profileWrapper.addClass(formFieldStyles.noEdit);
     this.profileWrapper.removeClass(styles.edit);
     this.saveChangesBtn.setAttribute('disabled', '');
+  }
+
+  private renderAddresses(addresses: TableRowProps[]): void {
+    this.addressTable.appendChildren(
+      addresses.map((addr) => {
+        const customerAddress = new TableRow(
+          addr,
+          this.deleteRowAddress.bind(this),
+          this.defaultHandler.bind(this),
+        );
+        this.addresses.push(customerAddress);
+        return customerAddress;
+      }),
+    );
   }
 
   private addNewRowAddress(): void {

@@ -1,5 +1,6 @@
 import {
   ByProjectKeyRequestBuilder,
+  Customer,
   CustomerPagedQueryResponse,
   CustomerSignInResult,
   Project,
@@ -39,6 +40,10 @@ export class ApiService {
       .customers()
       .get({ queryArgs: { where: `email="${customerEmail}"` } })
       .execute();
+  }
+
+  public getCustomerById(customerId: string): ApiClientResponse<Customer> {
+    return this.apiRoot.customers().withId({ ID: customerId }).get().execute();
   }
 
   public signupCustomer(newCustomer: NewCustomer): ApiClientResponse<CustomerSignInResult> {
