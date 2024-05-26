@@ -1,4 +1,5 @@
 import { CategoriesTypes } from 'pages/pageWrapper.consts';
+import { Breadcrumbs } from 'pages/shared/components/breadcrumbs/breadcrumbs.component';
 import { SectionTitle } from 'pages/shared/components/sectionTitle/sectionTitle.component';
 import sharedStyles from 'pages/shared/styles/common.module.scss';
 import { BaseComponent } from 'shared/base/base.component';
@@ -15,6 +16,7 @@ export class Catalog extends BaseComponent {
     super(
       { className: styles.catalog },
       new SectionTitle('Catalog'),
+      new Breadcrumbs(),
       div(
         { className: sharedStyles.container },
         div(
@@ -22,9 +24,9 @@ export class Catalog extends BaseComponent {
           h3('Select category'),
           div(
             { className: styles.categories },
-            getCategory(CategoriesTypes.CHAIRS, 'Chairs', chairsImage),
-            getCategory(CategoriesTypes.SOFAS, 'Sofas', sofasImage),
-            getCategory(CategoriesTypes.BEDS, 'Beds', bedsImage),
+            getCategory(CategoriesTypes.CHAIRS, chairsImage),
+            getCategory(CategoriesTypes.SOFAS, sofasImage),
+            getCategory(CategoriesTypes.BEDS, bedsImage),
           ),
         ),
       ),

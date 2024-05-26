@@ -18,7 +18,7 @@ export const enum PagesPaths {
   ABOUT = 'about',
   SIGNUP = 'signup',
   LOGIN = 'login',
+  PROFILE = 'profile',
   CATEGORY = `${PagesPaths.CATALOG}/:${CatalogParams.CATEGORY}`,
   PRODUCT = `${PagesPaths.CATEGORY}/:${CatalogParams.ID}`,
-  PROFILE = 'profile',
 }

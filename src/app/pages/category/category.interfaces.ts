@@ -1,6 +1,6 @@
 import { CategoriesTypes } from 'pages/pageWrapper.consts';
 
-export interface ProductCard {
+export interface ProductCardMock {
   id: string;
   name: string;
   description: string;

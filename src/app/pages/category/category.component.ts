@@ -1,5 +1,7 @@
 import { ProductsFilters } from 'pages/category/components/productsFilters/productsFilters.component';
+import { getCategoryBreadcrumbPath } from 'pages/pageWrapper.helpers';
 import { CategoryParams } from 'pages/pageWrapper.types';
+import { Breadcrumbs } from 'pages/shared/components/breadcrumbs/breadcrumbs.component';
 import { SectionTitle } from 'pages/shared/components/sectionTitle/sectionTitle.component';
 import sharedStyles from 'pages/shared/styles/common.module.scss';
 import { BaseComponent } from 'shared/base/base.component';
@@ -14,6 +16,7 @@ export class Category extends BaseComponent {
     super(
       { className: styles.category },
       new SectionTitle(capitalizeFirstLetter(category)),
+      new Breadcrumbs([getCategoryBreadcrumbPath(category)]),
       new ProductsFilters(),
       div(
         { className: sharedStyles.container },

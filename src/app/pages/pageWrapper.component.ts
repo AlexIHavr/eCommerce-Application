@@ -11,7 +11,7 @@ import { routingService } from 'services/routing.service';
 import { BaseComponent } from 'shared/base/base.component';
 
 import { Category } from './category/category.component';
-import { PRODUCTS_CARDS } from './category/category.consts';
+import { PRODUCTS_CARDS_MOCK } from './category/category.consts';
 import { PagesPaths } from './pageWrapper.consts';
 import { isIncorrectCategoryPath, isLogined, redirectToMain } from './pageWrapper.helpers';
 import styles from './pageWrapper.module.scss';
@@ -94,7 +94,7 @@ export class PageWrapper extends BaseComponent {
 
     if (
       isIncorrectCategoryPath(params.category) ||
-      !PRODUCTS_CARDS.find(({ id }) => id === params.id)
+      !PRODUCTS_CARDS_MOCK.find(({ id }) => id === params.id)
     ) {
       this.goToPage(this.notFound);
     } else {

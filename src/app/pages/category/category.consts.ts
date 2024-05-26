@@ -1,9 +1,9 @@
 import { CategoriesTypes } from 'pages/pageWrapper.consts';
 
-import { ProductCard } from './category.interfaces';
+import { ProductCardMock } from './category.interfaces';
 import sofaImage from './images/sofaImg.jpg';
 
-export const PRODUCTS_CARDS: ProductCard[] = [
+export const PRODUCTS_CARDS_MOCK: ProductCardMock[] = [
   {
     id: '1',
     name: 'Cozy sofa 1',

@@ -1,4 +1,5 @@
 import { Anchor } from 'globalTypes/elements';
+import { BreadcrumbPath } from 'pages/shared/components/breadcrumbs/breadcrumbs.interfaces';
 import { LocalStorageService } from 'services/localStorage.service';
 import { routingService } from 'services/routing.service';
 import { alertModal } from 'shared/alert/alert.component';
@@ -39,4 +40,16 @@ export function successLogin(title: string): void {
 
 export function isIncorrectCategoryPath(category: CategoriesTypes): boolean {
   return !CATEGORIES_TYPES_VALUES.includes(category);
+}
+
+export function getCategoryPath(category: CategoriesTypes): string {
+  return `${PagesPaths.CATALOG}/${category}`;
+}
+
+export function getProductPath(category: CategoriesTypes, id: string): string {
+  return `${getCategoryPath(category)}/${id}`;
+}
+
+export function getCategoryBreadcrumbPath(category: CategoriesTypes): BreadcrumbPath {
+  return { name: category, path: getCategoryPath(category) };
 }
