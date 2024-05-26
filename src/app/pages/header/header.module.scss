@@ -15,6 +15,11 @@
 
     color: var(--base-color);
 
+    .active {
+      pointer-events: none;
+      cursor: default;
+    }
+
     .titleWrapper {
       display: flex;
       gap: 6px;
@@ -72,12 +77,8 @@
             transition: width 0.4s;
           }
 
-          &.active {
-            cursor: default;
-
-            &::after {
-              width: 100%;
-            }
+          &.active::after {
+            width: 100%;
           }
 
           @media (hover: hover) and (pointer: fine) {

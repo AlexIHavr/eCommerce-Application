@@ -1,7 +1,7 @@
 export type FormFieldProps = {
   name: string;
   type: string;
-  labelName: string;
+  labelName?: string;
   autocomplete?: AutoFill;
   minLength?: number;
   maxLength?: number;

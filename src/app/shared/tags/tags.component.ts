@@ -9,6 +9,7 @@ import {
   Heading,
   Image,
   Input,
+  Label,
   LI,
   Option,
   Select,
@@ -34,10 +35,8 @@ export const h3 = (text: string, className: string = ''): Heading =>
 export const button = (props: TagProps<HTMLButtonElement>, ...children: BaseComponent[]): Button =>
   new BaseComponent({ ...props, tag: 'button' }, ...children);
 
-export const label = (
-  props: TagProps<HTMLLabelElement>,
-  ...children: BaseComponent[]
-): BaseComponent<HTMLLabelElement> => new BaseComponent({ ...props, tag: 'label' }, ...children);
+export const label = (props: TagProps<HTMLLabelElement>, ...children: BaseComponent[]): Label =>
+  new BaseComponent({ ...props, tag: 'label' }, ...children);
 
 export const input = (props: TagProps<HTMLInputElement>): Input =>
   new BaseComponent({ ...props, tag: 'input' });
