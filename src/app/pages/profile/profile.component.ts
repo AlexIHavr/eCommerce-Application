@@ -5,6 +5,7 @@ import { BaseComponent } from 'shared/base/base.component';
 import { loader } from 'shared/loader/loader.component';
 import { div } from 'shared/tags/tags.component';
 
+import { makeProfileProps } from './profile.helpers';
 import styles from './profile.module.scss';
 import { ProfileInfo } from './profileContent/profileInfo.component';
 import { ProfileInfoProps } from './profileContent/profileInfo.types';
@@ -16,56 +17,31 @@ export class Profile extends BaseComponent {
     super({ className: styles.profilePage }, new SectionTitle('Profile'));
 
     this.append(this.contentWrapper);
-    loader.open();
     this.getCustomer();
   }
 
   private getCustomer(): void {
+    this.contentWrapper.destroyChildren();
+    loader.open();
+
     const customerId = LocalStorageService.getData('customerId');
+
     if (customerId) {
       apiService.getCustomerById(customerId).then((data) => {
-        const customerInfo = data.body;
-        const customerAddresses = customerInfo.addresses.map((addr) => {
-          const address = {
-            type: addr.key,
-            city: addr.city,
-            street: addr.streetName,
-            postalCode: addr.postalCode,
-            country: addr.country,
-            addressId: addr.id,
-            defaultBilAddress: '',
-            defaultShipAddress: '',
-          };
-
-          if (customerInfo.defaultBillingAddressId)
-            address.defaultBilAddress = customerInfo.defaultBillingAddressId;
-          if (customerInfo.defaultShippingAddressId)
-            address.defaultShipAddress = customerInfo.defaultShippingAddressId;
-          return address;
-        });
-
-        const user = {
-          firstName: customerInfo.firstName,
-          lastName: customerInfo.lastName,
-          email: customerInfo.email,
-          dateOfBirth: customerInfo.dateOfBirth,
-          addresses: customerAddresses,
-        };
-
-        this.render(user as ProfileInfoProps);
+        const props = makeProfileProps(data.body);
+        this.render(props);
       });
     } else {
-      this.loadUserError();
+      this.showNoUserError();
     }
   }
 
   private render(customerProps: ProfileInfoProps): void {
-    this.contentWrapper.destroyChildren();
     this.contentWrapper.append(new ProfileInfo(customerProps));
     loader.close();
   }
 
-  private loadUserError(): void {
+  private showNoUserError(): void {
     this.contentWrapper.append(
       div({ className: styles.noUserError, text: 'No such user. Please, relogin' }),
     );
