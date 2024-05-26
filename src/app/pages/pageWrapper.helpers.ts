@@ -35,9 +35,9 @@ export function loginRedirect(): void {
 }
 
 export function successLogin(title: string): void {
-  if (!tokenCache.cache.refreshToken) return;
-
-  LocalStorageService.saveData('refreshToken', tokenCache.cache.refreshToken);
+  if (tokenCache.cache.refreshToken) {
+    LocalStorageService.saveData('refreshToken', tokenCache.cache.refreshToken);
+  }
 
   redirectToMain();
   alertModal.showAlert('success', title);
