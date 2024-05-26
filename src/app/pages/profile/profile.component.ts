@@ -37,7 +37,7 @@ export class Profile extends BaseComponent {
   }
 
   private render(customerProps: ProfileInfoProps): void {
-    this.contentWrapper.append(new ProfileInfo(customerProps));
+    this.contentWrapper.append(new ProfileInfo(customerProps, this.cancelEditHandler.bind(this)));
     loader.close();
   }
 
@@ -46,5 +46,9 @@ export class Profile extends BaseComponent {
       div({ className: styles.noUserError, text: 'No such user. Please, relogin' }),
     );
     loader.close();
+  }
+
+  private cancelEditHandler(): void {
+    this.getCustomer();
   }
 }

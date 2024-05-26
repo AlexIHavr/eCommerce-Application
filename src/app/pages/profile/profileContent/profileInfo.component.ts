@@ -1,3 +1,4 @@
+import { ActionFunc } from 'globalTypes/actionFunc';
 import { Button, Div, Form, Table } from 'globalTypes/elements';
 import { PasswordChange } from 'pages/profile/passwordChange/passwordChange.component';
 import { TableRow } from 'pages/profile/tableRow/tableRow.component';
@@ -36,7 +37,7 @@ export class ProfileInfo extends BaseComponent {
 
   private newAddressCounter = 0;
 
-  constructor(props: ProfileInfoProps) {
+  constructor(props: ProfileInfoProps, cancelEditHandler: ActionFunc) {
     super({ className: sharedStyles.container });
     this.addresses = [];
 
@@ -121,7 +122,13 @@ export class ProfileInfo extends BaseComponent {
             className: `${formStyles.formButton} ${styles.cancelEditBtn}`,
             text: 'Cancel',
             type: 'button',
-            onclick: () => this.stopEdit(),
+            onclick: () => {
+              if (this.saveChangesBtn.getAttribute('disabled') === null) {
+                cancelEditHandler();
+              } else {
+                this.stopEdit();
+              }
+            },
           }),
         ),
         button({
