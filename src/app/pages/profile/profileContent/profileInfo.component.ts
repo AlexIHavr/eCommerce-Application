@@ -37,7 +37,11 @@ export class ProfileInfo extends BaseComponent {
 
   private newAddressCounter = 0;
 
-  constructor(props: ProfileInfoProps, cancelEditHandler: ActionFunc) {
+  constructor(
+    props: ProfileInfoProps,
+    saveChangesHandler: (isValid: boolean) => void,
+    cancelEditHandler: ActionFunc,
+  ) {
     super({ className: sharedStyles.container });
     this.addresses = [];
 
@@ -102,7 +106,7 @@ export class ProfileInfo extends BaseComponent {
       text: 'Save changes',
       type: 'button',
       disabled: true,
-      onclick: () => console.log('TODO SAVE CHANGES'),
+      onclick: () => saveChangesHandler(this.isProfileInfoValid()),
     });
 
     this.appendChildren([
@@ -202,5 +206,15 @@ export class ProfileInfo extends BaseComponent {
       .forEach((addr) => {
         if (addr !== defaultAddress) addr.resetDefault();
       });
+  }
+
+  private isProfileInfoValid(): boolean {
+    return (
+      this.firstNameField.isValid() &&
+      this.lastNameField.isValid() &&
+      this.emailField.isValid() &&
+      this.birthField.isBirthdayValid(USER_AVAILABLE_AGE) &&
+      this.addresses.every((addr) => addr.isRowAddressValid())
+    );
   }
 }

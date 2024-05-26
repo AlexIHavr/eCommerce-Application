@@ -60,10 +60,10 @@ export class TableRow extends BaseComponent {
       },
     });
 
-    this.cityField = new FormField(SIGNUP_PROPS.firstName, props.city);
+    this.cityField = new FormField(SIGNUP_PROPS.addressCity, props.city);
     this.cityField.getNode().removeChild(this.cityField.getNode().firstChild!);
 
-    this.streetField = new FormField(SIGNUP_PROPS.firstName, props.street);
+    this.streetField = new FormField(SIGNUP_PROPS.addressStreet, props.street);
     this.streetField.getNode().removeChild(this.streetField.getNode().firstChild!);
 
     this.postalCodeField = new FormField(SIGNUP_PROPS.addressPostalCode, props.postalCode);
@@ -129,6 +129,11 @@ export class TableRow extends BaseComponent {
     return Boolean(postalCodeValue.match(`${country.pattern}`));
   }
 
+  private isAddressTypeValid(): boolean {
+    const type = this.typeField.getNode().value;
+    return type === 'billing' || type === 'shipping';
+  }
+
   private typeChangeHandler(): void {
     this.type = this.typeField.getNode().value;
     this.resetDefault();
@@ -138,5 +143,14 @@ export class TableRow extends BaseComponent {
     this.defaultField.getNode().checked = false;
     this.isDefaultAddress = false;
     this.removeClass(styles.default);
+  }
+
+  public isRowAddressValid(): boolean {
+    return (
+      this.isAddressTypeValid() &&
+      this.streetField.isValid() &&
+      this.cityField.isValid() &&
+      this.isPostalCodeValid()
+    );
   }
 }
