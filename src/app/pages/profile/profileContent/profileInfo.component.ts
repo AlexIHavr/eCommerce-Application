@@ -1,6 +1,8 @@
+import { CustomerUpdateAction } from '@commercetools/platform-sdk';
 import { ActionFunc } from 'globalTypes/actionFunc';
 import { Button, Div, Form, Table } from 'globalTypes/elements';
 import { PasswordChange } from 'pages/profile/passwordChange/passwordChange.component';
+import { INVALID_DATA_WARNING } from 'pages/profile/profile.consts';
 import { TableRow } from 'pages/profile/tableRow/tableRow.component';
 import { TableRowProps } from 'pages/profile/tableRow/tableRow.types';
 import { FormField } from 'pages/shared/components/formField/formField.component';
@@ -8,6 +10,7 @@ import formFieldStyles from 'pages/shared/components/formField/formField.module.
 import sharedStyles from 'pages/shared/styles/common.module.scss';
 import formStyles from 'pages/shared/styles/formElements.module.scss';
 import { SIGNUP_PROPS, USER_AVAILABLE_AGE } from 'pages/signup/signup.consts';
+import { alertModal } from 'shared/alert/alert.component';
 import { BaseComponent } from 'shared/base/base.component';
 import { button, div, form, table, td, tr } from 'shared/tags/tags.component';
 
@@ -39,7 +42,7 @@ export class ProfileInfo extends BaseComponent {
 
   constructor(
     props: ProfileInfoProps,
-    saveChangesHandler: (isValid: boolean) => void,
+    saveChangesHandler: (actions: CustomerUpdateAction[]) => void,
     cancelEditHandler: ActionFunc,
   ) {
     super({ className: sharedStyles.container });
@@ -70,8 +73,8 @@ export class ProfileInfo extends BaseComponent {
         { className: styles.tableHeader },
         td({ text: 'Default' }),
         td({ text: 'Type' }),
-        td({ text: 'Street' }),
         td({ text: 'City' }),
+        td({ text: 'Street' }),
         td({ text: 'Code' }),
         td({ text: 'Country' }),
         td({ text: 'Delete' }),
@@ -106,7 +109,14 @@ export class ProfileInfo extends BaseComponent {
       text: 'Save changes',
       type: 'button',
       disabled: true,
-      onclick: () => saveChangesHandler(this.isProfileInfoValid()),
+      onclick: () => {
+        if (this.isProfileInfoValid()) {
+          const actions = this.getActionsForApi();
+          saveChangesHandler(actions);
+        } else {
+          alertModal.showAlert('attention', INVALID_DATA_WARNING);
+        }
+      },
     });
 
     this.appendChildren([
@@ -193,9 +203,12 @@ export class ProfileInfo extends BaseComponent {
   }
 
   private deleteRowAddress(id: string): void {
-    const delAddrIndex = this.addresses.findIndex((address) => address.addressId === id);
-    this.addresses[delAddrIndex].destroy();
-    this.addresses.splice(delAddrIndex, 1);
+    const delAddr = this.addresses.find((address) => address.addressId === id);
+    if (delAddr?.addressId.startsWith('newAddress')) {
+      const delAddrIndex = this.addresses.findIndex((address) => address.addressId === id);
+      this.addresses.splice(delAddrIndex, 1);
+    } else if (delAddr) delAddr.addressId = `deleteAddress${delAddr?.addressId}`;
+    delAddr?.destroy();
     this.saveChangesBtn.removeAttribute('disabled');
   }
 
@@ -216,5 +229,58 @@ export class ProfileInfo extends BaseComponent {
       this.birthField.isBirthdayValid(USER_AVAILABLE_AGE) &&
       this.addresses.every((addr) => addr.isRowAddressValid())
     );
+  }
+
+  public getActionsForApi(): CustomerUpdateAction[] {
+    const addressActionsArr: CustomerUpdateAction[] = this.addresses.map((addr) => {
+      const address = {
+        city: addr.cityField.value,
+        streetName: addr.streetField.value,
+        postalCode: addr.postalCodeField.value,
+        country: addr.countryField.getNode().value,
+      };
+
+      if (addr.addressId.startsWith('newAddress')) {
+        return {
+          action: 'addAddress',
+          address,
+        };
+      }
+
+      if (addr.addressId.startsWith('deleteAddress')) {
+        const originalAddrId = addr.addressId.replace('deleteAddress', '');
+        return {
+          action: 'removeAddress',
+          addressId: originalAddrId,
+          address,
+        };
+      }
+
+      return {
+        action: 'changeAddress',
+        addressId: addr.addressId,
+        address,
+      };
+    });
+
+    return [
+      {
+        action: 'setFirstName',
+        firstName: this.firstNameField.value,
+      },
+      {
+        action: 'setLastName',
+        lastName: this.lastNameField.value,
+      },
+      {
+        action: 'changeEmail',
+        email: this.emailField.value,
+      },
+      {
+        action: 'setDateOfBirth',
+        dateOfBirth: this.birthField.value,
+      },
+      ...addressActionsArr,
+    ];
   }
 }

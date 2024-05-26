@@ -1,3 +1,4 @@
+import { CustomerUpdateAction } from '@commercetools/platform-sdk';
 import { SectionTitle } from 'pages/shared/components/sectionTitle/sectionTitle.component';
 import { apiService } from 'services/api.service';
 import { LocalStorageService } from 'services/localStorage.service';
@@ -6,7 +7,7 @@ import { BaseComponent } from 'shared/base/base.component';
 import { loader } from 'shared/loader/loader.component';
 import { div } from 'shared/tags/tags.component';
 
-import { INVALID_DATA_WARNING, NO_USER_ERROR } from './profile.consts';
+import { NO_USER_ERROR, SUCCESS_USER_UPDATE } from './profile.consts';
 import { makeProfileProps } from './profile.helpers';
 import styles from './profile.module.scss';
 import { ProfileInfo } from './profileContent/profileInfo.component';
@@ -58,12 +59,20 @@ export class Profile extends BaseComponent {
     this.getCustomer();
   }
 
-  private saveChangesHandler(isValid: boolean): void {
-    if (isValid) {
-      console.log(this);
-      console.log('TODO UPDATE CUSTOMER');
+  private saveChangesHandler(actions: CustomerUpdateAction[]): void {
+    const customerId = LocalStorageService.getData('customerId');
+
+    if (customerId) {
+      apiService.getCustomerById(customerId).then((data) => {
+        const { version } = data.body;
+        apiService
+          .updateCustomerInfo(customerId, version, actions)
+          .then(() => alertModal.showAlert('success', SUCCESS_USER_UPDATE))
+          .then(() => this.getCustomer());
+      });
     } else {
-      alertModal.showAlert('attention', INVALID_DATA_WARNING);
+      this.contentWrapper.destroyChildren();
+      this.showNoUserError();
     }
   }
 }

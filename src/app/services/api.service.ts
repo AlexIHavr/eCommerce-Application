@@ -3,6 +3,7 @@ import {
   Customer,
   CustomerPagedQueryResponse,
   CustomerSignInResult,
+  CustomerUpdateAction,
   Project,
 } from '@commercetools/platform-sdk';
 import { TokenCache } from '@commercetools/sdk-client-v2';
@@ -52,6 +53,23 @@ export class ApiService {
 
   public logout(): void {
     this.apiRoot = clientBuild.getApiRootByAnonymousFlow();
+  }
+
+  public updateCustomerInfo(
+    customerId: string,
+    version: number,
+    data: CustomerUpdateAction[],
+  ): ApiClientResponse<Customer> {
+    return this.apiRoot
+      .customers()
+      .withId({ ID: customerId })
+      .post({
+        body: {
+          version,
+          actions: [...data],
+        },
+      })
+      .execute();
   }
 }
 
