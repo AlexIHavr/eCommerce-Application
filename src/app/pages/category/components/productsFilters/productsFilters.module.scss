@@ -1,5 +1,8 @@
 @import '/src/styles/global';
 
+$filter-reset-background-color: crimson;
+$filter-apply-background-color: green;
+
 .productsFilters {
   $text-font-size: 0.8em;
 
@@ -31,12 +34,21 @@
     gap: 10px;
     align-items: center;
 
-    .submitFilterBtn {
+    .submitFilterBtn,
+    .resetFilterBtn {
       min-width: 100px;
       padding: 5px 10px;
     }
 
-    @media (width <= $medium-width) {
+    .resetFilterBtn {
+      background-color: $filter-reset-background-color;
+    }
+
+    .submitFilterBtn {
+      background-color: $filter-apply-background-color;
+    }
+
+    @media (width <= $catalog-medium-width) {
       flex-direction: column;
     }
   }

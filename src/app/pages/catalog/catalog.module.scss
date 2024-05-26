@@ -42,7 +42,7 @@
         }
       }
 
-      @media (width <= $medium-width) {
+      @media (width <= $catalog-medium-width) {
         flex-direction: column;
       }
     }

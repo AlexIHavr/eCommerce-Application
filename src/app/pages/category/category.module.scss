@@ -1,3 +1,7 @@
+$product-card-color: whitesmoke;
+$product-card-description-color: grey;
+$discount-label-color: rgb(233 113 113);
+
 .category {
   width: 100%;
 
@@ -28,7 +32,7 @@
 
       font-size: 0.8em;
 
-      background-color: var(--product-card-color);
+      background-color: $product-card-color;
 
       transition: scale 0.3s;
 
@@ -43,7 +47,7 @@
       }
 
       .cardDescription {
-        color: var(--product-card-description-color);
+        color: $product-card-description-color;
       }
 
       .cardPrices {
@@ -58,7 +62,7 @@
         .discountPrice {
           font-size: 0.9em;
           font-weight: normal;
-          color: var(--product-card-description-color);
+          color: $product-card-description-color;
           text-decoration: line-through;
         }
       }
@@ -77,7 +81,7 @@
 
         color: var(--background-color);
 
-        background-color: var(--discount-label-color);
+        background-color: $discount-label-color;
         border-radius: 50%;
       }
 

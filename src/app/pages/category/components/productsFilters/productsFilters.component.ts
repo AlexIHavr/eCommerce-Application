@@ -43,6 +43,7 @@ export class ProductsFilters extends BaseComponent {
       div({ className: styles.filterField, text: 'Price' }, this.priceFromInput, this.priceToInput),
       this.getMultipleSelectField('brand'),
       this.getMultipleSelectField('color'),
+      button({ className: styles.resetFilterBtn, type: 'reset', text: 'Reset' }),
       button({
         className: styles.submitFilterBtn,
         type: 'submit',
