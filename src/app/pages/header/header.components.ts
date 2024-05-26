@@ -78,7 +78,7 @@ export class Header extends BaseComponent {
     this.logoutNavLink.addListener('click', () => this.onLogoutEvent());
 
     this.loginNavLinkWrapper = li({});
-    
+
     this.setLinkWrapper();
 
     this.appendChildren([
