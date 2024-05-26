@@ -4,10 +4,10 @@ $filter-reset-background-color: crimson;
 $filter-apply-background-color: green;
 
 .productsFilters {
-  $text-font-size: 0.8em;
+  $text-font-size: 0.9em;
 
   display: flex;
-  gap: 20px;
+  gap: 40px;
   align-items: center;
   justify-content: center;
 
@@ -33,10 +33,16 @@ $filter-apply-background-color: green;
     gap: 10px;
     align-items: center;
 
+    .filterFieldLabel {
+      display: flex;
+      gap: 10px;
+    }
+
     .submitFilterBtn,
     .resetFilterBtn {
       min-width: 100px;
       padding: 5px 10px;
+      font-size: $text-font-size;
     }
 
     .resetFilterBtn {
@@ -54,11 +60,11 @@ $filter-apply-background-color: green;
 
   .icon {
     align-self: center;
-    height: 23px;
+    height: 25px;
   }
 
   .filterField {
-    $select-width: 90px;
+    $select-width: 100px;
 
     display: flex;
     gap: 10px;
@@ -68,10 +74,9 @@ $filter-apply-background-color: green;
       width: 100px;
       padding: 5px 10px;
       font-size: $text-font-size;
-      border-color: var(--form-checkbox-color);
 
-      &:placeholder-shown {
-        border-color: var(--input-border-color);
+      &:not(:placeholder-shown) {
+        border-color: var(--form-checkbox-color);
       }
     }
 
@@ -136,7 +141,7 @@ $filter-apply-background-color: green;
           justify-content: flex-end;
 
           .selectCheckbox {
-            width: 13px;
+            width: 15px;
             height: 20px;
           }
         }
@@ -207,5 +212,6 @@ $filter-apply-background-color: green;
 
   @media (width <= $huge-width) {
     flex-direction: column;
+    gap: 20px;
   }
 }

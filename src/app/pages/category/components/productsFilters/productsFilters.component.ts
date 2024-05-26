@@ -17,8 +17,6 @@ export class ProductsFilters extends BaseComponent {
 
   private readonly priceToInput: Input;
 
-  private readonly filteredCount: Div;
-
   private readonly inputOptions: Record<OptionsType, Input[]>;
 
   private selectFields: Div[] = [];
@@ -40,7 +38,15 @@ export class ProductsFilters extends BaseComponent {
 
     const filterFieldForm = form(
       { className: styles.filterFieldForm },
-      div({ className: styles.filterField, text: 'Price' }, this.priceFromInput, this.priceToInput),
+      label(
+        { className: styles.filterFieldLabel },
+        img({ className: styles.icon, src: filterIcon, alt: 'filter-icon' }),
+        div(
+          { className: styles.filterField, text: 'Price' },
+          this.priceFromInput,
+          this.priceToInput,
+        ),
+      ),
       this.getMultipleSelectField('brand'),
       this.getMultipleSelectField('color'),
       button({ className: styles.resetFilterBtn, type: 'reset', text: 'Reset' }),
@@ -52,13 +58,7 @@ export class ProductsFilters extends BaseComponent {
       }),
     );
 
-    this.filteredCount = div(
-      { className: styles.filteredCount, text: '5 / 20' },
-      img({ className: styles.icon, src: filterIcon, alt: 'filter-icon' }),
-    );
-
     this.appendChildren([
-      this.filteredCount,
       filterFieldForm,
       div(
         { className: styles.filterField },
@@ -66,7 +66,7 @@ export class ProductsFilters extends BaseComponent {
         getSortField('Name'),
         getSortField('Price'),
       ),
-      div(
+      label(
         { className: styles.filterField },
         img({ className: styles.icon, src: searchIcon, alt: 'sort-icon' }),
         input({ className: styles.searchInput, ...PRODUCTS_FILTERS_PROPS.search }),
