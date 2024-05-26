@@ -7,7 +7,7 @@ export const LOGIN_PROPS = {
     labelName: 'E-mail',
     placeholder: 'Enter your email',
     maxLength: 30,
-    pattern: '^[\\w]+@([\\w\\-]+\\.)+[a-z]{2,4}$',
+    pattern: '^[\\w\\-]+@([\\w\\-]+\\.)+[a-z]{2,4}$',
     required: true,
     errorText: '❌ Enter correct email. No whitespaces allowed',
     autocomplete: 'username',

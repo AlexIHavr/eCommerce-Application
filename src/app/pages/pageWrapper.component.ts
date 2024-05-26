@@ -17,6 +17,7 @@ import { isIncorrectCategoryPath, isLogined, redirectToMain } from './pageWrappe
 import styles from './pageWrapper.module.scss';
 import { CategoryParams, ProductParams } from './pageWrapper.types';
 import { Product } from './product/product.component';
+import { Profile } from './profile/profile.component';
 
 export class PageWrapper extends BaseComponent {
   private readonly pageContent;
@@ -60,6 +61,7 @@ export class PageWrapper extends BaseComponent {
       [PagesPaths.ABOUT]: () => this.goToPage(new About()),
       [PagesPaths.CATEGORY]: (match) => this.goToCategory(match),
       [PagesPaths.PRODUCT]: (match) => this.goToProduct(match),
+      [PagesPaths.PROFILE]: () => this.goToProfile(),
     });
 
     routingService.setNotFound(() => this.goToPage(this.notFound));
@@ -97,6 +99,14 @@ export class PageWrapper extends BaseComponent {
       this.goToPage(this.notFound);
     } else {
       this.goToPage(new Product(params));
+    }
+  }
+
+  private goToProfile(): void {
+    if (isLogined()) {
+      this.goToPage(new Profile());
+    } else {
+      routingService.navigate(PagesPaths.LOGIN);
     }
   }
 

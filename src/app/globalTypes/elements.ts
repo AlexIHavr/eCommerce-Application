@@ -14,3 +14,6 @@ export type Option = BaseComponent<HTMLOptionElement>;
 export type Image = BaseComponent<HTMLImageElement>;
 export type UL = BaseComponent<HTMLUListElement>;
 export type LI = BaseComponent<HTMLLIElement>;
+export type Table = BaseComponent<HTMLTableElement>;
+export type TR = BaseComponent<HTMLTableRowElement>;
+export type TD = BaseComponent<HTMLTableCellElement>;

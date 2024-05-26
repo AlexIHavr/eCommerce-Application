@@ -20,4 +20,5 @@ export const enum PagesPaths {
   LOGIN = 'login',
   CATEGORY = `${PagesPaths.CATALOG}/:${CatalogParams.CATEGORY}`,
   PRODUCT = `${PagesPaths.CATEGORY}/:${CatalogParams.ID}`,
+  PROFILE = 'profile',
 }
