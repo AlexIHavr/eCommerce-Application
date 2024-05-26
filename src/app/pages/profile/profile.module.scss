@@ -181,19 +181,7 @@ $table-header-color: #efefef;
   .rowAddBtn {
     max-width: 80px;
     margin: 10px auto 0;
-
     font-size: 0.4em;
-
     background-color: var(--button-do-color);
-
-    transition:
-      opacity 0.2s ease-in,
-      transform 0.1s ease-in;
-
-    @media (hover: hover) and (pointer: fine) {
-      &:hover {
-        opacity: 0.6;
-      }
-    }
   }
 }
