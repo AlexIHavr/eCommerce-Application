@@ -110,6 +110,14 @@ export class PageWrapper extends BaseComponent {
     }
   }
 
+  private goToProfile(): void {
+    if (isLogined()) {
+      this.goToPage(new Profile());
+    } else {
+      routingService.navigate(PagesPaths.LOGIN);
+    }
+  }
+
   private goToPage(page: BaseComponent): void {
     this.pageContent.destroyChildren();
     this.pageContent.append(page);
