@@ -1,4 +1,4 @@
-import { CustomerUpdateAction } from '@commercetools/platform-sdk';
+import { Address, CustomerUpdateAction } from '@commercetools/platform-sdk';
 import { ActionFunc } from 'globalTypes/actionFunc';
 import { Button, Div, Form, Table } from 'globalTypes/elements';
 import { PasswordChange } from 'pages/profile/passwordChange/passwordChange.component';
@@ -231,8 +231,11 @@ export class ProfileInfo extends BaseComponent {
     );
   }
 
-  public getActionsForApi(): CustomerUpdateAction[] {
-    const addressActionsArr: CustomerUpdateAction[] = this.addresses.map((addr) => {
+  public getActionsForApi(actual?: Address[]): CustomerUpdateAction[] {
+    if (actual) console.log(actual);
+    const addressActionsArr: CustomerUpdateAction[][] = this.addresses.map((addr) => {
+      const actions: CustomerUpdateAction[] = [];
+
       const address = {
         city: addr.cityField.value,
         streetName: addr.streetField.value,
@@ -241,26 +244,25 @@ export class ProfileInfo extends BaseComponent {
       };
 
       if (addr.addressId.startsWith('newAddress')) {
-        return {
+        actions.push({
           action: 'addAddress',
           address,
-        };
-      }
-
-      if (addr.addressId.startsWith('deleteAddress')) {
+        });
+      } else if (addr.addressId.startsWith('deleteAddress')) {
         const originalAddrId = addr.addressId.replace('deleteAddress', '');
-        return {
+        actions.push({
           action: 'removeAddress',
           addressId: originalAddrId,
+        });
+      } else {
+        actions.push({
+          action: 'changeAddress',
+          addressId: addr.addressId,
           address,
-        };
+        });
       }
 
-      return {
-        action: 'changeAddress',
-        addressId: addr.addressId,
-        address,
-      };
+      return actions;
     });
 
     return [
@@ -280,7 +282,7 @@ export class ProfileInfo extends BaseComponent {
         action: 'setDateOfBirth',
         dateOfBirth: this.birthField.value,
       },
-      ...addressActionsArr,
+      ...addressActionsArr.flat(),
     ];
   }
 }

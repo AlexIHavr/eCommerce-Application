@@ -16,8 +16,11 @@ import { ProfileInfoProps } from './profileContent/profileInfo.types';
 export class Profile extends BaseComponent {
   private readonly contentWrapper = div({});
 
+  private profileInfo: ProfileInfo | null;
+
   constructor() {
     super({ className: styles.profilePage }, new SectionTitle('Profile'));
+    this.profileInfo = null;
 
     this.append(this.contentWrapper);
     this.getCustomer();
@@ -25,6 +28,7 @@ export class Profile extends BaseComponent {
 
   private getCustomer(): void {
     this.contentWrapper.destroyChildren();
+    this.profileInfo = null;
     loader.open();
 
     const customerId = LocalStorageService.getData('customerId');
@@ -40,13 +44,12 @@ export class Profile extends BaseComponent {
   }
 
   private render(customerProps: ProfileInfoProps): void {
-    this.contentWrapper.append(
-      new ProfileInfo(
-        customerProps,
-        this.saveChangesHandler.bind(this),
-        this.cancelEditHandler.bind(this),
-      ),
+    this.profileInfo = new ProfileInfo(
+      customerProps,
+      this.saveChangesHandler.bind(this),
+      this.cancelEditHandler.bind(this),
     );
+    this.contentWrapper.append(this.profileInfo);
     loader.close();
   }
 
@@ -59,20 +62,49 @@ export class Profile extends BaseComponent {
     this.getCustomer();
   }
 
-  private saveChangesHandler(actions: CustomerUpdateAction[]): void {
-    const customerId = LocalStorageService.getData('customerId');
+  private async saveChangesHandler(actions: CustomerUpdateAction[]): Promise<void> {
+    let actualVersion;
+    const actionNewAddr = actions.filter((a) => a.action === 'addAddress');
 
-    if (customerId) {
-      apiService.getCustomerById(customerId).then((data) => {
-        const { version } = data.body;
-        apiService
-          .updateCustomerInfo(customerId, version, actions)
-          .then(() => alertModal.showAlert('success', SUCCESS_USER_UPDATE))
-          .then(() => this.getCustomer());
-      });
-    } else {
-      this.contentWrapper.destroyChildren();
-      this.showNoUserError();
+    if (actionNewAddr.length > 0) {
+      const customerId = LocalStorageService.getData('customerId');
+      if (customerId) {
+        const user = await apiService.getCustomerById(customerId);
+        actualVersion = user.body.version;
+        const upduser = await apiService.updateCustomerInfo(
+          customerId,
+          actualVersion,
+          actionNewAddr,
+        );
+        actualVersion = upduser.body.version;
+        console.log(upduser.body.addresses);
+        console.log(actions);
+        const newActions = this.profileInfo?.getActionsForApi(upduser.body.addresses);
+        console.log(newActions);
+      } else {
+        this.contentWrapper.destroyChildren();
+        this.profileInfo = null;
+        this.showNoUserError();
+      }
     }
+    console.log('posle');
+
+    // const customerId = LocalStorageService.getData('customerId');
+
+    // if (customerId) {
+    //   apiService.getCustomerById(customerId).then((data) => {
+    //     const { version } = data.body;
+    //     apiService
+    //       .updateCustomerInfo(customerId, version, actions)
+    //       .then(() => alertModal.showAlert('success', SUCCESS_USER_UPDATE))
+    //       .then(() => this.getCustomer());
+    //   });
+    // } else {
+    //   this.contentWrapper.destroyChildren();
+    //   this.profileInfo = null;
+    //   this.showNoUserError();
+    // }
+    console.log(alertModal);
+    console.log(SUCCESS_USER_UPDATE);
   }
 }
