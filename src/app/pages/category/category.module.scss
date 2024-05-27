@@ -1,0 +1,95 @@
+$product-card-color: whitesmoke;
+$product-card-description-color: grey;
+$discount-label-color: rgb(233 113 113);
+
+.category {
+  width: 100%;
+
+  .productsList {
+    $card-max-width: 250px;
+    $cards-gap: 20px;
+    $cards-count-in-row: 4;
+
+    display: flex;
+    flex-wrap: wrap;
+    gap: $cards-gap;
+    justify-content: center;
+
+    max-width: calc($cards-count-in-row * ($card-max-width + $cards-gap));
+    margin: 0 auto;
+    padding: 40px 0;
+
+    .productCard {
+      cursor: pointer;
+
+      position: relative;
+
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+
+      max-width: $card-max-width;
+
+      font-size: 0.8em;
+
+      background-color: $product-card-color;
+
+      transition: scale 0.3s;
+
+      .cardImg {
+        width: 100%;
+      }
+
+      .cardName,
+      .cardDescription,
+      .cardPrices {
+        padding: 0 10px;
+      }
+
+      .cardDescription {
+        color: $product-card-description-color;
+      }
+
+      .cardPrices {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        padding-bottom: 10px;
+
+        font-weight: bold;
+
+        .discountPrice {
+          font-size: 0.9em;
+          font-weight: normal;
+          color: $product-card-description-color;
+          text-decoration: line-through;
+        }
+      }
+
+      .discountLabel {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        width: 50px;
+        height: 50px;
+
+        color: var(--background-color);
+
+        background-color: $discount-label-color;
+        border-radius: 50%;
+      }
+
+      @media (hover: hover) and (pointer: fine) {
+        &:hover {
+          scale: 1.05;
+        }
+      }
+    }
+  }
+}
