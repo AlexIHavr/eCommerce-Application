@@ -1,5 +1,4 @@
 import { Customer, CustomerUpdateAction } from '@commercetools/platform-sdk';
-import { ActionFunc } from 'globalTypes/actionFunc';
 import { Button, Div, Form, Table } from 'globalTypes/elements';
 import { PasswordChange } from 'pages/profile/passwordChange/passwordChange.component';
 import { INVALID_DATA_WARNING } from 'pages/profile/profile.consts';
@@ -46,7 +45,7 @@ export class ProfileInfo extends BaseComponent {
     props: ProfileInfoProps,
     allCustomerData: Customer,
     saveChangesHandler: (actions: CustomerUpdateAction[]) => void,
-    cancelEditHandler: ActionFunc,
+    cancelEditHandler: () => void,
     passwordUpdateHandler: (data: PasswordProps) => void,
   ) {
     super({ className: sharedStyles.container });
