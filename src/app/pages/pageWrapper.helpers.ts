@@ -1,4 +1,5 @@
 import { Anchor } from 'globalTypes/elements';
+import { BreadcrumbPath } from 'pages/shared/components/breadcrumbs/breadcrumbs.interfaces';
 import { LocalStorageService } from 'services/localStorage.service';
 import { routingService } from 'services/routing.service';
 import { alertModal } from 'shared/alert/alert.component';
@@ -6,7 +7,7 @@ import { BaseComponent } from 'shared/base/base.component';
 import { a } from 'shared/tags/tags.component';
 import { tokenCache } from 'utils/tokenCache.util';
 
-import { PagesPaths } from './pageWrapper.consts';
+import { CATEGORIES_TYPES_VALUES, CategoriesTypes, PagesPaths } from './pageWrapper.consts';
 
 export function redirectToMain(): void {
   routingService.navigate(PagesPaths.HOME);
@@ -14,7 +15,7 @@ export function redirectToMain(): void {
 
 export function getNavLink(
   title: string,
-  path: PagesPaths,
+  path: string,
   className: string,
   ...children: BaseComponent[]
 ): Anchor {
@@ -28,18 +29,28 @@ export function isLogined(): boolean {
   return Boolean(LocalStorageService.getData('refreshToken'));
 }
 
-export function loginRedirect(): void {
-  if (!isLogined()) return;
-
-  redirectToMain();
-}
-
 export function successLogin(title: string, customerId: string): void {
-  if (!tokenCache.cache.refreshToken) return;
-
-  LocalStorageService.saveData('refreshToken', tokenCache.cache.refreshToken);
-  LocalStorageService.saveData('customerId', customerId);
+  if (tokenCache.cache.refreshToken) {
+    LocalStorageService.saveData('refreshToken', tokenCache.cache.refreshToken);
+    LocalStorageService.saveData('customerId', customerId);
+  }
 
   redirectToMain();
   alertModal.showAlert('success', title);
+}
+
+export function isIncorrectCategoryPath(category: CategoriesTypes): boolean {
+  return !CATEGORIES_TYPES_VALUES.includes(category);
+}
+
+export function getCategoryPath(category: CategoriesTypes): string {
+  return `${PagesPaths.CATALOG}/${category}`;
+}
+
+export function getProductPath(category: CategoriesTypes, id: string): string {
+  return `${getCategoryPath(category)}/${id}`;
+}
+
+export function getCategoryBreadcrumbPath(category: CategoriesTypes): BreadcrumbPath {
+  return { name: category, path: getCategoryPath(category) };
 }

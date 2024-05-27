@@ -24,6 +24,12 @@ input {
   &[type='date'] {
     cursor: text;
   }
+
+  &[type='number']::-webkit-outer-spin-button,
+  &[type='number']::-webkit-inner-spin-button {
+    margin: 0;
+    appearance: none;
+  }
 }
 
 button {
@@ -45,7 +51,8 @@ button {
   box-shadow: 1px 1px 2px var(--base-color);
 
   transition:
-    background-color 0.3s ease-in-out,
+    background-color 0.2s ease-in,
+    opacity 0.2s ease-in,
     transform 0.1s ease-in;
 
   &:disabled {
@@ -59,7 +66,7 @@ button {
 
   @media (hover: hover) and (pointer: fine) {
     &:hover {
-      background-color: rgba($background-button-color, 75%);
+      opacity: 0.75;
     }
   }
 }

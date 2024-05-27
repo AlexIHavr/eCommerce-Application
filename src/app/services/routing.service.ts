@@ -1,4 +1,4 @@
-import { ActionFunc } from 'globalTypes/actionFunc';
+import { MatchFunc } from 'globalTypes/routing.type';
 import Navigo, { RouteHooks } from 'navigo';
 
 class RoutingService {
@@ -8,11 +8,11 @@ class RoutingService {
     this.router = new Navigo(import.meta.env.BASE_URL, { noMatchWarning: true });
   }
 
-  public setRouting(map: Record<string, ActionFunc>): void {
+  public setRouting(map: Record<string, MatchFunc>): void {
     this.router.on(map).resolve();
   }
 
-  public setNotFound(notFoundAction: ActionFunc): void {
+  public setNotFound(notFoundAction: MatchFunc): void {
     this.router.notFound(notFoundAction).resolve();
   }
 
