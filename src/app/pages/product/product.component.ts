@@ -3,7 +3,10 @@ import { getCategoryBreadcrumbPath, getProductPath } from 'pages/pageWrapper.hel
 import { ProductParams } from 'pages/pageWrapper.types';
 import { Breadcrumbs } from 'pages/shared/components/breadcrumbs/breadcrumbs.component';
 import { SectionTitle } from 'pages/shared/components/sectionTitle/sectionTitle.component';
+import sharedStyles from 'pages/shared/styles/common.module.scss';
 import { BaseComponent } from 'shared/base/base.component';
+import { Slider } from 'shared/slider/slider.component';
+import { div, img } from 'shared/tags/tags.component';
 
 import styles from './product.module.scss';
 
@@ -18,6 +21,20 @@ export class Product extends BaseComponent {
         getCategoryBreadcrumbPath(params.category),
         { name: product.name, path: getProductPath(params.category, params.id) },
       ]),
+      div(
+        { className: sharedStyles.container },
+        div(
+          { className: styles.productDetails },
+          div(
+            { className: styles.slider },
+            Slider.getSliderWrapper(
+              ...product.images.map((image) =>
+                img({ className: styles.sliderImage, src: image, alt: `${image}-image` }),
+              ),
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

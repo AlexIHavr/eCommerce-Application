@@ -1,0 +1,10 @@
+.sliderBullet {
+  opacity: 1;
+  background-color: var(--secondary-background-color);
+  box-shadow: 0 0 5px var(--base-color);
+}
+
+.sliderButton {
+  color: var(--secondary-background-color);
+  filter: drop-shadow(0 0 3px var(--base-color));
+}

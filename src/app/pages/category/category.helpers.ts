@@ -10,7 +10,7 @@ const CURRENCY = 'BYN';
 
 export function getProducts(category: CategoriesTypes): Anchor[] {
   return PRODUCTS_CARDS_MOCK.filter(({ type }) => type === category).map(
-    ({ id, name, src, price, discount, description }) => {
+    ({ id, name, images, price, discount, description }) => {
       const priceWithDiscount = discount
         ? `${Number(price) - (Number(price) * Number(discount)) / 100} ${CURRENCY}`
         : `${price} ${CURRENCY}`;
@@ -21,7 +21,7 @@ export function getProducts(category: CategoriesTypes): Anchor[] {
         '',
         getProductPath(category, id),
         styles.productCard,
-        img({ className: styles.cardImg, src, alt: 'product-card-img' }),
+        img({ className: styles.cardImg, src: images[0], alt: 'product-card-img' }),
         h3(name, styles.cardName),
         div({ className: styles.cardDescription, text: description }),
         prices,
