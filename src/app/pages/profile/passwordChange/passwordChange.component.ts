@@ -1,4 +1,5 @@
 import { Button, Div, Form } from 'globalTypes/elements';
+import { PasswordProps } from 'pages/profile/profileContent/profileInfo.types';
 import { FormField } from 'pages/shared/components/formField/formField.component';
 import formFieldStyles from 'pages/shared/components/formField/formField.module.scss';
 import formStyles from 'pages/shared/styles/formElements.module.scss';
@@ -23,7 +24,7 @@ export class PasswordChange extends BaseComponent {
 
   private readonly message: Div;
 
-  constructor() {
+  constructor(updatePasswordHandler: (data: PasswordProps) => void) {
     super({ className: styles.overlay });
 
     this.currentPasswordField = new FormField(PASSWORD_CHANGE_PROPS.currentPassword);
@@ -56,11 +57,16 @@ export class PasswordChange extends BaseComponent {
     this.saveBtn = button({
       className: `${formStyles.formButton} ${styles.saveBtn}`,
       text: 'Save and close',
-      type: 'button',
+      type: 'submit',
       disabled: true,
-      onclick: () => {
+      onclick: (e) => {
+        e.preventDefault();
         if (this.checkValidity()) {
-          console.log('TODO save');
+          updatePasswordHandler({
+            currentPassword: this.currentPasswordField.value,
+            newPassword: this.newPasswordField.value,
+          });
+          this.closeModal();
         }
       },
     });

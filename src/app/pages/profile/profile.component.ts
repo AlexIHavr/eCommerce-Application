@@ -1,4 +1,8 @@
-import { Customer, CustomerUpdateAction } from '@commercetools/platform-sdk';
+import {
+  Customer,
+  CustomerChangePassword,
+  CustomerUpdateAction,
+} from '@commercetools/platform-sdk';
 import { SectionTitle } from 'pages/shared/components/sectionTitle/sectionTitle.component';
 import { apiService } from 'services/api.service';
 import { LocalStorageService } from 'services/localStorage.service';
@@ -7,11 +11,17 @@ import { BaseComponent } from 'shared/base/base.component';
 import { loader } from 'shared/loader/loader.component';
 import { div } from 'shared/tags/tags.component';
 
-import { FAIL_USER_UPDATE, NO_USER_ERROR, SUCCESS_USER_UPDATE } from './profile.consts';
+import {
+  FAIL_PASSWORD_UPDATE,
+  FAIL_USER_UPDATE,
+  NO_USER_ERROR,
+  SUCCESS_PASSWORD_UPDATE,
+  SUCCESS_USER_UPDATE,
+} from './profile.consts';
 import { makeProfileProps } from './profile.helpers';
 import styles from './profile.module.scss';
 import { ProfileInfo } from './profileContent/profileInfo.component';
-import { ProfileInfoProps } from './profileContent/profileInfo.types';
+import { PasswordProps, ProfileInfoProps } from './profileContent/profileInfo.types';
 
 export class Profile extends BaseComponent {
   private readonly contentWrapper = div({});
@@ -49,6 +59,7 @@ export class Profile extends BaseComponent {
       data,
       this.saveChangesHandler.bind(this),
       this.cancelEditHandler.bind(this),
+      this.passwordUpdateHandler.bind(this),
     );
     this.contentWrapper.append(this.profileInfo);
     loader.close();
@@ -88,6 +99,32 @@ export class Profile extends BaseComponent {
       } catch (error) {
         alertModal.showAlert('error', FAIL_USER_UPDATE);
       }
+    } else {
+      this.contentWrapper.destroyChildren();
+      this.profileInfo = null;
+      this.showNoUserError();
+    }
+  }
+
+  private async passwordUpdateHandler(password: PasswordProps): Promise<void> {
+    loader.open();
+
+    const customerId = LocalStorageService.getData('customerId');
+    if (customerId) {
+      const data = await apiService.getCustomerById(customerId);
+
+      const body: CustomerChangePassword = {
+        id: data.body.id,
+        version: data.body.version,
+        currentPassword: password.currentPassword,
+        newPassword: password.newPassword,
+      };
+
+      apiService
+        .updateCustomerPassword(body)
+        .then(() => alertModal.showAlert('success', SUCCESS_PASSWORD_UPDATE))
+        .catch(() => alertModal.showAlert('error', FAIL_PASSWORD_UPDATE))
+        .finally(() => loader.close());
     } else {
       this.contentWrapper.destroyChildren();
       this.profileInfo = null;

@@ -15,7 +15,7 @@ import { BaseComponent } from 'shared/base/base.component';
 import { button, div, form, table, td, tr } from 'shared/tags/tags.component';
 
 import styles from './profileInfo.module.scss';
-import { ProfileInfoProps } from './profileInfo.types';
+import { PasswordProps, ProfileInfoProps } from './profileInfo.types';
 
 export class ProfileInfo extends BaseComponent {
   private readonly profileWrapper: Div;
@@ -47,6 +47,7 @@ export class ProfileInfo extends BaseComponent {
     allCustomerData: Customer,
     saveChangesHandler: (actions: CustomerUpdateAction[]) => void,
     cancelEditHandler: ActionFunc,
+    passwordUpdateHandler: (data: PasswordProps) => void,
   ) {
     super({ className: sharedStyles.container });
     this.allCustomerData = allCustomerData;
@@ -131,7 +132,7 @@ export class ProfileInfo extends BaseComponent {
           className: `${formStyles.formButton} ${styles.passwordEditBtn}`,
           text: 'Change password',
           type: 'button',
-          onclick: () => this.append(new PasswordChange()),
+          onclick: () => this.append(new PasswordChange(passwordUpdateHandler)),
         }),
         div(
           { className: styles.saveCancelWrapper },

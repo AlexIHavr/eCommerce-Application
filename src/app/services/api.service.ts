@@ -1,6 +1,7 @@
 import {
   ByProjectKeyRequestBuilder,
   Customer,
+  CustomerChangePassword,
   CustomerPagedQueryResponse,
   CustomerSignInResult,
   CustomerUpdateAction,
@@ -70,6 +71,10 @@ export class ApiService {
         },
       })
       .execute();
+  }
+
+  public updateCustomerPassword(data: CustomerChangePassword): ApiClientResponse<Customer> {
+    return this.apiRoot.customers().password().post({ body: data }).execute();
   }
 }
 

@@ -1,3 +1,4 @@
+import { CustomerChangePassword } from '@commercetools/platform-sdk';
 import { TableRowProps } from 'pages/profile/tableRow/tableRow.types';
 
 export type ProfileInfoProps = {
@@ -7,3 +8,5 @@ export type ProfileInfoProps = {
   dateOfBirth: string;
   addresses: TableRowProps[];
 };
+
+export type PasswordProps = Pick<CustomerChangePassword, 'currentPassword' | 'newPassword'>;
