@@ -11,7 +11,12 @@ class Alert extends BaseComponent {
   private readonly infoText: Span;
 
   constructor() {
-    super({ className: styles.alert, onanimationend: () => this.removeClass(styles.show) });
+    super({
+      className: styles.alert,
+      onanimationend: () => {
+        this.getNode().className = styles.alert;
+      },
+    });
 
     this.infoTitle = span({ className: styles.infoTitle });
     this.infoText = span({ className: styles.infoText });
