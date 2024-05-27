@@ -5,7 +5,7 @@ import { ProfileInfoProps } from './profileContent/profileInfo.types';
 export function makeProfileProps(data: Customer): ProfileInfoProps {
   const customerAddresses = data.addresses.map((addr) => {
     const address = {
-      type: addr.key,
+      type: data.billingAddressIds?.includes(addr.id!) ? 'billing' : 'shipping',
       city: addr.city,
       street: addr.streetName,
       postalCode: addr.postalCode,
