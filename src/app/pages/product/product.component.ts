@@ -11,7 +11,7 @@ import { SectionTitle } from 'pages/shared/components/sectionTitle/sectionTitle.
 import sharedStyles from 'pages/shared/styles/common.module.scss';
 import productsStyles from 'pages/shared/styles/products.module.scss';
 import { BaseComponent } from 'shared/base/base.component';
-import { div, h3 } from 'shared/tags/tags.component';
+import { button, div, h3 } from 'shared/tags/tags.component';
 
 import { getSlider } from './product.helpers';
 import styles from './product.module.scss';
@@ -67,9 +67,13 @@ export class Product extends BaseComponent {
                 text: discount ? `${price} BYN` : '',
               }),
             ),
-            div({ text: description }),
-            div({ text: `Brand - ${brand}` }),
-            div({ text: `Color - ${color}` }),
+            div(
+              { className: styles.description },
+              div({ text: description }),
+              div({ text: `Brand - ${brand}` }),
+              div({ text: `Color - ${color}` }),
+            ),
+            button({ className: styles.addToCardBtn, text: 'Add to cart' }),
           ),
         ),
       ),
