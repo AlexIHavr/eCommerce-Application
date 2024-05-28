@@ -46,8 +46,16 @@ export class Product extends BaseComponent {
     }
 
     this.sliderModal = div(
-      { className: styles.sliderModal, onclick: (event) => this.hideSliderModal(event) },
-      getSlider(images, styles.sliderInModal),
+      { className: styles.sliderModal, onclick: (event) => this.closeSliderModal(event) },
+      div(
+        { className: styles.sliderInModalWrapper },
+        getSlider(images, styles.sliderInModal),
+        button({
+          className: styles.closeSliderModalBtn,
+          text: '❌',
+          onclick: () => this.closeSliderModal(),
+        }),
+      ),
     );
 
     this.appendChildren([
@@ -90,8 +98,8 @@ export class Product extends BaseComponent {
     this.sliderModal.addClass(styles.show);
   }
 
-  private hideSliderModal(event: MouseEvent): void {
-    if (event.target !== this.sliderModal.getNode()) return;
+  private closeSliderModal(event?: MouseEvent): void {
+    if (event && event.target !== this.sliderModal.getNode()) return;
 
     this.sliderModal.removeClass(styles.show);
   }

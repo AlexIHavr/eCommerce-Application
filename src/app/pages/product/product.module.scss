@@ -9,12 +9,13 @@
     margin: 40px;
 
     .slider {
-      cursor: pointer;
       position: relative;
       max-width: 400px;
 
       .sliderImage {
+        cursor: zoom-in;
         width: 100%;
+        height: 100%;
       }
 
       .discountLabel {
@@ -31,7 +32,7 @@
       display: flex;
       flex-direction: column;
       gap: 10px;
-      justify-content: space-evenly;
+      justify-content: space-between;
 
       .prices {
         display: flex;
@@ -63,7 +64,7 @@
   }
 
   .sliderModal {
-    cursor: pointer;
+    cursor: zoom-out;
 
     position: fixed;
     z-index: 1000;
@@ -85,13 +86,43 @@
       scale: 1;
     }
 
-    .sliderInModal {
+    .sliderInModalWrapper {
       cursor: default;
+      position: relative;
       width: 60%;
       margin: 0 auto;
 
+      .closeSliderModalBtn {
+        position: absolute;
+        z-index: 1001;
+        top: 0;
+        right: 0;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        width: 40px;
+        height: 40px;
+        margin: 10px 10px 0 0;
+
+        font-size: 1.2em;
+        color: var(--discount-label-color);
+
+        background-color: transparent;
+        box-shadow: none;
+
+        @media (hover: hover) and (pointer: fine) {
+          &:hover {
+            opacity: 1;
+            background-color: var(--base-color);
+          }
+        }
+      }
+
       .sliderImage {
         width: 100%;
+        height: 100%;
       }
 
       @media (width <= $huge-width) {

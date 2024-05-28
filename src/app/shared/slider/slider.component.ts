@@ -28,18 +28,26 @@ export class Slider {
 
   public static getSliderWrapper(...sliders: BaseComponent[]): Div {
     const buttonPrev = div({ className: SWIPER_CLASSES.buttonPrev });
-    buttonPrev.addClass(styles.sliderButton);
+    buttonPrev.addClass(styles.sliderButtonPrev);
 
     const buttonNext = div({ className: SWIPER_CLASSES.buttonNext });
-    buttonNext.addClass(styles.sliderButton);
+    buttonNext.addClass(styles.sliderButtonNext);
+
+    const pagination = div({ className: SWIPER_CLASSES.pagination });
+    pagination.addClass(styles.pagination);
 
     return div(
       { className: SWIPER_CLASSES.swiper },
       div(
         { className: 'swiper-wrapper' },
-        ...sliders.map((slide) => div({ className: 'swiper-slide' }, slide)),
+        ...sliders.map((slide) => {
+          const slideElem = div({ className: 'swiper-slide' }, slide);
+          slideElem.addClass(styles.slide);
+
+          return slideElem;
+        }),
       ),
-      div({ className: SWIPER_CLASSES.pagination }),
+      pagination,
       buttonPrev,
       buttonNext,
     );

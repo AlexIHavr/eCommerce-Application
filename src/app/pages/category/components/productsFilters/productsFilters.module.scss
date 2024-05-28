@@ -1,7 +1,7 @@
 @import '/src/styles/global';
 
 $filter-reset-background-color: crimson;
-$filter-apply-background-color: green;
+$filter-apply-background-color: lightseagreen;
 
 .productsFilters {
   $text-font-size: 0.9em;
@@ -76,7 +76,7 @@ $filter-apply-background-color: green;
       font-size: $text-font-size;
 
       &:not(:placeholder-shown) {
-        border-color: var(--form-checkbox-color);
+        border-color: $filter-apply-background-color;
       }
     }
 
@@ -101,7 +101,7 @@ $filter-apply-background-color: green;
       border-radius: 5px;
 
       &:has(:checked) {
-        border-color: var(--form-checkbox-color);
+        border-color: $filter-apply-background-color;
       }
 
       .selectIcon {
@@ -128,7 +128,7 @@ $filter-apply-background-color: green;
         border-radius: 5px;
 
         &:has(:checked) {
-          border-color: var(--form-checkbox-color);
+          border-color: $filter-apply-background-color;
         }
 
         .multipleSelectLabel {
@@ -181,7 +181,7 @@ $filter-apply-background-color: green;
       border-radius: 5px;
 
       &:has(.asc, .desc) {
-        border-color: var(--form-checkbox-color);
+        border-color: $filter-apply-background-color;
       }
 
       .arrowIcon {
