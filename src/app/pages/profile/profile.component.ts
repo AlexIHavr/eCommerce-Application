@@ -44,10 +44,15 @@ export class Profile extends BaseComponent {
     const customerId = LocalStorageService.getData('customerId');
 
     if (customerId) {
-      apiService.getCustomerById(customerId).then((data) => {
-        const props = makeProfileProps(data.body);
-        this.render(props, data.body);
-      });
+      apiService
+        .getCustomerById(customerId)
+        .then((data) => {
+          const props = makeProfileProps(data.body);
+          this.render(props, data.body);
+        })
+        .catch(() => {
+          loader.close();
+        });
     } else {
       this.showNoUserError();
     }
