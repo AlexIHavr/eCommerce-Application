@@ -1,21 +1,19 @@
 import { Anchor } from 'globalTypes/elements';
 import { CategoriesTypes } from 'pages/pageWrapper.consts';
-import { getNavLink, getProductPath } from 'pages/pageWrapper.helpers';
+import { getDiscountPrice, getNavLink, getProductPath } from 'pages/pageWrapper.helpers';
+import productsStyles from 'pages/shared/styles/products.module.scss';
 import { div, h3, img } from 'shared/tags/tags.component';
 
 import { PRODUCTS_CARDS_MOCK } from './category.consts';
 import styles from './category.module.scss';
 
-const CURRENCY = 'BYN';
-
 export function getProducts(category: CategoriesTypes): Anchor[] {
   return PRODUCTS_CARDS_MOCK.filter(({ type }) => type === category).map(
     ({ id, name, images, price, discount, description }) => {
-      const priceWithDiscount = discount
-        ? `${Number(price) - (Number(price) * Number(discount)) / 100} ${CURRENCY}`
-        : `${price} ${CURRENCY}`;
-
-      const prices = div({ className: styles.cardPrices }, div({ text: priceWithDiscount }));
+      const prices = div(
+        { className: styles.cardPrices },
+        div({ text: getDiscountPrice(price, discount) }),
+      );
 
       const productCard = getNavLink(
         '',
@@ -28,8 +26,8 @@ export function getProducts(category: CategoriesTypes): Anchor[] {
       );
 
       if (discount) {
-        prices.append(div({ className: styles.discountPrice, text: `${price} ${CURRENCY}` }));
-        productCard.append(div({ className: styles.discountLabel, text: `-${discount}%` }));
+        prices.append(div({ className: productsStyles.discountPrice, text: `${price} BYN` }));
+        productCard.append(div({ className: productsStyles.discountLabel, text: `-${discount}%` }));
       }
 
       return productCard;

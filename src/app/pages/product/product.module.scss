@@ -2,14 +2,37 @@
   width: 100%;
 
   .productDetails {
-    padding: 10px;
+    display: flex;
+    gap: 20px;
+    margin: 40px 0 0 40px;
 
     .slider {
+      position: relative;
       max-width: 500px;
-      margin: 0 auto;
 
       .sliderImage {
         width: 100%;
+      }
+
+      .discountLabel {
+        width: 60px;
+        height: 60px;
+      }
+    }
+
+    .details {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+
+      .prices {
+        display: flex;
+        gap: 20px;
+        align-items: center;
+
+        margin-bottom: 10px;
+
+        font-weight: bold;
       }
     }
   }
