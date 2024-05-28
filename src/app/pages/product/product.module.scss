@@ -10,7 +10,7 @@
 
     .slider {
       position: relative;
-      max-width: 400px;
+      max-width: 450px;
 
       .sliderImage {
         cursor: zoom-in;
@@ -38,17 +38,58 @@
         display: flex;
         gap: 20px;
         align-items: center;
-
-        margin-bottom: 10px;
-
         font-weight: bold;
       }
 
       .description {
+        font-size: 0.9em;
+      }
+
+      .brand {
         display: flex;
         flex-direction: column;
         gap: 5px;
-        font-size: 0.9em;
+        font-weight: bold;
+
+        .brandName {
+          font-weight: normal;
+        }
+      }
+
+      .colorsSelect {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+        font-weight: bold;
+
+        .colors {
+          display: flex;
+          gap: 10px;
+
+          .color {
+            cursor: pointer;
+
+            width: 25px;
+            height: 25px;
+
+            border-radius: 50%;
+
+            transition:
+              scale 0.2s,
+              box-shadow 0.2s;
+
+            &.active {
+              scale: 1.1;
+              box-shadow: 0 0 5px var(--base-color);
+            }
+
+            @media (hover: hover) and (pointer: fine) {
+              &:hover {
+                scale: 1.1;
+              }
+            }
+          }
+        }
       }
 
       .addToCardBtn {

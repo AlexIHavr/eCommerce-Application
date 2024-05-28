@@ -12,7 +12,7 @@ export const PRODUCTS_CARDS_MOCK: ProductCardMock[] = [
     price: '1500',
     discount: '10',
     brand: 'Brand 1',
-    color: 'white',
+    color: 'black',
     type: CategoriesTypes.CHAIRS,
   },
   {
@@ -23,7 +23,7 @@ export const PRODUCTS_CARDS_MOCK: ProductCardMock[] = [
     price: '1600',
     discount: '20',
     brand: 'Brand 1',
-    color: 'white',
+    color: 'black',
     type: CategoriesTypes.CHAIRS,
   },
   {
@@ -34,7 +34,7 @@ export const PRODUCTS_CARDS_MOCK: ProductCardMock[] = [
     price: '1300',
     discount: '25',
     brand: 'Brand 2',
-    color: 'white',
+    color: 'black',
     type: CategoriesTypes.CHAIRS,
   },
   {
@@ -44,7 +44,7 @@ export const PRODUCTS_CARDS_MOCK: ProductCardMock[] = [
     images: [sofaImage],
     price: '1200',
     brand: 'Brand 3',
-    color: 'white',
+    color: 'black',
     type: CategoriesTypes.CHAIRS,
   },
   {
@@ -55,7 +55,7 @@ export const PRODUCTS_CARDS_MOCK: ProductCardMock[] = [
     price: '1700',
     discount: '30',
     brand: 'Brand 2',
-    color: 'white',
+    color: 'black',
     type: CategoriesTypes.SOFAS,
   },
   {
@@ -66,7 +66,7 @@ export const PRODUCTS_CARDS_MOCK: ProductCardMock[] = [
     price: '1800',
     discount: '5',
     brand: 'Brand 1',
-    color: 'white',
+    color: 'black',
     type: CategoriesTypes.SOFAS,
   },
   {
@@ -76,7 +76,7 @@ export const PRODUCTS_CARDS_MOCK: ProductCardMock[] = [
     images: [sofaImage],
     price: '1900',
     brand: 'Brand 2',
-    color: 'white',
+    color: 'black',
     type: CategoriesTypes.BEDS,
   },
   {
@@ -87,7 +87,7 @@ export const PRODUCTS_CARDS_MOCK: ProductCardMock[] = [
     price: '2000',
     discount: '50',
     brand: 'Brand 3',
-    color: 'white',
+    color: 'black',
     type: CategoriesTypes.BEDS,
   },
 ];

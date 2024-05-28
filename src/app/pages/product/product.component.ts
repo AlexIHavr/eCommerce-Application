@@ -13,6 +13,7 @@ import productsStyles from 'pages/shared/styles/products.module.scss';
 import { BaseComponent } from 'shared/base/base.component';
 import { button, div, h3 } from 'shared/tags/tags.component';
 
+import { PRODUCT_COLORS_VALUES } from './product.consts';
 import { getSlider } from './product.helpers';
 import styles from './product.module.scss';
 
@@ -58,6 +59,26 @@ export class Product extends BaseComponent {
       ),
     );
 
+    const colors = div(
+      { className: styles.colors },
+      ...PRODUCT_COLORS_VALUES.map((colorValue) => {
+        const colorElem = div({
+          className: styles.color,
+          onclick: () => {
+            colors.getChildren().forEach((child) => child.removeClass(styles.active));
+            colorElem.addClass(styles.active);
+          },
+        });
+        colorElem.getNode().style.backgroundColor = colorValue;
+
+        if (color === colorValue) {
+          colorElem.addClass(styles.active);
+        }
+
+        return colorElem;
+      }),
+    );
+
     this.appendChildren([
       div(
         { className: sharedStyles.container },
@@ -75,12 +96,12 @@ export class Product extends BaseComponent {
                 text: discount ? `${price} BYN` : '',
               }),
             ),
+            div({ className: styles.description, text: description }),
             div(
-              { className: styles.description },
-              div({ text: description }),
-              div({ text: `Brand - ${brand}` }),
-              div({ text: `Color - ${color}` }),
+              { className: styles.brand, text: 'Brand' },
+              div({ className: styles.brandName, text: brand }),
             ),
+            div({ className: styles.colorsSelect }, div({ text: 'Color' }), colors),
             button({ className: styles.addToCardBtn, text: 'Add to cart' }),
           ),
         ),
