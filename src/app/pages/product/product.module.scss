@@ -1,15 +1,17 @@
+@import '/src/styles/global';
+
 .product {
   width: 100%;
 
   .productDetails {
     display: flex;
     gap: 20px;
-    margin: 40px 0 0 40px;
+    margin: 40px;
 
     .slider {
       cursor: pointer;
       position: relative;
-      max-width: 500px;
+      max-width: 400px;
 
       .sliderImage {
         width: 100%;
@@ -18,6 +20,10 @@
       .discountLabel {
         width: 60px;
         height: 60px;
+      }
+
+      @media (width <= $catalog-medium-width) {
+        max-width: 300px;
       }
     }
 
@@ -36,6 +42,10 @@
         font-weight: bold;
       }
     }
+
+    @media (width <= $catalog-medium-width) {
+      flex-direction: column;
+    }
   }
 
   .sliderModal {
@@ -52,7 +62,6 @@
 
     width: 100%;
     height: 100%;
-    padding: 40px;
 
     backdrop-filter: blur(3px);
 
@@ -69,6 +78,14 @@
 
       .sliderImage {
         width: 100%;
+      }
+
+      @media (width <= $huge-width) {
+        width: 80%;
+      }
+
+      @media (width <= $medium-width) {
+        width: 90%;
       }
     }
   }
