@@ -17,6 +17,7 @@ export class Slider {
       navigation: {
         nextEl: `.${SWIPER_CLASSES.buttonNext}`,
         prevEl: `.${SWIPER_CLASSES.buttonPrev}`,
+        disabledClass: `swiper-button-disabled ${styles.navigationDisabled}`,
       },
       pagination: {
         el: `.${SWIPER_CLASSES.pagination}`,

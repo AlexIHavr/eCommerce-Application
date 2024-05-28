@@ -49,7 +49,7 @@ export class Product extends BaseComponent {
       { className: styles.sliderModal, onclick: (event) => this.closeSliderModal(event) },
       div(
         { className: styles.sliderInModalWrapper },
-        getSlider(images, styles.sliderInModal),
+        getSlider(images),
         button({
           className: styles.closeSliderModalBtn,
           text: '❌',

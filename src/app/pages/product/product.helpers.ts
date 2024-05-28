@@ -4,15 +4,17 @@ import { div, img } from 'shared/tags/tags.component';
 
 import styles from './product.module.scss';
 
-export function getSlider(images: string[], className: string): Div {
+export function getSlider(images: string[], className?: string): Div {
   const slider = div(
-    { className },
+    {},
     Slider.getSliderWrapper(
       ...images.map((image) =>
         img({ className: styles.sliderImage, src: image, alt: `${image}-image` }),
       ),
     ),
   );
+
+  if (className) slider.addClass(className);
 
   return slider;
 }

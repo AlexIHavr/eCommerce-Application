@@ -19,8 +19,8 @@
       }
 
       .discountLabel {
-        width: 60px;
-        height: 60px;
+        width: 55px;
+        height: 55px;
       }
 
       @media (width <= $catalog-medium-width) {
@@ -64,8 +64,6 @@
   }
 
   .sliderModal {
-    cursor: zoom-out;
-
     position: fixed;
     z-index: 1000;
     top: 0;
@@ -87,7 +85,6 @@
     }
 
     .sliderInModalWrapper {
-      cursor: default;
       position: relative;
       width: 60%;
       margin: 0 auto;
