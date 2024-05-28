@@ -1,3 +1,4 @@
+import { Div } from 'globalTypes/elements';
 import { PRODUCTS_CARDS_MOCK } from 'pages/category/category.consts';
 import {
   getCategoryBreadcrumbPath,
@@ -10,32 +11,20 @@ import { SectionTitle } from 'pages/shared/components/sectionTitle/sectionTitle.
 import sharedStyles from 'pages/shared/styles/common.module.scss';
 import productsStyles from 'pages/shared/styles/products.module.scss';
 import { BaseComponent } from 'shared/base/base.component';
-import { Slider } from 'shared/slider/slider.component';
-import { div, h3, img } from 'shared/tags/tags.component';
+import { div, h3 } from 'shared/tags/tags.component';
 
+import { getSlider } from './product.helpers';
 import styles from './product.module.scss';
 
 export class Product extends BaseComponent {
+  private readonly sliderModal: Div;
+
+  private readonly slider: Div;
+
   constructor(params: ProductParams) {
     const { name, images, price, discount, description, brand, color } = PRODUCTS_CARDS_MOCK.find(
       ({ id }) => id === params.id,
     )!;
-
-    const slider = div(
-      { className: styles.slider },
-      Slider.getSliderWrapper(
-        ...images.map((image) =>
-          img({ className: styles.sliderImage, src: image, alt: `${image}-image` }),
-        ),
-      ),
-    );
-
-    if (discount) {
-      const discountLabel = div({ className: productsStyles.discountLabel, text: `-${discount}%` });
-      discountLabel.addClass(styles.discountLabel);
-
-      slider.append(discountLabel);
-    }
 
     super(
       { className: styles.product },
@@ -44,11 +33,29 @@ export class Product extends BaseComponent {
         getCategoryBreadcrumbPath(params.category),
         { name, path: getProductPath(params.category, params.id) },
       ]),
+    );
+
+    this.slider = getSlider(images, styles.slider);
+    this.slider.setProps({ onclick: (event) => this.showSliderModal(event) });
+
+    if (discount) {
+      const discountLabel = div({ className: productsStyles.discountLabel, text: `-${discount}%` });
+      discountLabel.addClass(styles.discountLabel);
+
+      this.slider.append(discountLabel);
+    }
+
+    this.sliderModal = div(
+      { className: styles.sliderModal, onclick: (event) => this.hideSliderModal(event) },
+      getSlider(images, styles.sliderInModal),
+    );
+
+    this.appendChildren([
       div(
         { className: sharedStyles.container },
         div(
           { className: styles.productDetails },
-          slider,
+          this.slider,
           div(
             { className: styles.details },
             h3(name),
@@ -66,6 +73,22 @@ export class Product extends BaseComponent {
           ),
         ),
       ),
-    );
+      this.sliderModal,
+    ]);
+  }
+
+  private showSliderModal(event: MouseEvent): void {
+    if (!(event.target as HTMLImageElement).classList.contains(styles.sliderImage)) return;
+
+    const { x, y, width, height } = this.slider.getNode().getBoundingClientRect();
+
+    this.sliderModal.getNode().style.transformOrigin = `${x + width / 2}px ${y + height / 2}px`;
+    this.sliderModal.addClass(styles.show);
+  }
+
+  private hideSliderModal(event: MouseEvent): void {
+    if (event.target !== this.sliderModal.getNode()) return;
+
+    this.sliderModal.removeClass(styles.show);
   }
 }

@@ -7,6 +7,7 @@
     margin: 40px 0 0 40px;
 
     .slider {
+      cursor: pointer;
       position: relative;
       max-width: 500px;
 
@@ -33,6 +34,41 @@
         margin-bottom: 10px;
 
         font-weight: bold;
+      }
+    }
+  }
+
+  .sliderModal {
+    cursor: pointer;
+
+    position: fixed;
+    z-index: 1000;
+    top: 0;
+    left: 0;
+    scale: 0;
+
+    display: flex;
+    align-items: center;
+
+    width: 100%;
+    height: 100%;
+    padding: 40px;
+
+    backdrop-filter: blur(3px);
+
+    transition: scale 0.3s;
+
+    &.show {
+      scale: 1;
+    }
+
+    .sliderInModal {
+      cursor: default;
+      width: 60%;
+      margin: 0 auto;
+
+      .sliderImage {
+        width: 100%;
       }
     }
   }
