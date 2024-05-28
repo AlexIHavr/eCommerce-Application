@@ -30,11 +30,15 @@ class Alert extends BaseComponent {
   }
 
   public showAlert(type: 'success' | 'error' | 'attention', text: string): void {
-    this.infoTitle.setText(capitalizeFirstLetter(type));
-    this.infoText.setText(text);
+    if (this.containsClass(styles.show)) this.getNode().className = styles.alert;
 
-    this.addClass(styles[type]);
-    this.addClass(styles.show);
+    setTimeout(() => {
+      this.infoTitle.setText(capitalizeFirstLetter(type));
+      this.infoText.setText(text);
+
+      this.addClass(styles[type]);
+      this.addClass(styles.show);
+    }, 10);
   }
 }
 
