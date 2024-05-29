@@ -1,4 +1,4 @@
-import { CategoriesTypes } from 'pages/pageWrapper.consts';
+import { ProductsCategories } from 'globalConsts/api.const';
 
 export interface ProductCardMock {
   id: string;
@@ -9,5 +9,5 @@ export interface ProductCardMock {
   brand: string;
   color: string;
   discount?: string;
-  type: CategoriesTypes;
+  type: ProductsCategories;
 }

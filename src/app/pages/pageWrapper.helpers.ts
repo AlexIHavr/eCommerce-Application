@@ -1,3 +1,4 @@
+import { ProductsCategories } from 'globalConsts/api.const';
 import { Anchor } from 'globalTypes/elements';
 import { BreadcrumbPath } from 'pages/shared/components/breadcrumbs/breadcrumbs.interfaces';
 import { LocalStorageService } from 'services/localStorage.service';
@@ -7,7 +8,7 @@ import { BaseComponent } from 'shared/base/base.component';
 import { a } from 'shared/tags/tags.component';
 import { tokenCache } from 'utils/tokenCache.util';
 
-import { CATEGORIES_TYPES_VALUES, CategoriesTypes, PagesPaths } from './pageWrapper.consts';
+import { PagesPaths, PRODUCTS_CATEGORIES_VALUES } from './pageWrapper.consts';
 
 export function redirectToMain(): void {
   routingService.navigate(PagesPaths.HOME);
@@ -40,19 +41,19 @@ export function successLogin(title: string): void {
   alertModal.showAlert('success', title);
 }
 
-export function isIncorrectCategoryPath(category: CategoriesTypes): boolean {
-  return !CATEGORIES_TYPES_VALUES.includes(category);
+export function isIncorrectCategoryPath(category: ProductsCategories): boolean {
+  return !PRODUCTS_CATEGORIES_VALUES.includes(category);
 }
 
-export function getCategoryPath(category: CategoriesTypes): string {
+export function getCategoryPath(category: ProductsCategories): string {
   return `${PagesPaths.CATALOG}/${category}`;
 }
 
-export function getProductPath(category: CategoriesTypes, id: string): string {
+export function getProductPath(category: ProductsCategories, id: string): string {
   return `${getCategoryPath(category)}/${id}`;
 }
 
-export function getCategoryBreadcrumbPath(category: CategoriesTypes): BreadcrumbPath {
+export function getCategoryBreadcrumbPath(category: ProductsCategories): BreadcrumbPath {
   return { name: category, path: getCategoryPath(category) };
 }
 

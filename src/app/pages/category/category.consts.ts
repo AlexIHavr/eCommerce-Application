@@ -1,4 +1,4 @@
-import { CategoriesTypes } from 'pages/pageWrapper.consts';
+import { ProductsCategories } from 'globalConsts/api.const';
 
 import { ProductCardMock } from './category.interfaces';
 import sofaImage from './images/sofaImg.jpg';
@@ -13,7 +13,7 @@ export const PRODUCTS_CARDS_MOCK: ProductCardMock[] = [
     discount: '10',
     brand: 'Brand 1',
     color: 'black',
-    type: CategoriesTypes.CHAIRS,
+    type: ProductsCategories.CHAIRS,
   },
   {
     id: '2',
@@ -24,7 +24,7 @@ export const PRODUCTS_CARDS_MOCK: ProductCardMock[] = [
     discount: '20',
     brand: 'Brand 1',
     color: 'black',
-    type: CategoriesTypes.CHAIRS,
+    type: ProductsCategories.CHAIRS,
   },
   {
     id: '3',
@@ -35,7 +35,7 @@ export const PRODUCTS_CARDS_MOCK: ProductCardMock[] = [
     discount: '25',
     brand: 'Brand 2',
     color: 'black',
-    type: CategoriesTypes.CHAIRS,
+    type: ProductsCategories.CHAIRS,
   },
   {
     id: '4',
@@ -45,7 +45,7 @@ export const PRODUCTS_CARDS_MOCK: ProductCardMock[] = [
     price: '1200',
     brand: 'Brand 3',
     color: 'black',
-    type: CategoriesTypes.CHAIRS,
+    type: ProductsCategories.CHAIRS,
   },
   {
     id: '5',
@@ -56,7 +56,7 @@ export const PRODUCTS_CARDS_MOCK: ProductCardMock[] = [
     discount: '30',
     brand: 'Brand 2',
     color: 'black',
-    type: CategoriesTypes.SOFAS,
+    type: ProductsCategories.SOFAS,
   },
   {
     id: '6',
@@ -67,7 +67,7 @@ export const PRODUCTS_CARDS_MOCK: ProductCardMock[] = [
     discount: '5',
     brand: 'Brand 1',
     color: 'black',
-    type: CategoriesTypes.SOFAS,
+    type: ProductsCategories.SOFAS,
   },
   {
     id: '7',
@@ -77,7 +77,7 @@ export const PRODUCTS_CARDS_MOCK: ProductCardMock[] = [
     price: '1900',
     brand: 'Brand 2',
     color: 'black',
-    type: CategoriesTypes.BEDS,
+    type: ProductsCategories.BEDS,
   },
   {
     id: '8',
@@ -88,6 +88,6 @@ export const PRODUCTS_CARDS_MOCK: ProductCardMock[] = [
     discount: '50',
     brand: 'Brand 3',
     color: 'black',
-    type: CategoriesTypes.BEDS,
+    type: ProductsCategories.BEDS,
   },
 ];

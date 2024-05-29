@@ -1,10 +1,6 @@
-export enum CategoriesTypes {
-  CHAIRS = 'chairs',
-  SOFAS = 'sofas',
-  BEDS = 'beds',
-}
+import { ProductsCategories } from 'globalConsts/api.const';
 
-export const CATEGORIES_TYPES_VALUES = Object.values(CategoriesTypes);
+export const PRODUCTS_CATEGORIES_VALUES = Object.values(ProductsCategories);
 
 export const enum CatalogParams {
   CATEGORY = 'category',

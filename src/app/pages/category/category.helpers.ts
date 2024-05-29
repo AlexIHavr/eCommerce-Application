@@ -1,5 +1,5 @@
+import { ProductsCategories } from 'globalConsts/api.const';
 import { Anchor } from 'globalTypes/elements';
-import { CategoriesTypes } from 'pages/pageWrapper.consts';
 import { getDiscountPrice, getNavLink, getProductPath } from 'pages/pageWrapper.helpers';
 import productsStyles from 'pages/shared/styles/products.module.scss';
 import { div, h3, img } from 'shared/tags/tags.component';
@@ -7,7 +7,7 @@ import { div, h3, img } from 'shared/tags/tags.component';
 import { PRODUCTS_CARDS_MOCK } from './category.consts';
 import styles from './category.module.scss';
 
-export function getProducts(category: CategoriesTypes): Anchor[] {
+export function getProducts(category: ProductsCategories): Anchor[] {
   return PRODUCTS_CARDS_MOCK.filter(({ type }) => type === category).map(
     ({ id, name, images, price, discount, description }) => {
       const prices = div(

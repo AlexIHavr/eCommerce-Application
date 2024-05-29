@@ -21,3 +21,8 @@ export interface NewAddress {
   postalCode: string;
   country: Country;
 }
+
+export interface ProductPriceFilter {
+  from: number | '*';
+  to: number | '*';
+}

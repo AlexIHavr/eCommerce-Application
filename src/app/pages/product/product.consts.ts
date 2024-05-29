@@ -1,4 +1,4 @@
-export enum ProductColors {
+export enum ProductsColors {
   BLACK = 'black',
   GREY = 'grey',
   GREEN = 'green',
@@ -6,4 +6,4 @@ export enum ProductColors {
   RED = 'red',
 }
 
-export const PRODUCT_COLORS_VALUES = Object.values(ProductColors);
+export const PRODUCT_COLORS_VALUES = Object.values(ProductsColors);

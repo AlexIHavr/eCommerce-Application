@@ -1,4 +1,4 @@
-import { ProductBrands, ProductCategoriesId, ProductColors } from 'globalTypes/api.type';
+import { ProductsBrands, ProductsCategoriesIds, ProductsColors } from 'globalConsts/api.const';
 import { PageWrapper } from 'pages/pageWrapper.component';
 import { apiService } from 'services/api.service';
 import { routingService } from 'services/routing.service';
@@ -14,10 +14,10 @@ class App {
     this.children.forEach((child) => document.body.append(child.getNode()));
     routingService.updateLinks();
     apiService.getFilteredProducts(
-      ProductCategoriesId.chairs,
+      ProductsCategoriesIds.CHAIRS,
       { from: 0, to: 15000 },
-      [ProductBrands.colamy, ProductBrands.feonase],
-      [ProductColors.beige],
+      [ProductsBrands.COLAMY, ProductsBrands.FEONASE],
+      [ProductsColors.BEIGE],
     );
     Slider.init();
   }
