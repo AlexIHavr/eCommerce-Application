@@ -1,4 +1,6 @@
+import { ProductsAttributes, ProductsBrands, ProductsColors } from 'globalConsts/api.const';
 import { Div, Input } from 'globalTypes/elements';
+import { Category } from 'pages/category/category.component';
 import { BaseComponent } from 'shared/base/base.component';
 import { button, div, form, img, input, label } from 'shared/tags/tags.component';
 import { capitalizeFirstLetter } from 'utils/strings.util';
@@ -10,18 +12,17 @@ import sortIcon from './images/sortIcon.png';
 import { PRODUCTS_FILTERS_PROPS, PRODUCTS_OPTIONS } from './productsFilters.consts';
 import { getSortField } from './productsFilters.helpers';
 import styles from './productsFilters.module.scss';
-import { OptionsType } from './productsFilters.types';
 
 export class ProductsFilters extends BaseComponent {
   private readonly priceFromInput: Input;
 
   private readonly priceToInput: Input;
 
-  private readonly inputOptions: Record<OptionsType, Input[]>;
+  private readonly inputOptions: Record<ProductsAttributes, Input[]>;
 
   private selectFields: Div[] = [];
 
-  constructor() {
+  constructor(private readonly parent: Category) {
     super({ className: styles.productsFilters });
 
     this.inputOptions = { color: [], brand: [] };
@@ -47,9 +48,14 @@ export class ProductsFilters extends BaseComponent {
           this.priceToInput,
         ),
       ),
-      this.getMultipleSelectField('brand'),
-      this.getMultipleSelectField('color'),
-      button({ className: styles.resetFilterBtn, type: 'reset', text: 'Reset' }),
+      this.getMultipleSelectField(ProductsAttributes.BRAND),
+      this.getMultipleSelectField(ProductsAttributes.COLOR),
+      button({
+        className: styles.resetFilterBtn,
+        type: 'reset',
+        text: 'Reset',
+        onclick: () => this.resetFilters(),
+      }),
       button({
         className: styles.submitFilterBtn,
         type: 'submit',
@@ -84,7 +90,7 @@ export class ProductsFilters extends BaseComponent {
     });
   }
 
-  private getMultipleSelectField(optionsType: OptionsType): Div {
+  private getMultipleSelectField(optionsType: ProductsAttributes): Div {
     const multipleSelect = div(
       { className: styles.multipleSelect },
       ...PRODUCTS_OPTIONS[optionsType].map((option) => {
@@ -129,9 +135,38 @@ export class ProductsFilters extends BaseComponent {
     return multipleSelectField;
   }
 
+  private resetFilters(): void {
+    this.parent.setProducts();
+  }
+
   private submitFilter(event: MouseEvent): void {
     event.preventDefault();
-    // TODO: SUBMIT FILTER
-    console.log(this);
+
+    const toInputValue = this.priceToInput.getNode().value;
+
+    const fromValue = Number(this.priceFromInput.getNode().value) * 100;
+    let toValue: number | undefined;
+
+    if (toInputValue) {
+      toValue = Number(toInputValue) * 100;
+    }
+
+    this.parent.setProducts({
+      price: { from: fromValue, to: toValue },
+      brands: this.getFilteredOptions(ProductsAttributes.BRAND),
+      colors: this.getFilteredOptions(ProductsAttributes.COLOR),
+    });
+  }
+
+  private getFilteredOptions<T extends ProductsBrands | ProductsColors>(
+    optionsType: ProductsAttributes,
+  ): T[] {
+    return this.inputOptions[optionsType].reduce<T[]>((products, inputOption) => {
+      const node = inputOption.getNode();
+
+      if (node.checked) products.push(node.value as T);
+
+      return products;
+    }, []);
   }
 }

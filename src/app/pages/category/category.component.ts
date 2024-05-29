@@ -1,4 +1,6 @@
 import { ProductsCategories } from 'globalConsts/api.const';
+import { Div } from 'globalTypes/elements';
+import { FilterProps } from 'interfaces/api.interface';
 import { ProductsFilters } from 'pages/category/components/productsFilters/productsFilters.component';
 import { getCategoryBreadcrumbPath } from 'pages/pageWrapper.helpers';
 import { Breadcrumbs } from 'pages/shared/components/breadcrumbs/breadcrumbs.component';
@@ -15,33 +17,40 @@ import { getProducts } from './category.helpers';
 import styles from './category.module.scss';
 
 export class Category extends BaseComponent {
+  private readonly productsList: Div;
+
   constructor(private readonly category: ProductsCategories) {
     super(
       { className: styles.category },
       new SectionTitle(capitalizeFirstLetter(category)),
       new Breadcrumbs([getCategoryBreadcrumbPath(category)]),
-      new ProductsFilters(),
     );
+
+    this.productsList = div({ className: styles.productsList });
+
+    this.appendChildren([
+      new ProductsFilters(this),
+      div({ className: sharedStyles.container }, this.productsList),
+    ]);
 
     this.setProducts();
   }
 
-  private setProducts(): void {
+  public setProducts(filterProps?: Omit<FilterProps, 'category'>): void {
     loader.open();
     apiService
-      .getFilteredProducts(this.category)
+      .getFilteredProducts({ category: this.category, ...filterProps })
       .then((res) => {
         const products = res.body.results;
 
-        const productsList = div({ className: styles.productsList });
+        this.productsList.destroyChildren();
 
         if (products.length) {
-          productsList.appendChildren(getProducts(this.category, products));
+          this.productsList.appendChildren(getProducts(this.category, products));
         } else {
-          productsList.append(h3('No products'));
+          this.productsList.append(h3('No products'));
         }
 
-        this.append(div({ className: sharedStyles.container }, productsList));
         routingService.updateLinks();
       })
       .finally(() => loader.close());

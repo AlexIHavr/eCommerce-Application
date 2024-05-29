@@ -1,5 +1,5 @@
 import { LocalizedString, ProductVariant } from '@commercetools/platform-sdk';
-import { CountriesLanguages, ProductsAttributes, ProductsCategories } from 'globalConsts/api.const';
+import { ProductsAttributes, ProductsCategories } from 'globalConsts/api.const';
 import { Anchor } from 'globalTypes/elements';
 import { BreadcrumbPath } from 'pages/shared/components/breadcrumbs/breadcrumbs.interfaces';
 import { LocalStorageService } from 'services/localStorage.service';
@@ -63,19 +63,27 @@ export function getDiscountPercent(price: number, discount: number): string {
 }
 
 export function getProductName(name: LocalizedString): string {
-  return name[CountriesLanguages.GB] ?? name[CountriesLanguages.US];
+  return name.en;
 }
 
 export function getProductDescription(description?: LocalizedString): string | undefined {
-  return description?.[CountriesLanguages.GB] ?? description?.[CountriesLanguages.US];
+  return description?.en;
 }
 
 export function getProductPrice(masterVariant: ProductVariant): number | undefined {
-  return masterVariant.prices?.[0].value.centAmount;
+  const priceInCent = masterVariant.prices?.[0].value.centAmount;
+
+  return priceInCent ? priceInCent / 100 : priceInCent;
 }
 
 export function getProductDiscount(masterVariant: ProductVariant): number | undefined {
-  return masterVariant.prices?.[0].discounted?.value.centAmount;
+  const discountInCent = masterVariant.prices?.[0].discounted?.value.centAmount;
+
+  return discountInCent ? discountInCent / 100 : discountInCent;
+}
+
+export function getCurrency(masterVariant: ProductVariant): string {
+  return masterVariant.prices?.[0].value.currencyCode ?? 'USD';
 }
 
 export function getProductBrand(masterVariant: ProductVariant): string | undefined {

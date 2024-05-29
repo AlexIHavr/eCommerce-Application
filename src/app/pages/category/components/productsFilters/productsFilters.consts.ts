@@ -1,3 +1,4 @@
+import { ProductsAttributes, ProductsBrands, ProductsColors } from 'globalConsts/api.const';
 import { FormFieldsProps } from 'pages/shared/components/formField/formField.types';
 
 export const PRODUCTS_FILTERS_PROPS = {
@@ -18,7 +19,9 @@ export const PRODUCTS_FILTERS_PROPS = {
   },
 } as const satisfies FormFieldsProps;
 
-export const PRODUCTS_OPTIONS = {
-  brand: ['Brand 1', 'Brand 2', 'Brand 3'],
-  color: ['Black', 'Red', 'Yellow', 'Green', 'White'],
-} as const satisfies Record<string, string[]>;
+export const PRODUCTS_OPTIONS: Readonly<
+  Record<ProductsAttributes, (ProductsBrands | ProductsColors)[]>
+> = {
+  brand: Object.values(ProductsBrands),
+  color: Object.values(ProductsColors),
+};

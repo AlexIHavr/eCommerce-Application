@@ -1,3 +1,4 @@
+import { ProductsBrands, ProductsCategories, ProductsColors } from 'globalConsts/api.const';
 import { Address, Country } from 'globalTypes/api.type';
 
 export interface CustomerLoginData {
@@ -23,6 +24,13 @@ export interface NewAddress {
 }
 
 export interface ProductPriceFilter {
-  from: number | '*';
-  to: number | '*';
+  from?: number;
+  to?: number;
+}
+
+export interface FilterProps {
+  category: ProductsCategories;
+  price?: ProductPriceFilter;
+  brands?: ProductsBrands[];
+  colors?: ProductsColors[];
 }

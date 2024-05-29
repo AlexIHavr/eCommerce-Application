@@ -107,6 +107,7 @@ export class PageWrapper extends BaseComponent {
             this.goToPage(this.notFound);
           } else {
             this.goToPage(new Product(params.category, product[0]));
+            routingService.updateLinks();
             Slider.init();
           }
         })
@@ -125,6 +126,5 @@ export class PageWrapper extends BaseComponent {
   private goToPage(page: BaseComponent): void {
     this.pageContent.destroyChildren();
     this.pageContent.append(page);
-    routingService.updateLinks();
   }
 }

@@ -4,7 +4,7 @@ export const enum ProductsCategories {
   BEDS = 'beds',
 }
 
-export const enum ProductsBrands {
+export enum ProductsBrands {
   COLAMY = 'COLAMY',
   FEONASE = 'Feonase',
   MELLOW = 'Mellow',
@@ -15,7 +15,7 @@ export const enum ProductsBrands {
   ZINUS = 'ZINUS',
 }
 
-export const enum ProductsColors {
+export enum ProductsColors {
   BLACK = 'black',
   GREY = 'grey',
   WHITE = 'white',
@@ -36,11 +36,6 @@ export const enum ProductsColors {
 export const enum ProductsAttributes {
   BRAND = 'brand',
   COLOR = 'color',
-}
-
-export const enum CountriesLanguages {
-  GB = 'en-GB',
-  US = 'en-US',
 }
 
 export const PRODUCTS_CATEGORIES_IDS = {

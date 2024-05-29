@@ -2,6 +2,7 @@ import { ProductProjection } from '@commercetools/platform-sdk';
 import { ProductsCategories } from 'globalConsts/api.const';
 import { Anchor } from 'globalTypes/elements';
 import {
+  getCurrency,
   getDiscountPercent,
   getNavLink,
   getProductDescription,
@@ -19,10 +20,11 @@ export function getProducts(category: ProductsCategories, products: ProductProje
   return products.map(({ id, name, description, masterVariant }) => {
     const price = getProductPrice(masterVariant) ?? 0;
     const discount = getProductDiscount(masterVariant);
+    const currency = getCurrency(masterVariant);
 
     const cardPrices = div(
       { className: styles.cardPrices },
-      div({ text: `${discount ?? price} BYN` }),
+      div({ text: `${discount ?? price} ${currency}` }),
     );
 
     const productCard = getNavLink(
@@ -40,7 +42,12 @@ export function getProducts(category: ProductsCategories, products: ProductProje
     );
 
     if (discount) {
-      cardPrices.append(div({ className: productsStyles.discountPrice, text: `${price} BYN` }));
+      cardPrices.append(
+        div({
+          className: productsStyles.discountPrice,
+          text: `${price} ${currency}`,
+        }),
+      );
       productCard.append(
         div({
           className: productsStyles.discountLabel,
