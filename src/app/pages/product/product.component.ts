@@ -5,6 +5,7 @@ import {
   getCategoryBreadcrumbPath,
   getDiscountPercent,
   getProductBrand,
+  getProductColor,
   getProductDescription,
   getProductDiscount,
   getProductName,
@@ -27,9 +28,11 @@ export class Product extends BaseComponent {
   private readonly slider: Div;
 
   constructor(category: ProductsCategories, product: ProductProjection) {
-    const { id, name, description, masterVariant } = product;
+    const { id, name, description, masterVariant, variants } = product;
 
     const title = getProductName(name);
+
+    console.log(product);
 
     super(
       { className: styles.product },
@@ -70,24 +73,31 @@ export class Product extends BaseComponent {
       ),
     );
 
+    const color = getProductColor(masterVariant);
+
     const colors = div(
       { className: styles.colors },
-      // ...PRODUCT_COLORS_VALUES.map((colorValue) => {
-      //   const colorElem = div({
-      //     className: styles.color,
-      //     onclick: () => {
-      //       colors.getChildren().forEach((child) => child.removeClass(styles.active));
-      //       colorElem.addClass(styles.active);
-      //     },
-      //   });
-      //   colorElem.getNode().style.backgroundColor = colorValue;
+      ...[masterVariant, ...variants].map((variant) => {
+        const colorValue = getProductColor(variant);
 
-      //   if (color === colorValue) {
-      //     colorElem.addClass(styles.active);
-      //   }
+        const colorElem = div({
+          className: styles.color,
+          onclick: () => {
+            colors.getChildren().forEach((child) => child.removeClass(styles.active));
+            colorElem.addClass(styles.active);
+          },
+        });
 
-      //   return colorElem;
-      // }),
+        if (colorValue) {
+          colorElem.getNode().style.backgroundColor = colorValue;
+        }
+
+        if (color === colorValue) {
+          colorElem.addClass(styles.active);
+        }
+
+        return colorElem;
+      }),
     );
 
     this.appendChildren([

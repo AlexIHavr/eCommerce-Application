@@ -83,5 +83,6 @@ export function getProductBrand(masterVariant: ProductVariant): string | undefin
 }
 
 export function getProductColor(masterVariant: ProductVariant): string | undefined {
-  return masterVariant.attributes?.find(({ name }) => name === ProductsAttributes.COLOR)?.value;
+  return masterVariant.attributes?.find(({ name }) => name === ProductsAttributes.COLOR)?.value
+    .label;
 }

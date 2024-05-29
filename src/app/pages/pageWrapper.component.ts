@@ -85,11 +85,7 @@ export class PageWrapper extends BaseComponent {
     if (isIncorrectCategoryPath(params.category)) {
       this.goToPage(this.notFound);
     } else {
-      loader.open();
-      apiService
-        .getFilteredProducts(params.category)
-        .then((products) => this.goToPage(new Category(params.category, products.body.results)))
-        .finally(() => loader.close());
+      this.goToPage(new Category(params.category));
     }
   }
 
@@ -105,8 +101,6 @@ export class PageWrapper extends BaseComponent {
       apiService
         .getProductById(params.id)
         .then((products) => {
-          console.log(products);
-
           const product = products.body.results;
 
           if (!product.length) {
