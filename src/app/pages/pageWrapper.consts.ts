@@ -1,6 +1,6 @@
-import { ProductsCategories } from 'globalConsts/api.const';
+import { PRODUCTS_CATEGORIES_IDS } from 'globalConsts/api.const';
 
-export const PRODUCTS_CATEGORIES_VALUES = Object.values(ProductsCategories);
+export const PRODUCTS_CATEGORIES_KEYS = Object.keys(PRODUCTS_CATEGORIES_IDS);
 
 export const enum CatalogParams {
   CATEGORY = 'category',

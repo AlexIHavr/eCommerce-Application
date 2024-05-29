@@ -9,9 +9,9 @@ import {
 } from '@commercetools/platform-sdk';
 import { TokenCache } from '@commercetools/sdk-client-v2';
 import {
+  PRODUCTS_CATEGORIES_IDS,
   ProductsBrands,
   ProductsCategories,
-  ProductsCategoriesIds,
   ProductsColors,
 } from 'globalConsts/api.const';
 import { ApiClientResponse } from 'globalTypes/api.type';
@@ -73,12 +73,12 @@ export class ApiService {
   }
 
   public getProductsByCategoryId(
-    categoryId: ProductsCategoriesIds,
+    category: ProductsCategories,
   ): ApiClientResponse<ProductProjectionPagedSearchResponse> {
     return this.apiRoot
       .productProjections()
       .search()
-      .get({ queryArgs: { filter: `categories.id:"${categoryId}"` } })
+      .get({ queryArgs: { filter: `categories.id:"${PRODUCTS_CATEGORIES_IDS[category]}"` } })
       .execute();
   }
 
@@ -103,12 +103,12 @@ export class ApiService {
   }
 
   public getFilteredProducts(
-    categoryId: ProductsCategoriesIds,
+    category: ProductsCategories,
     price?: ProductPriceFilter,
     brands?: ProductsBrands[],
     colors?: ProductsColors[],
   ): ApiClientResponse<ProductProjectionPagedSearchResponse> {
-    const queryFilter = [`categories.id:"${categoryId}"`];
+    const queryFilter = [`categories.id:"${PRODUCTS_CATEGORIES_IDS[category]}"`];
 
     if (price) {
       queryFilter.push(`variants.price.centAmount:range (${price.from} to ${price.to})`);

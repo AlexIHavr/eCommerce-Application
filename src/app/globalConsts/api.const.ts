@@ -1,16 +1,10 @@
-export enum ProductsCategories {
+export const enum ProductsCategories {
   CHAIRS = 'chairs',
   SOFAS = 'sofas',
   BEDS = 'beds',
 }
 
-export enum ProductsCategoriesIds {
-  CHAIRS = 'aaf8c963-3c9a-4208-bef3-79c2560468f5',
-  SOFAS = '152e9396-eaca-4ee2-bc32-2b37ab2ea8c8',
-  BEDS = '03933605-debc-43c0-86e9-ef19d49062b8',
-}
-
-export enum ProductsBrands {
+export const enum ProductsBrands {
   COLAMY = 'COLAMY',
   FEONASE = 'Feonase',
   MELLOW = 'Mellow',
@@ -21,7 +15,7 @@ export enum ProductsBrands {
   ZINUS = 'ZINUS',
 }
 
-export enum ProductsColors {
+export const enum ProductsColors {
   BLACK = 'black',
   GREY = 'grey',
   WHITE = 'white',
@@ -38,3 +32,19 @@ export enum ProductsColors {
   GOLD = 'gold',
   SILVER = 'silver',
 }
+
+export const enum ProductsAttributes {
+  BRAND = 'brand',
+  COLOR = 'color',
+}
+
+export const enum CountriesLanguages {
+  GB = 'en-GB',
+  US = 'en-US',
+}
+
+export const PRODUCTS_CATEGORIES_IDS = {
+  [ProductsCategories.CHAIRS]: 'aaf8c963-3c9a-4208-bef3-79c2560468f5',
+  [ProductsCategories.SOFAS]: '152e9396-eaca-4ee2-bc32-2b37ab2ea8c8',
+  [ProductsCategories.BEDS]: '03933605-debc-43c0-86e9-ef19d49062b8',
+} as const satisfies Record<ProductsCategories, string>;

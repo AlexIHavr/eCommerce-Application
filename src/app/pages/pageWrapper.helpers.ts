@@ -1,4 +1,5 @@
-import { ProductsCategories } from 'globalConsts/api.const';
+import { Image, ProductData } from '@commercetools/platform-sdk';
+import { CountriesLanguages, ProductsAttributes, ProductsCategories } from 'globalConsts/api.const';
 import { Anchor } from 'globalTypes/elements';
 import { BreadcrumbPath } from 'pages/shared/components/breadcrumbs/breadcrumbs.interfaces';
 import { LocalStorageService } from 'services/localStorage.service';
@@ -8,7 +9,7 @@ import { BaseComponent } from 'shared/base/base.component';
 import { a } from 'shared/tags/tags.component';
 import { tokenCache } from 'utils/tokenCache.util';
 
-import { PagesPaths, PRODUCTS_CATEGORIES_VALUES } from './pageWrapper.consts';
+import { PagesPaths, PRODUCTS_CATEGORIES_KEYS } from './pageWrapper.consts';
 
 export function redirectToMain(): void {
   routingService.navigate(PagesPaths.HOME);
@@ -42,7 +43,7 @@ export function successLogin(title: string): void {
 }
 
 export function isIncorrectCategoryPath(category: ProductsCategories): boolean {
-  return !PRODUCTS_CATEGORIES_VALUES.includes(category);
+  return !PRODUCTS_CATEGORIES_KEYS.includes(category);
 }
 
 export function getCategoryPath(category: ProductsCategories): string {
@@ -57,8 +58,38 @@ export function getCategoryBreadcrumbPath(category: ProductsCategories): Breadcr
   return { name: category, path: getCategoryPath(category) };
 }
 
-export function getDiscountPrice(price: string, discount?: string): string {
-  return discount
-    ? `${Number(price) - (Number(price) * Number(discount)) / 100} BYN`
-    : `${price} BYN`;
+export function getDiscountPercent(price: number, discount: number): string {
+  return String(Math.round((1 - discount / price) * 100));
+}
+
+export function getProductName(current: ProductData): string {
+  return current.name[CountriesLanguages.GB] ?? current.name[CountriesLanguages.US];
+}
+
+export function getProductDescription(current: ProductData): string | undefined {
+  return (
+    current.description?.[CountriesLanguages.GB] ?? current.description?.[CountriesLanguages.US]
+  );
+}
+
+export function getProductPrice(current: ProductData): number | undefined {
+  return current.masterVariant.prices?.[0].value.centAmount;
+}
+
+export function getProductDiscount(current: ProductData): number | undefined {
+  return current.masterVariant.prices?.[0].discounted?.value.centAmount;
+}
+
+export function getProductImages(current: ProductData): Image[] | undefined {
+  return current.masterVariant.images;
+}
+
+export function getProductBrand(current: ProductData): string | undefined {
+  return current.masterVariant.attributes?.find(({ name }) => name === ProductsAttributes.BRAND)
+    ?.value;
+}
+
+export function getProductColor(current: ProductData): string | undefined {
+  return current.masterVariant.attributes?.find(({ name }) => name === ProductsAttributes.COLOR)
+    ?.value;
 }

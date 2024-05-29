@@ -1,11 +1,17 @@
+import { Product as ApiProduct } from '@commercetools/platform-sdk';
+import { ProductsCategories } from 'globalConsts/api.const';
 import { Div } from 'globalTypes/elements';
-import { PRODUCTS_CARDS_MOCK } from 'pages/category/category.consts';
 import {
   getCategoryBreadcrumbPath,
-  getDiscountPrice,
+  getDiscountPercent,
+  getProductBrand,
+  getProductDescription,
+  getProductDiscount,
+  getProductImages,
+  getProductName,
   getProductPath,
+  getProductPrice,
 } from 'pages/pageWrapper.helpers';
-import { ProductParams } from 'pages/pageWrapper.types';
 import { Breadcrumbs } from 'pages/shared/components/breadcrumbs/breadcrumbs.component';
 import { SectionTitle } from 'pages/shared/components/sectionTitle/sectionTitle.component';
 import sharedStyles from 'pages/shared/styles/common.module.scss';
@@ -13,7 +19,6 @@ import productsStyles from 'pages/shared/styles/products.module.scss';
 import { BaseComponent } from 'shared/base/base.component';
 import { button, div, h3 } from 'shared/tags/tags.component';
 
-import { PRODUCT_COLORS_VALUES } from './product.consts';
 import { getSlider } from './product.helpers';
 import styles from './product.module.scss';
 
@@ -22,25 +27,35 @@ export class Product extends BaseComponent {
 
   private readonly slider: Div;
 
-  constructor(params: ProductParams) {
-    const { name, images, price, discount, description, brand, color } = PRODUCTS_CARDS_MOCK.find(
-      ({ id }) => id === params.id,
-    )!;
+  constructor(category: ProductsCategories, product: ApiProduct) {
+    const {
+      id,
+      masterData: { current },
+    } = product;
+
+    const name = getProductName(current);
 
     super(
       { className: styles.product },
       new SectionTitle(name),
       new Breadcrumbs([
-        getCategoryBreadcrumbPath(params.category),
-        { name, path: getProductPath(params.category, params.id) },
+        getCategoryBreadcrumbPath(category),
+        { name, path: getProductPath(category, id) },
       ]),
     );
+
+    const images = getProductImages(current);
+    const price = getProductPrice(current);
+    const discount = getProductDiscount(current);
 
     this.slider = getSlider(images, styles.slider);
     this.slider.setProps({ onclick: (event) => this.showSliderModal(event) });
 
-    if (discount) {
-      const discountLabel = div({ className: productsStyles.discountLabel, text: `-${discount}%` });
+    if (price && discount) {
+      const discountLabel = div({
+        className: productsStyles.discountLabel,
+        text: `-${getDiscountPercent(price, discount)}%`,
+      });
       discountLabel.addClass(styles.discountLabel);
 
       this.slider.append(discountLabel);
@@ -61,22 +76,22 @@ export class Product extends BaseComponent {
 
     const colors = div(
       { className: styles.colors },
-      ...PRODUCT_COLORS_VALUES.map((colorValue) => {
-        const colorElem = div({
-          className: styles.color,
-          onclick: () => {
-            colors.getChildren().forEach((child) => child.removeClass(styles.active));
-            colorElem.addClass(styles.active);
-          },
-        });
-        colorElem.getNode().style.backgroundColor = colorValue;
+      // ...PRODUCT_COLORS_VALUES.map((colorValue) => {
+      //   const colorElem = div({
+      //     className: styles.color,
+      //     onclick: () => {
+      //       colors.getChildren().forEach((child) => child.removeClass(styles.active));
+      //       colorElem.addClass(styles.active);
+      //     },
+      //   });
+      //   colorElem.getNode().style.backgroundColor = colorValue;
 
-        if (color === colorValue) {
-          colorElem.addClass(styles.active);
-        }
+      //   if (color === colorValue) {
+      //     colorElem.addClass(styles.active);
+      //   }
 
-        return colorElem;
-      }),
+      //   return colorElem;
+      // }),
     );
 
     this.appendChildren([
@@ -90,16 +105,16 @@ export class Product extends BaseComponent {
             h3(name),
             div(
               { className: styles.prices },
-              div({ text: getDiscountPrice(price, discount) }),
+              div({ text: `${discount ?? price} BYN` }),
               div({
                 className: productsStyles.discountPrice,
                 text: discount ? `${price} BYN` : '',
               }),
             ),
-            div({ className: styles.description, text: description }),
+            div({ className: styles.description, text: getProductDescription(current) }),
             div(
               { className: styles.brand, text: 'Brand' },
-              div({ className: styles.brandName, text: brand }),
+              div({ className: styles.brandName, text: getProductBrand(current) }),
             ),
             div({ className: styles.colorsSelect }, div({ text: 'Color' }), colors),
             button({ className: styles.addToCardBtn, text: 'Add to cart' }),

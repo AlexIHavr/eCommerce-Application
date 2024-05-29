@@ -1,6 +1,4 @@
-import { ProductsBrands, ProductsCategoriesIds, ProductsColors } from 'globalConsts/api.const';
 import { PageWrapper } from 'pages/pageWrapper.component';
-import { apiService } from 'services/api.service';
 import { routingService } from 'services/routing.service';
 import { alertModal } from 'shared/alert/alert.component';
 import { BaseComponent } from 'shared/base/base.component';
@@ -13,12 +11,12 @@ class App {
   public start(): void {
     this.children.forEach((child) => document.body.append(child.getNode()));
     routingService.updateLinks();
-    apiService.getFilteredProducts(
-      ProductsCategoriesIds.CHAIRS,
-      { from: 0, to: 15000 },
-      [ProductsBrands.COLAMY, ProductsBrands.FEONASE],
-      [ProductsColors.BEIGE],
-    );
+    // apiService.getFilteredProducts(
+    //   PRODUCTS_CATEGORIES_IDS.CHAIRS,
+    //   { from: 0, to: 15000 },
+    //   [ProductsBrands.COLAMY, ProductsBrands.FEONASE],
+    //   [ProductsColors.BEIGE],
+    // );
     Slider.init();
   }
 }
