@@ -1,6 +1,7 @@
+import { ProductProjection } from '@commercetools/platform-sdk';
+import { ProductsCategories } from 'globalConsts/api.const';
 import { ProductsFilters } from 'pages/category/components/productsFilters/productsFilters.component';
 import { getCategoryBreadcrumbPath } from 'pages/pageWrapper.helpers';
-import { CategoryParams } from 'pages/pageWrapper.types';
 import { Breadcrumbs } from 'pages/shared/components/breadcrumbs/breadcrumbs.component';
 import { SectionTitle } from 'pages/shared/components/sectionTitle/sectionTitle.component';
 import sharedStyles from 'pages/shared/styles/common.module.scss';
@@ -12,7 +13,7 @@ import { getProducts } from './category.helpers';
 import styles from './category.module.scss';
 
 export class Category extends BaseComponent {
-  constructor({ category }: CategoryParams) {
+  constructor(category: ProductsCategories, products: ProductProjection[]) {
     super(
       { className: styles.category },
       new SectionTitle(capitalizeFirstLetter(category)),
@@ -20,7 +21,7 @@ export class Category extends BaseComponent {
       new ProductsFilters(),
       div(
         { className: sharedStyles.container },
-        div({ className: styles.productsList }, ...getProducts(category)),
+        div({ className: styles.productsList }, ...getProducts(category, products)),
       ),
     );
   }

@@ -17,7 +17,6 @@ import { Slider } from 'shared/slider/slider.component';
 import { PagesPaths } from './pageWrapper.consts';
 import { isIncorrectCategoryPath, isLogined, redirectToMain } from './pageWrapper.helpers';
 import styles from './pageWrapper.module.scss';
-import { state } from './pageWrapper.state';
 import { CategoryParams, ProductParams } from './pageWrapper.types';
 import { Product } from './product/product.component';
 import { Profile } from './profile/profile.component';
@@ -42,12 +41,7 @@ export class PageWrapper extends BaseComponent {
 
     this.addListener('click', (event) => this.header.closeMobileMenu(event));
 
-    loader.open();
-    apiService.getAllProducts().then((products) => {
-      state.products = products.body.results;
-      this.initRoutingService();
-      loader.close();
-    });
+    this.initRoutingService();
   }
 
   private initRoutingService(): void {
@@ -91,7 +85,11 @@ export class PageWrapper extends BaseComponent {
     if (isIncorrectCategoryPath(params.category)) {
       this.goToPage(this.notFound);
     } else {
-      this.goToPage(new Category(params));
+      loader.open();
+      apiService
+        .getFilteredProducts(params.category)
+        .then((products) => this.goToPage(new Category(params.category, products.body.results)))
+        .finally(() => loader.close());
     }
   }
 
@@ -99,13 +97,26 @@ export class PageWrapper extends BaseComponent {
     if (!data) return;
 
     const params = data as ProductParams;
-    const product = state.products.find(({ id }) => id === params.id);
 
-    if (isIncorrectCategoryPath(params.category) || !product) {
+    if (isIncorrectCategoryPath(params.category)) {
       this.goToPage(this.notFound);
     } else {
-      this.goToPage(new Product(params.category, product));
-      Slider.init();
+      loader.open();
+      apiService
+        .getProductById(params.id)
+        .then((products) => {
+          console.log(products);
+
+          const product = products.body.results;
+
+          if (!product.length) {
+            this.goToPage(this.notFound);
+          } else {
+            this.goToPage(new Product(params.category, product[0]));
+            Slider.init();
+          }
+        })
+        .finally(() => loader.close());
     }
   }
 
@@ -120,5 +131,6 @@ export class PageWrapper extends BaseComponent {
   private goToPage(page: BaseComponent): void {
     this.pageContent.destroyChildren();
     this.pageContent.append(page);
+    routingService.updateLinks();
   }
 }

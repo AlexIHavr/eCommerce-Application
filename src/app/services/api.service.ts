@@ -1,9 +1,9 @@
 import {
   ByProjectKeyRequestBuilder,
-  CategoryPagedQueryResponse,
   CustomerPagedQueryResponse,
   CustomerSignInResult,
   ProductPagedQueryResponse,
+  ProductProjectionPagedQueryResponse,
   ProductProjectionPagedSearchResponse,
   Project,
 } from '@commercetools/platform-sdk';
@@ -63,42 +63,11 @@ export class ApiService {
     return this.apiRoot.products().get().execute();
   }
 
-  public getCategoryByExternalId(
-    externalId: ProductsCategories,
-  ): ApiClientResponse<CategoryPagedQueryResponse> {
-    return this.apiRoot
-      .categories()
-      .get({ queryArgs: { where: `externalId="${externalId}"` } })
-      .execute();
-  }
-
-  public getProductsByCategoryId(
-    category: ProductsCategories,
-  ): ApiClientResponse<ProductProjectionPagedSearchResponse> {
+  public getProductById(productId: string): ApiClientResponse<ProductProjectionPagedQueryResponse> {
     return this.apiRoot
       .productProjections()
       .search()
-      .get({ queryArgs: { filter: `categories.id:"${PRODUCTS_CATEGORIES_IDS[category]}"` } })
-      .execute();
-  }
-
-  public getProductsByBrand(
-    brand: string,
-  ): ApiClientResponse<ProductProjectionPagedSearchResponse> {
-    return this.apiRoot
-      .productProjections()
-      .search()
-      .get({ queryArgs: { filter: `variants.attributes.brand:"${brand}"` } })
-      .execute();
-  }
-
-  public getProductsByColor(
-    color: string,
-  ): ApiClientResponse<ProductProjectionPagedSearchResponse> {
-    return this.apiRoot
-      .productProjections()
-      .search()
-      .get({ queryArgs: { filter: `variants.attributes.color.label:"${color}"` } })
+      .get({ queryArgs: { filter: [`id:"${productId}"`] } })
       .execute();
   }
 

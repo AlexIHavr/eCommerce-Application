@@ -11,12 +11,6 @@ class App {
   public start(): void {
     this.children.forEach((child) => document.body.append(child.getNode()));
     routingService.updateLinks();
-    // apiService.getFilteredProducts(
-    //   PRODUCTS_CATEGORIES_IDS.CHAIRS,
-    //   { from: 0, to: 15000 },
-    //   [ProductsBrands.COLAMY, ProductsBrands.FEONASE],
-    //   [ProductsColors.BEIGE],
-    // );
     Slider.init();
   }
 }

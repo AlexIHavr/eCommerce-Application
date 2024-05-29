@@ -1,4 +1,4 @@
-import { Product as ApiProduct } from '@commercetools/platform-sdk';
+import { ProductProjection } from '@commercetools/platform-sdk';
 import { ProductsCategories } from 'globalConsts/api.const';
 import { Div } from 'globalTypes/elements';
 import {
@@ -7,7 +7,6 @@ import {
   getProductBrand,
   getProductDescription,
   getProductDiscount,
-  getProductImages,
   getProductName,
   getProductPath,
   getProductPrice,
@@ -27,26 +26,23 @@ export class Product extends BaseComponent {
 
   private readonly slider: Div;
 
-  constructor(category: ProductsCategories, product: ApiProduct) {
-    const {
-      id,
-      masterData: { current },
-    } = product;
+  constructor(category: ProductsCategories, product: ProductProjection) {
+    const { id, name, description, masterVariant } = product;
 
-    const name = getProductName(current);
+    const title = getProductName(name);
 
     super(
       { className: styles.product },
-      new SectionTitle(name),
+      new SectionTitle(title),
       new Breadcrumbs([
         getCategoryBreadcrumbPath(category),
-        { name, path: getProductPath(category, id) },
+        { name: title, path: getProductPath(category, id) },
       ]),
     );
 
-    const images = getProductImages(current);
-    const price = getProductPrice(current);
-    const discount = getProductDiscount(current);
+    const { images } = masterVariant;
+    const price = getProductPrice(masterVariant);
+    const discount = getProductDiscount(masterVariant);
 
     this.slider = getSlider(images, styles.slider);
     this.slider.setProps({ onclick: (event) => this.showSliderModal(event) });
@@ -102,7 +98,7 @@ export class Product extends BaseComponent {
           this.slider,
           div(
             { className: styles.details },
-            h3(name),
+            h3(title),
             div(
               { className: styles.prices },
               div({ text: `${discount ?? price} BYN` }),
@@ -111,10 +107,10 @@ export class Product extends BaseComponent {
                 text: discount ? `${price} BYN` : '',
               }),
             ),
-            div({ className: styles.description, text: getProductDescription(current) }),
+            div({ className: styles.description, text: getProductDescription(description) }),
             div(
               { className: styles.brand, text: 'Brand' },
-              div({ className: styles.brandName, text: getProductBrand(current) }),
+              div({ className: styles.brandName, text: getProductBrand(masterVariant) }),
             ),
             div({ className: styles.colorsSelect }, div({ text: 'Color' }), colors),
             button({ className: styles.addToCardBtn, text: 'Add to cart' }),

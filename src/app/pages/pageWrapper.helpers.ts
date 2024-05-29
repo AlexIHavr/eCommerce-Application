@@ -1,4 +1,4 @@
-import { Image, ProductData } from '@commercetools/platform-sdk';
+import { LocalizedString, ProductVariant } from '@commercetools/platform-sdk';
 import { CountriesLanguages, ProductsAttributes, ProductsCategories } from 'globalConsts/api.const';
 import { Anchor } from 'globalTypes/elements';
 import { BreadcrumbPath } from 'pages/shared/components/breadcrumbs/breadcrumbs.interfaces';
@@ -62,34 +62,26 @@ export function getDiscountPercent(price: number, discount: number): string {
   return String(Math.round((1 - discount / price) * 100));
 }
 
-export function getProductName(current: ProductData): string {
-  return current.name[CountriesLanguages.GB] ?? current.name[CountriesLanguages.US];
+export function getProductName(name: LocalizedString): string {
+  return name[CountriesLanguages.GB] ?? name[CountriesLanguages.US];
 }
 
-export function getProductDescription(current: ProductData): string | undefined {
-  return (
-    current.description?.[CountriesLanguages.GB] ?? current.description?.[CountriesLanguages.US]
-  );
+export function getProductDescription(description?: LocalizedString): string | undefined {
+  return description?.[CountriesLanguages.GB] ?? description?.[CountriesLanguages.US];
 }
 
-export function getProductPrice(current: ProductData): number | undefined {
-  return current.masterVariant.prices?.[0].value.centAmount;
+export function getProductPrice(masterVariant: ProductVariant): number | undefined {
+  return masterVariant.prices?.[0].value.centAmount;
 }
 
-export function getProductDiscount(current: ProductData): number | undefined {
-  return current.masterVariant.prices?.[0].discounted?.value.centAmount;
+export function getProductDiscount(masterVariant: ProductVariant): number | undefined {
+  return masterVariant.prices?.[0].discounted?.value.centAmount;
 }
 
-export function getProductImages(current: ProductData): Image[] | undefined {
-  return current.masterVariant.images;
+export function getProductBrand(masterVariant: ProductVariant): string | undefined {
+  return masterVariant.attributes?.find(({ name }) => name === ProductsAttributes.BRAND)?.value;
 }
 
-export function getProductBrand(current: ProductData): string | undefined {
-  return current.masterVariant.attributes?.find(({ name }) => name === ProductsAttributes.BRAND)
-    ?.value;
-}
-
-export function getProductColor(current: ProductData): string | undefined {
-  return current.masterVariant.attributes?.find(({ name }) => name === ProductsAttributes.COLOR)
-    ?.value;
+export function getProductColor(masterVariant: ProductVariant): string | undefined {
+  return masterVariant.attributes?.find(({ name }) => name === ProductsAttributes.COLOR)?.value;
 }
