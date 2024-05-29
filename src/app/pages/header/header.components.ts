@@ -147,6 +147,7 @@ export class Header extends BaseComponent {
 
   private onLogoutEvent(): void {
     LocalStorageService.removeData('refreshToken');
+    LocalStorageService.removeData('token');
 
     apiService.logout();
 

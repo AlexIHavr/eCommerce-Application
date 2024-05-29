@@ -34,6 +34,8 @@ export function successLogin(title: string): void {
     LocalStorageService.saveData('refreshToken', tokenCache.cache.refreshToken);
   }
 
+  LocalStorageService.saveData('token', tokenCache.cache.token);
+
   redirectToMain();
   alertModal.showAlert('success', title);
 }
