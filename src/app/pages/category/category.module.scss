@@ -25,6 +25,7 @@ $product-card-color: whitesmoke;
       display: flex;
       flex-direction: column;
       gap: 10px;
+      justify-content: space-between;
 
       max-width: $card-max-width;
 

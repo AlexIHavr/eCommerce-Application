@@ -1,4 +1,4 @@
-import { ProductProjection } from '@commercetools/platform-sdk';
+import { LocalizedString, ProductProjection, ProductVariant } from '@commercetools/platform-sdk';
 import { ProductsCategories } from 'globalConsts/api.const';
 import { Anchor } from 'globalTypes/elements';
 import {
@@ -16,46 +16,66 @@ import { div, h3, img } from 'shared/tags/tags.component';
 
 import styles from './category.module.scss';
 
-export function getProducts(category: ProductsCategories, products: ProductProjection[]): Anchor[] {
-  return products.map(({ id, name, description, masterVariant }) => {
-    const price = getProductPrice(masterVariant) ?? 0;
-    const discount = getProductDiscount(masterVariant);
-    const currency = getCurrency(masterVariant);
+export function getProductCard(
+  category: ProductsCategories,
+  variant: ProductVariant,
+  id: string,
+  name: LocalizedString,
+  description?: LocalizedString,
+): Anchor {
+  const price = getProductPrice(variant) ?? 0;
+  const discount = getProductDiscount(variant);
+  const currency = getCurrency(variant);
 
-    const cardPrices = div(
-      { className: styles.cardPrices },
-      div({ text: `${discount ?? price} ${currency}` }),
-    );
+  const cardPrices = div(
+    { className: styles.cardPrices },
+    div({ text: `${discount ?? price} ${currency}` }),
+  );
 
-    const productCard = getNavLink(
-      '',
-      getProductPath(category, id),
-      styles.productCard,
-      img({
-        className: styles.cardImg,
-        src: masterVariant.images?.[0].url ?? '',
-        alt: 'product-card-img',
+  const productCard = getNavLink(
+    '',
+    getProductPath(category, id),
+    styles.productCard,
+    img({
+      className: styles.cardImg,
+      src: variant.images?.[0].url ?? '',
+      alt: 'product-card-img',
+    }),
+    h3(getProductName(name), styles.cardName),
+    div({ className: styles.cardDescription, text: getProductDescription(description) }),
+    cardPrices,
+  );
+
+  if (discount) {
+    cardPrices.append(
+      div({
+        className: productsStyles.discountPrice,
+        text: `${price} ${currency}`,
       }),
-      h3(getProductName(name), styles.cardName),
-      div({ className: styles.cardDescription, text: getProductDescription(description) }),
-      cardPrices,
     );
+    productCard.append(
+      div({
+        className: productsStyles.discountLabel,
+        text: `-${getDiscountPercent(price, discount)}%`,
+      }),
+    );
+  }
 
-    if (discount) {
-      cardPrices.append(
-        div({
-          className: productsStyles.discountPrice,
-          text: `${price} ${currency}`,
-        }),
-      );
-      productCard.append(
-        div({
-          className: productsStyles.discountLabel,
-          text: `-${getDiscountPercent(price, discount)}%`,
-        }),
-      );
-    }
+  return productCard;
+}
 
-    return productCard;
-  });
+export function getProducts(category: ProductsCategories, products: ProductProjection[]): Anchor[] {
+  return products.reduce<Anchor[]>(
+    (productsCards, { id, name, description, masterVariant, variants }) => {
+      const productCard = getProductCard(category, masterVariant, id, name, description);
+
+      productsCards.push(
+        productCard,
+        ...variants.map((variant) => getProductCard(category, variant, id, name, description)),
+      );
+
+      return productsCards;
+    },
+    [],
+  );
 }
