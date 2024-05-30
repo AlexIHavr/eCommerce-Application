@@ -99,7 +99,7 @@ export class PageWrapper extends BaseComponent {
     } else {
       loader.open();
       apiService
-        .getFilteredProducts({ id: params.id })
+        .getFilteredProducts({ id: params.id, colors: [params.color] })
         .then((products) => {
           const product = products.body.results;
 

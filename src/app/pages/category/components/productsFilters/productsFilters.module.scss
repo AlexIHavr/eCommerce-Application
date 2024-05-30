@@ -7,7 +7,7 @@ $filter-apply-background-color: lightseagreen;
   $text-font-size: 0.9em;
 
   display: flex;
-  gap: 40px;
+  gap: 20px;
   align-items: center;
   justify-content: center;
 
@@ -65,13 +65,14 @@ $filter-apply-background-color: lightseagreen;
 
   .filterField {
     $select-width: 100px;
+    $select-brand-width: 140px;
 
     display: flex;
     gap: 10px;
     align-items: center;
 
     .priceInput {
-      width: 100px;
+      width: $select-width;
       padding: 5px 10px;
       font-size: $text-font-size;
 
@@ -100,6 +101,10 @@ $filter-apply-background-color: lightseagreen;
       border: 2px solid var(--input-border-color);
       border-radius: 5px;
 
+      &:has(.brand) {
+        width: $select-brand-width;
+      }
+
       &:has(:checked) {
         border-color: $filter-apply-background-color;
       }
@@ -126,6 +131,10 @@ $filter-apply-background-color: lightseagreen;
         background-color: var(--background-color);
         border: 2px solid var(--input-border-color);
         border-radius: 5px;
+
+        &.brand {
+          width: $select-brand-width;
+        }
 
         &:has(:checked) {
           border-color: $filter-apply-background-color;

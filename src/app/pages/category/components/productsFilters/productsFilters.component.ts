@@ -105,6 +105,7 @@ export class ProductsFilters extends BaseComponent {
         return label({ className: styles.multipleSelectLabel, text: option }, inputOption);
       }),
     );
+    multipleSelect.addClass(styles[optionsType]);
 
     const selectIcon = img({
       className: styles.icon,

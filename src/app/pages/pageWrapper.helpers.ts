@@ -1,5 +1,5 @@
 import { LocalizedString, ProductVariant } from '@commercetools/platform-sdk';
-import { ProductsAttributes, ProductsCategories } from 'globalConsts/api.const';
+import { ProductsAttributes, ProductsCategories, ProductsColors } from 'globalConsts/api.const';
 import { Anchor } from 'globalTypes/elements';
 import { BreadcrumbPath } from 'pages/shared/components/breadcrumbs/breadcrumbs.interfaces';
 import { LocalStorageService } from 'services/localStorage.service';
@@ -50,8 +50,12 @@ export function getCategoryPath(category: ProductsCategories): string {
   return `${PagesPaths.CATALOG}/${category}`;
 }
 
-export function getProductPath(category: ProductsCategories, id: string): string {
-  return `${getCategoryPath(category)}/${id}`;
+export function getProductPath(
+  category: ProductsCategories,
+  id: string,
+  color?: ProductsColors,
+): string {
+  return `${getCategoryPath(category)}/${id}/${color}`;
 }
 
 export function getCategoryBreadcrumbPath(category: ProductsCategories): BreadcrumbPath {
@@ -90,7 +94,7 @@ export function getProductBrand(masterVariant: ProductVariant): string | undefin
   return masterVariant.attributes?.find(({ name }) => name === ProductsAttributes.BRAND)?.value;
 }
 
-export function getProductColor(masterVariant: ProductVariant): string | undefined {
+export function getProductColor(masterVariant: ProductVariant): ProductsColors | undefined {
   return masterVariant.attributes?.find(({ name }) => name === ProductsAttributes.COLOR)?.value
     .label;
 }

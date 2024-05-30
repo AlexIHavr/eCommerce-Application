@@ -5,6 +5,7 @@ export const PRODUCTS_CATEGORIES_KEYS = Object.keys(PRODUCTS_CATEGORIES_IDS);
 export const enum CatalogParams {
   CATEGORY = 'category',
   ID = 'id',
+  COLOR = 'color',
 }
 
 export const enum PagesPaths {
@@ -16,5 +17,5 @@ export const enum PagesPaths {
   LOGIN = 'login',
   PROFILE = 'profile',
   CATEGORY = `${PagesPaths.CATALOG}/:${CatalogParams.CATEGORY}`,
-  PRODUCT = `${PagesPaths.CATEGORY}/:${CatalogParams.ID}`,
+  PRODUCT = `${PagesPaths.CATEGORY}/:${CatalogParams.ID}/:${CatalogParams.COLOR}`,
 }

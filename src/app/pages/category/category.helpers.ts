@@ -5,6 +5,7 @@ import {
   getCurrency,
   getDiscountPercent,
   getNavLink,
+  getProductColor,
   getProductDescription,
   getProductDiscount,
   getProductName,
@@ -16,7 +17,7 @@ import { div, h3, img } from 'shared/tags/tags.component';
 
 import styles from './category.module.scss';
 
-export function getProductCard(
+function getProductCard(
   category: ProductsCategories,
   variant: ProductVariant,
   id: string,
@@ -26,6 +27,7 @@ export function getProductCard(
   const price = getProductPrice(variant) ?? 0;
   const discount = getProductDiscount(variant);
   const currency = getCurrency(variant);
+  const color = getProductColor(variant);
 
   const cardPrices = div(
     { className: styles.cardPrices },
@@ -34,7 +36,7 @@ export function getProductCard(
 
   const productCard = getNavLink(
     '',
-    getProductPath(category, id),
+    getProductPath(category, id, color),
     styles.productCard,
     img({
       className: styles.cardImg,
@@ -67,11 +69,14 @@ export function getProductCard(
 export function getProducts(category: ProductsCategories, products: ProductProjection[]): Anchor[] {
   return products.reduce<Anchor[]>(
     (productsCards, { id, name, description, masterVariant, variants }) => {
-      const productCard = getProductCard(category, masterVariant, id, name, description);
+      if (masterVariant.isMatchingVariant) {
+        productsCards.push(getProductCard(category, masterVariant, id, name, description));
+      }
 
       productsCards.push(
-        productCard,
-        ...variants.map((variant) => getProductCard(category, variant, id, name, description)),
+        ...variants
+          .filter(({ isMatchingVariant }) => isMatchingVariant)
+          .map((variant) => getProductCard(category, variant, id, name, description)),
       );
 
       return productsCards;

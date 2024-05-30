@@ -5,6 +5,7 @@ import {
   getCategoryBreadcrumbPath,
   getCurrency,
   getDiscountPercent,
+  getNavLink,
   getProductBrand,
   getProductColor,
   getProductDescription,
@@ -31,21 +32,26 @@ export class Product extends BaseComponent {
   constructor(category: ProductsCategories, product: ProductProjection) {
     const { id, name, description, masterVariant, variants } = product;
 
+    const currentVariant = masterVariant.isMatchingVariant
+      ? masterVariant
+      : variants.find(({ isMatchingVariant }) => isMatchingVariant) ?? masterVariant;
+
     const title = getProductName(name);
+    const color = getProductColor(currentVariant);
 
     super(
       { className: styles.product },
       new SectionTitle(title),
       new Breadcrumbs([
         getCategoryBreadcrumbPath(category),
-        { name: title, path: getProductPath(category, id) },
+        { name: title, path: getProductPath(category, id, color) },
       ]),
     );
 
-    const { images } = masterVariant;
-    const price = getProductPrice(masterVariant);
-    const discount = getProductDiscount(masterVariant);
-    const currency = getCurrency(masterVariant);
+    const { images } = currentVariant;
+    const price = getProductPrice(currentVariant);
+    const discount = getProductDiscount(currentVariant);
+    const currency = getCurrency(currentVariant);
 
     this.slider = getSlider(images, styles.slider);
     this.slider.setProps({ onclick: (event) => this.showSliderModal(event) });
@@ -73,30 +79,22 @@ export class Product extends BaseComponent {
       ),
     );
 
-    const color = getProductColor(masterVariant);
-
     const colors = div(
       { className: styles.colors },
       ...[masterVariant, ...variants].map((variant) => {
         const colorValue = getProductColor(variant);
 
-        const colorElem = div({
-          className: styles.color,
-          onclick: () => {
-            colors.getChildren().forEach((child) => child.removeClass(styles.active));
-            colorElem.addClass(styles.active);
-          },
-        });
+        const colorLink = getNavLink('', getProductPath(category, id, colorValue), styles.color);
 
         if (colorValue) {
-          colorElem.getNode().style.backgroundColor = colorValue;
+          colorLink.getNode().style.backgroundColor = colorValue;
         }
 
         if (color === colorValue) {
-          colorElem.addClass(styles.active);
+          colorLink.addClass(styles.active);
         }
 
-        return colorElem;
+        return colorLink;
       }),
     );
 
@@ -120,7 +118,7 @@ export class Product extends BaseComponent {
             div({ className: styles.description, text: getProductDescription(description) }),
             div(
               { className: styles.brand, text: 'Brand' },
-              div({ className: styles.brandName, text: getProductBrand(masterVariant) }),
+              div({ className: styles.brandName, text: getProductBrand(currentVariant) }),
             ),
             div({ className: styles.colorsSelect }, div({ text: 'Color' }), colors),
             button({ className: styles.addToCardBtn, text: 'Add to cart' }),
