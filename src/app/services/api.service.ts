@@ -2,8 +2,6 @@ import {
   ByProjectKeyRequestBuilder,
   CustomerPagedQueryResponse,
   CustomerSignInResult,
-  ProductPagedQueryResponse,
-  ProductProjectionPagedQueryResponse,
   ProductProjectionPagedSearchResponse,
   Project,
 } from '@commercetools/platform-sdk';
@@ -54,27 +52,23 @@ export class ApiService {
     this.apiRoot = clientBuild.getApiRootByAnonymousFlow();
   }
 
-  public getAllProducts(): ApiClientResponse<ProductPagedQueryResponse> {
-    return this.apiRoot.products().get().execute();
-  }
-
-  public getProductById(productId: string): ApiClientResponse<ProductProjectionPagedQueryResponse> {
-    return this.apiRoot
-      .productProjections()
-      .search()
-      .get({ queryArgs: { filter: [`id:"${productId}"`] } })
-      .execute();
-  }
-
   public getFilteredProducts(
     filterProps: FilterProps,
   ): ApiClientResponse<ProductProjectionPagedSearchResponse> {
-    const { category, price, brands, colors } = filterProps;
-    const queryFilter = [`categories.id: "${PRODUCTS_CATEGORIES_IDS[category]}"`];
+    const { id, category, price, brands, colors } = filterProps;
+    const queryFilter: string[] = [];
+
+    if (id) {
+      queryFilter.push(`id: "${id}"`);
+    }
+
+    if (category) {
+      queryFilter.push(`categories.id: "${PRODUCTS_CATEGORIES_IDS[category]}"`);
+    }
 
     if (price) {
       queryFilter.push(
-        `variants.price.centAmount:range (${price.from ?? '*'} to ${price.to ?? '*'})`,
+        `variants.price.centAmount: range (${price.from ?? '*'} to ${price.to ?? '*'})`,
       );
     }
 

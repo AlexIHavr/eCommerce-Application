@@ -29,7 +29,8 @@ export interface ProductPriceFilter {
 }
 
 export interface FilterProps {
-  category: ProductsCategories;
+  id?: string;
+  category?: ProductsCategories;
   price?: ProductPriceFilter;
   brands?: ProductsBrands[];
   colors?: ProductsColors[];
