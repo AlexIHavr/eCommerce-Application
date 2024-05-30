@@ -44,7 +44,7 @@ export class Product extends BaseComponent {
       new SectionTitle(title),
       new Breadcrumbs([
         getCategoryBreadcrumbPath(category),
-        { name: title, path: getProductPath(category, id, color) },
+        { name: `${title} (${color})`, path: getProductPath(category, id, color) },
       ]),
     );
 

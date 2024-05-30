@@ -5,6 +5,7 @@ import {
   getCurrency,
   getDiscountPercent,
   getNavLink,
+  getProductBrand,
   getProductColor,
   getProductDescription,
   getProductDiscount,
@@ -43,7 +44,7 @@ function getProductCard(
       src: variant.images?.[0].url ?? '',
       alt: 'product-card-img',
     }),
-    h3(getProductName(name), styles.cardName),
+    h3(`${getProductBrand(variant)} ${getProductName(name)} (${color})`, styles.cardName),
     div({ className: styles.cardDescription, text: getProductDescription(description) }),
     cardPrices,
   );

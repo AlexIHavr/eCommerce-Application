@@ -72,6 +72,7 @@
             width: 25px;
             height: 25px;
 
+            border: 1px solid rgb(0 0 0 / 30%);
             border-radius: 50%;
 
             transition:
@@ -79,13 +80,13 @@
               box-shadow 0.2s;
 
             &.active {
-              scale: 1.1;
-              box-shadow: 0 0 5px var(--base-color);
+              scale: 1.2;
+              box-shadow: 0 0 3px var(--base-color);
             }
 
             @media (hover: hover) and (pointer: fine) {
               &:hover {
-                scale: 1.1;
+                scale: 1.2;
               }
             }
           }
@@ -127,7 +128,7 @@
 
     .sliderInModalWrapper {
       position: relative;
-      width: 60%;
+      width: 45%;
       margin: 0 auto;
 
       .closeSliderModalBtn {
@@ -164,11 +165,7 @@
       }
 
       @media (width <= $huge-width) {
-        width: 80%;
-      }
-
-      @media (width <= $medium-width) {
-        width: 90%;
+        width: 65%;
       }
     }
   }
