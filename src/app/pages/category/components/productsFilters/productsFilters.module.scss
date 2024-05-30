@@ -1,8 +1,5 @@
 @import '/src/styles/global';
 
-$filter-reset-background-color: crimson;
-$filter-apply-background-color: lightseagreen;
-
 .productsFilters {
   $text-font-size: 0.9em;
 
@@ -46,11 +43,11 @@ $filter-apply-background-color: lightseagreen;
     }
 
     .resetFilterBtn {
-      background-color: $filter-reset-background-color;
+      background-color: var(--discount-label-color);
     }
 
     .submitFilterBtn {
-      background-color: $filter-apply-background-color;
+      background-color: var(--add-to-card-background-color);
     }
 
     @media (width <= $catalog-medium-width) {
@@ -77,7 +74,7 @@ $filter-apply-background-color: lightseagreen;
       font-size: $text-font-size;
 
       &:not(:placeholder-shown) {
-        border-color: $filter-apply-background-color;
+        border-color: var(--add-to-card-background-color);
       }
     }
 
@@ -106,7 +103,7 @@ $filter-apply-background-color: lightseagreen;
       }
 
       &:has(:checked) {
-        border-color: $filter-apply-background-color;
+        border-color: var(--add-to-card-background-color);
       }
 
       .selectIcon {
@@ -137,7 +134,7 @@ $filter-apply-background-color: lightseagreen;
         }
 
         &:has(:checked) {
-          border-color: $filter-apply-background-color;
+          border-color: var(--add-to-card-background-color);
         }
 
         .multipleSelectLabel {
@@ -191,7 +188,7 @@ $filter-apply-background-color: lightseagreen;
 
       &.asc,
       &.desc {
-        border-color: $filter-apply-background-color;
+        border-color: var(--add-to-card-background-color);
       }
 
       .arrowIcon {
