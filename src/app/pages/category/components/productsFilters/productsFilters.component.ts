@@ -1,6 +1,8 @@
+import { ProductProjection } from '@commercetools/platform-sdk';
 import { ProductsAttributes, ProductsBrands, ProductsColors } from 'globalConsts/api.const';
 import { Div, Input } from 'globalTypes/elements';
 import { Category } from 'pages/category/category.component';
+import { getProductBrand, getProductColor } from 'pages/pageWrapper.helpers';
 import { BaseComponent } from 'shared/base/base.component';
 import { button, div, form, img, input, label } from 'shared/tags/tags.component';
 import { capitalizeFirstLetter } from 'utils/strings.util';
@@ -9,7 +11,7 @@ import filterIcon from './images/filterIcon.png';
 import searchIcon from './images/searchIcon.png';
 import selectArrowIcon from './images/selectArrowIcon.png';
 import sortIcon from './images/sortIcon.png';
-import { PRODUCTS_FILTERS_PROPS, PRODUCTS_OPTIONS } from './productsFilters.consts';
+import { PRODUCTS_FILTERS_PROPS } from './productsFilters.consts';
 import { getSortField } from './productsFilters.helpers';
 import styles from './productsFilters.module.scss';
 
@@ -20,12 +22,19 @@ export class ProductsFilters extends BaseComponent {
 
   private readonly inputOptions: Record<ProductsAttributes, Input[]>;
 
+  private readonly multipleSelects: Record<ProductsAttributes, Div>;
+
   private selectFields: Div[] = [];
 
   constructor(private readonly parent: Category) {
     super({ className: styles.productsFilters });
 
     this.inputOptions = { color: [], brand: [] };
+
+    this.multipleSelects = {
+      color: div({ className: styles.multipleSelect }),
+      brand: div({ className: styles.multipleSelect }),
+    };
 
     this.priceFromInput = input({
       className: styles.priceInput,
@@ -82,6 +91,17 @@ export class ProductsFilters extends BaseComponent {
     window.onclick = (event): void => this.hideSelectFields(event);
   }
 
+  public setProductsOptions(products: ProductProjection[]): void {
+    products.forEach(({ masterVariant, variants }) => {
+      this.addOptionToMultipleSelect(ProductsAttributes.BRAND, getProductBrand(masterVariant));
+      this.addOptionToMultipleSelect(ProductsAttributes.COLOR, getProductColor(masterVariant));
+
+      variants.forEach((variant) => {
+        this.addOptionToMultipleSelect(ProductsAttributes.COLOR, getProductColor(variant));
+      });
+    });
+  }
+
   private hideSelectFields(event: MouseEvent): void {
     this.selectFields.forEach((selectField) => {
       if (!event.composedPath().includes(selectField.getNode())) {
@@ -91,20 +111,8 @@ export class ProductsFilters extends BaseComponent {
   }
 
   private getMultipleSelectField(optionsType: ProductsAttributes): Div {
-    const multipleSelect = div(
-      { className: styles.multipleSelect },
-      ...PRODUCTS_OPTIONS[optionsType].map((option) => {
-        const inputOption = input({
-          className: styles.selectCheckbox,
-          value: option,
-          type: 'checkbox',
-        });
+    const multipleSelect = this.multipleSelects[optionsType];
 
-        this.inputOptions[optionsType].push(inputOption);
-
-        return label({ className: styles.multipleSelectLabel, text: option }, inputOption);
-      }),
-    );
     multipleSelect.addClass(styles[optionsType]);
 
     const selectIcon = img({
@@ -134,6 +142,27 @@ export class ProductsFilters extends BaseComponent {
     this.selectFields.push(multipleSelectField);
 
     return multipleSelectField;
+  }
+
+  private addOptionToMultipleSelect(optionsType: ProductsAttributes, option?: string): void {
+    if (
+      !option ||
+      this.inputOptions[optionsType].find((inputOption) => inputOption.getNode().value === option)
+    ) {
+      return;
+    }
+
+    const inputOption = input({
+      className: styles.selectCheckbox,
+      value: option,
+      type: 'checkbox',
+    });
+
+    this.inputOptions[optionsType].push(inputOption);
+
+    this.multipleSelects[optionsType].append(
+      label({ className: styles.multipleSelectLabel, text: option }, inputOption),
+    );
   }
 
   private resetFilters(): void {

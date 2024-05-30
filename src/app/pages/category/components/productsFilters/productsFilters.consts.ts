@@ -1,4 +1,3 @@
-import { ProductsAttributes, ProductsBrands, ProductsColors } from 'globalConsts/api.const';
 import { FormFieldsProps } from 'pages/shared/components/formField/formField.types';
 
 export const PRODUCTS_FILTERS_PROPS = {
@@ -18,10 +17,3 @@ export const PRODUCTS_FILTERS_PROPS = {
     placeholder: 'Search',
   },
 } as const satisfies FormFieldsProps;
-
-export const PRODUCTS_OPTIONS: Readonly<
-  Record<ProductsAttributes, (ProductsBrands | ProductsColors)[]>
-> = {
-  brand: Object.values(ProductsBrands),
-  color: Object.values(ProductsColors),
-};

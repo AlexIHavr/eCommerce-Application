@@ -19,6 +19,8 @@ import styles from './category.module.scss';
 export class Category extends BaseComponent {
   private readonly productsList: Div;
 
+  private productsFilters: ProductsFilters;
+
   constructor(private readonly category: ProductsCategories) {
     super(
       { className: styles.category },
@@ -28,15 +30,17 @@ export class Category extends BaseComponent {
 
     this.productsList = div({ className: styles.productsList });
 
+    this.productsFilters = new ProductsFilters(this);
+
     this.appendChildren([
-      new ProductsFilters(this),
+      this.productsFilters,
       div({ className: sharedStyles.container }, this.productsList),
     ]);
 
-    this.setProducts();
+    this.setProducts({}, true);
   }
 
-  public setProducts(filterProps?: Omit<FilterProps, 'category'>): void {
+  public setProducts(filterProps?: Omit<FilterProps, 'category'>, init: boolean = false): void {
     loader.open();
     apiService
       .getFilteredProducts({ category: this.category, ...filterProps })
@@ -46,6 +50,8 @@ export class Category extends BaseComponent {
         this.productsList.destroyChildren();
 
         if (products.length) {
+          if (init) this.productsFilters.setProductsOptions(products);
+
           this.productsList.appendChildren(getProducts(this.category, products));
         } else {
           this.productsList.append(h3('No products'));

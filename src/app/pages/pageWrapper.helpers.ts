@@ -1,5 +1,10 @@
 import { LocalizedString, ProductVariant } from '@commercetools/platform-sdk';
-import { ProductsAttributes, ProductsCategories, ProductsColors } from 'globalConsts/api.const';
+import {
+  ProductsAttributes,
+  ProductsBrands,
+  ProductsCategories,
+  ProductsColors,
+} from 'globalConsts/api.const';
 import { Anchor } from 'globalTypes/elements';
 import { BreadcrumbPath } from 'pages/shared/components/breadcrumbs/breadcrumbs.interfaces';
 import { LocalStorageService } from 'services/localStorage.service';
@@ -90,7 +95,7 @@ export function getCurrency(masterVariant: ProductVariant): string {
   return masterVariant.prices?.[0].value.currencyCode ?? 'USD';
 }
 
-export function getProductBrand(masterVariant: ProductVariant): string | undefined {
+export function getProductBrand(masterVariant: ProductVariant): ProductsBrands | undefined {
   return masterVariant.attributes?.find(({ name }) => name === ProductsAttributes.BRAND)?.value;
 }
 
