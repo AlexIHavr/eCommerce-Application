@@ -2,9 +2,9 @@ import { LocalizedString, ProductProjection, ProductVariant } from '@commercetoo
 import { ProductsCategories } from 'globalConsts/api.const';
 import { Anchor } from 'globalTypes/elements';
 import {
-  getCurrency,
   getDiscountPercent,
   getNavLink,
+  getPriceWithCurrency,
   getProductBrand,
   getProductColor,
   getProductDescription,
@@ -27,12 +27,11 @@ function getProductCard(
 ): Anchor {
   const price = getProductPrice(variant) ?? 0;
   const discount = getProductDiscount(variant);
-  const currency = getCurrency(variant);
   const color = getProductColor(variant);
 
   const cardPrices = div(
     { className: styles.cardPrices },
-    div({ text: `${discount ?? price} ${currency}` }),
+    div({ text: getPriceWithCurrency(discount ?? price) }),
   );
 
   const productCard = getNavLink(
@@ -54,7 +53,7 @@ function getProductCard(
     cardPrices.append(
       div({
         className: productsStyles.discountPrice,
-        text: `${price} ${currency}`,
+        text: getPriceWithCurrency(price),
       }),
     );
     productCard.append(

@@ -3,9 +3,9 @@ import { ProductsCategories } from 'globalConsts/api.const';
 import { Div } from 'globalTypes/elements';
 import {
   getCategoryBreadcrumbPath,
-  getCurrency,
   getDiscountPercent,
   getNavLink,
+  getPriceWithCurrency,
   getProductBrand,
   getProductColor,
   getProductDescription,
@@ -51,7 +51,6 @@ export class Product extends BaseComponent {
     const { images } = currentVariant;
     const price = getProductPrice(currentVariant);
     const discount = getProductDiscount(currentVariant);
-    const currency = getCurrency(currentVariant);
 
     this.slider = getSlider(images, styles.slider);
     this.slider.setProps({ onclick: (event) => this.showSliderModal(event) });
@@ -109,10 +108,10 @@ export class Product extends BaseComponent {
             h3(title),
             div(
               { className: styles.prices },
-              div({ text: `${discount ?? price} ${currency}` }),
+              div({ text: getPriceWithCurrency(discount ?? price) }),
               div({
                 className: productsStyles.discountPrice,
-                text: discount ? `${price} ${currency}` : '',
+                text: discount ? getPriceWithCurrency(price) : '',
               }),
             ),
             div({ className: styles.description, text: getProductDescription(description) }),

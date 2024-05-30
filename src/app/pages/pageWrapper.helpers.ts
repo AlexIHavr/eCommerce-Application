@@ -91,8 +91,8 @@ export function getProductDiscount(masterVariant: ProductVariant): number | unde
   return discountInCent ? discountInCent / 100 : discountInCent;
 }
 
-export function getCurrency(masterVariant: ProductVariant): string {
-  return masterVariant.prices?.[0].value.currencyCode ?? 'USD';
+export function getPriceWithCurrency(price?: number): string {
+  return new Intl.NumberFormat('en', { style: 'currency', currency: 'USD' }).format(price ?? 0);
 }
 
 export function getProductBrand(masterVariant: ProductVariant): ProductsBrands | undefined {
