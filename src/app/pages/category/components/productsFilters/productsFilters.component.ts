@@ -12,7 +12,7 @@ import searchIcon from './images/searchIcon.png';
 import selectArrowIcon from './images/selectArrowIcon.png';
 import sortIcon from './images/sortIcon.png';
 import { PRODUCTS_FILTERS_PROPS } from './productsFilters.consts';
-import { getSortField } from './productsFilters.helpers';
+import { getSortField, setSortTypeClass } from './productsFilters.helpers';
 import styles from './productsFilters.module.scss';
 
 export class ProductsFilters extends BaseComponent {
@@ -73,13 +73,19 @@ export class ProductsFilters extends BaseComponent {
       }),
     );
 
+    const nameSortField = getSortField('Name');
+    const priceSortField = getSortField('Price');
+
+    nameSortField.addListener('click', () => setSortTypeClass(nameSortField, priceSortField));
+    priceSortField.addListener('click', () => setSortTypeClass(priceSortField, nameSortField));
+
     this.appendChildren([
       filterFieldForm,
       div(
         { className: styles.filterField },
         img({ className: styles.icon, src: sortIcon, alt: 'sort-icon' }),
-        getSortField('Name'),
-        getSortField('Price'),
+        nameSortField,
+        priceSortField,
       ),
       label(
         { className: styles.filterField },

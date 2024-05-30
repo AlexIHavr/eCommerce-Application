@@ -189,7 +189,8 @@ $filter-apply-background-color: lightseagreen;
       border: 2px solid var(--input-border-color);
       border-radius: 5px;
 
-      &:has(.asc, .desc) {
+      &.asc,
+      &.desc {
         border-color: $filter-apply-background-color;
       }
 
@@ -201,12 +202,16 @@ $filter-apply-background-color: lightseagreen;
         display: none;
 
         transition: rotate 0.3s;
+      }
 
-        &.asc {
+      &.asc {
+        .arrowIcon {
           display: block;
         }
+      }
 
-        &.desc {
+      &.desc {
+        .arrowIcon {
           rotate: 360deg;
           display: block;
         }

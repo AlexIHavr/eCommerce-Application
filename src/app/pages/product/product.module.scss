@@ -80,6 +80,8 @@
               box-shadow 0.2s;
 
             &.active {
+              pointer-events: none;
+              cursor: default;
               scale: 1.2;
               box-shadow: 0 0 3px var(--base-color);
             }
