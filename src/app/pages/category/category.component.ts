@@ -42,10 +42,14 @@ export class Category extends BaseComponent {
     this.setProducts();
   }
 
-  public setProducts(filterProps?: Omit<FilterProps, 'category'>, sortProps?: SortProps): void {
+  public setProducts(
+    filterProps?: Omit<FilterProps, 'category'>,
+    sortProps?: SortProps,
+    searchText?: string,
+  ): void {
     loader.open();
     apiService
-      .getFilteredProducts({ category: this.category, ...filterProps }, sortProps)
+      .getFilteredProducts({ category: this.category, ...filterProps }, sortProps, searchText)
       .then((res) => {
         const products = res.body.results;
 

@@ -55,6 +55,7 @@ export class ApiService {
   public getFilteredProducts(
     filterProps: FilterProps,
     sortProps?: SortProps,
+    searchText?: string,
   ): ApiClientResponse<ProductProjectionPagedSearchResponse> {
     const { id, category, price, brands, colors } = filterProps;
 
@@ -97,6 +98,8 @@ export class ApiService {
           markMatchingVariants: true,
           filter: queryFilter,
           sort: querySort,
+          fuzzy: false,
+          'text.en': searchText,
         },
       })
       .execute();

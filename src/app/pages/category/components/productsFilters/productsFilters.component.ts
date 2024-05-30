@@ -1,7 +1,7 @@
 import { ProductProjection } from '@commercetools/platform-sdk';
 import { ProductsAttributes, ProductsBrands, ProductsColors } from 'globalConsts/api.const';
 import { SortValue } from 'globalTypes/api.type';
-import { Div, Input } from 'globalTypes/elements';
+import { Div, Form, Input } from 'globalTypes/elements';
 import { SortProps } from 'interfaces/api.interface';
 import { Category } from 'pages/category/category.component';
 import { getProductBrand, getProductColor } from 'pages/pageWrapper.helpers';
@@ -30,6 +30,10 @@ export class ProductsFilters extends BaseComponent {
 
   private readonly priceSortField: Div;
 
+  private readonly searchInput: Input;
+
+  private readonly filterFieldForm: Form;
+
   private selectFields: Div[] = [];
 
   private sortProps?: SortProps;
@@ -54,7 +58,7 @@ export class ProductsFilters extends BaseComponent {
       ...PRODUCTS_FILTERS_PROPS.priceTo,
     });
 
-    const filterFieldForm = form(
+    this.filterFieldForm = form(
       { className: styles.filterFieldForm },
       label(
         { className: styles.filterFieldLabel },
@@ -87,8 +91,14 @@ export class ProductsFilters extends BaseComponent {
     this.setSubmitFilter(this.nameSortField, this.priceSortField, 'name');
     this.setSubmitFilter(this.priceSortField, this.nameSortField, 'price');
 
+    this.searchInput = input({
+      className: styles.searchInput,
+      ...PRODUCTS_FILTERS_PROPS.search,
+      onkeydown: (event) => this.submitSearch(event),
+    });
+
     this.appendChildren([
-      filterFieldForm,
+      this.filterFieldForm,
       div(
         { className: styles.filterField },
         img({ className: styles.icon, src: sortIcon, alt: 'sort-icon' }),
@@ -96,9 +106,14 @@ export class ProductsFilters extends BaseComponent {
         this.priceSortField,
       ),
       label(
-        { className: styles.filterField },
+        {
+          className: styles.filterField,
+          onclick: (event) => {
+            if (event.target !== this.searchInput.getNode()) this.submitSearch();
+          },
+        },
         img({ className: styles.icon, src: searchIcon, alt: 'sort-icon' }),
-        input({ className: styles.searchInput, ...PRODUCTS_FILTERS_PROPS.search }),
+        this.searchInput,
       ),
     ]);
 
@@ -191,6 +206,7 @@ export class ProductsFilters extends BaseComponent {
 
   private resetFilters(): void {
     this.parent.setProducts();
+    this.searchInput.setProps({ value: '' });
 
     clearSortTypeClasses(this.nameSortField);
     clearSortTypeClasses(this.priceSortField);
@@ -207,6 +223,8 @@ export class ProductsFilters extends BaseComponent {
     if (toInputValue) {
       toValue = Number(toInputValue) * 100;
     }
+
+    this.searchInput.setProps({ value: '' });
 
     this.parent.setProducts(
       {
@@ -228,5 +246,16 @@ export class ProductsFilters extends BaseComponent {
 
       return products;
     }, []);
+  }
+
+  private submitSearch(event?: KeyboardEvent): void {
+    if (event && event.key !== 'Enter') return;
+
+    const searchText = this.searchInput.getNode().value;
+
+    if (!searchText) return;
+
+    this.filterFieldForm.getNode().reset();
+    this.parent.setProducts({}, this.sortProps, searchText);
   }
 }
