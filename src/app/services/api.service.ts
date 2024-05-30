@@ -8,7 +8,7 @@ import {
 import { TokenCache } from '@commercetools/sdk-client-v2';
 import { PRODUCTS_CATEGORIES_IDS } from 'globalConsts/api.const';
 import { ApiClientResponse } from 'globalTypes/api.type';
-import { CustomerLoginData, FilterProps, NewCustomer } from 'interfaces/api.interface';
+import { CustomerLoginData, FilterProps, NewCustomer, SortProps } from 'interfaces/api.interface';
 import { clientBuild } from 'utils/clientBuild.util';
 import { createQueryStringForFilter } from 'utils/strings.util';
 import { tokenCache } from 'utils/tokenCache.util';
@@ -54,9 +54,12 @@ export class ApiService {
 
   public getFilteredProducts(
     filterProps: FilterProps,
+    sortProps?: SortProps,
   ): ApiClientResponse<ProductProjectionPagedSearchResponse> {
     const { id, category, price, brands, colors } = filterProps;
+
     const queryFilter: string[] = [];
+    const querySort: string[] = [];
 
     if (id) {
       queryFilter.push(`id: "${id}"`);
@@ -80,6 +83,12 @@ export class ApiService {
       queryFilter.push(`variants.attributes.color.label: ${createQueryStringForFilter(colors)}`);
     }
 
+    if (sortProps?.value === 'name') {
+      querySort.push(`name.en ${sortProps.direction}`);
+    } else if (sortProps?.value === 'price') {
+      querySort.push(`price ${sortProps.direction}`);
+    }
+
     return this.apiRoot
       .productProjections()
       .search()
@@ -87,6 +96,7 @@ export class ApiService {
         queryArgs: {
           markMatchingVariants: true,
           filter: queryFilter,
+          sort: querySort,
         },
       })
       .execute();

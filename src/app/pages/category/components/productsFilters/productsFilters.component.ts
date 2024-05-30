@@ -1,6 +1,8 @@
 import { ProductProjection } from '@commercetools/platform-sdk';
 import { ProductsAttributes, ProductsBrands, ProductsColors } from 'globalConsts/api.const';
+import { SortValue } from 'globalTypes/api.type';
 import { Div, Input } from 'globalTypes/elements';
+import { SortProps } from 'interfaces/api.interface';
 import { Category } from 'pages/category/category.component';
 import { getProductBrand, getProductColor } from 'pages/pageWrapper.helpers';
 import { BaseComponent } from 'shared/base/base.component';
@@ -12,7 +14,7 @@ import searchIcon from './images/searchIcon.png';
 import selectArrowIcon from './images/selectArrowIcon.png';
 import sortIcon from './images/sortIcon.png';
 import { PRODUCTS_FILTERS_PROPS } from './productsFilters.consts';
-import { getSortField, setSortTypeClass } from './productsFilters.helpers';
+import { clearSortTypeClasses, getSortField, getSortType } from './productsFilters.helpers';
 import styles from './productsFilters.module.scss';
 
 export class ProductsFilters extends BaseComponent {
@@ -24,7 +26,13 @@ export class ProductsFilters extends BaseComponent {
 
   private readonly multipleSelects: Record<ProductsAttributes, Div>;
 
+  private readonly nameSortField: Div;
+
+  private readonly priceSortField: Div;
+
   private selectFields: Div[] = [];
+
+  private sortProps?: SortProps;
 
   constructor(private readonly parent: Category) {
     super({ className: styles.productsFilters });
@@ -73,19 +81,19 @@ export class ProductsFilters extends BaseComponent {
       }),
     );
 
-    const nameSortField = getSortField('Name');
-    const priceSortField = getSortField('Price');
+    this.nameSortField = getSortField('Name');
+    this.priceSortField = getSortField('Price');
 
-    nameSortField.addListener('click', () => setSortTypeClass(nameSortField, priceSortField));
-    priceSortField.addListener('click', () => setSortTypeClass(priceSortField, nameSortField));
+    this.setSubmitFilter(this.nameSortField, this.priceSortField, 'name');
+    this.setSubmitFilter(this.priceSortField, this.nameSortField, 'price');
 
     this.appendChildren([
       filterFieldForm,
       div(
         { className: styles.filterField },
         img({ className: styles.icon, src: sortIcon, alt: 'sort-icon' }),
-        nameSortField,
-        priceSortField,
+        this.nameSortField,
+        this.priceSortField,
       ),
       label(
         { className: styles.filterField },
@@ -105,6 +113,16 @@ export class ProductsFilters extends BaseComponent {
       variants.forEach((variant) => {
         this.addOptionToMultipleSelect(ProductsAttributes.COLOR, getProductColor(variant));
       });
+    });
+  }
+
+  private setSubmitFilter(mainSortField: Div, neighborSortField: Div, sortValue: SortValue): void {
+    mainSortField.addListener('click', () => {
+      const sortType = getSortType(mainSortField, neighborSortField);
+
+      this.sortProps = sortType ? { value: sortValue, direction: sortType } : undefined;
+
+      this.submitFilter();
     });
   }
 
@@ -173,10 +191,13 @@ export class ProductsFilters extends BaseComponent {
 
   private resetFilters(): void {
     this.parent.setProducts();
+
+    clearSortTypeClasses(this.nameSortField);
+    clearSortTypeClasses(this.priceSortField);
   }
 
-  private submitFilter(event: MouseEvent): void {
-    event.preventDefault();
+  private submitFilter(event?: MouseEvent): void {
+    event?.preventDefault();
 
     const toInputValue = this.priceToInput.getNode().value;
 
@@ -187,11 +208,14 @@ export class ProductsFilters extends BaseComponent {
       toValue = Number(toInputValue) * 100;
     }
 
-    this.parent.setProducts({
-      price: { from: fromValue, to: toValue },
-      brands: this.getFilteredOptions(ProductsAttributes.BRAND),
-      colors: this.getFilteredOptions(ProductsAttributes.COLOR),
-    });
+    this.parent.setProducts(
+      {
+        price: { from: fromValue, to: toValue },
+        brands: this.getFilteredOptions(ProductsAttributes.BRAND),
+        colors: this.getFilteredOptions(ProductsAttributes.COLOR),
+      },
+      this.sortProps,
+    );
   }
 
   private getFilteredOptions<T extends ProductsBrands | ProductsColors>(

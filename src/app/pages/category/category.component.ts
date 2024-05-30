@@ -1,6 +1,6 @@
 import { ProductsCategories } from 'globalConsts/api.const';
 import { Div } from 'globalTypes/elements';
-import { FilterProps } from 'interfaces/api.interface';
+import { FilterProps, SortProps } from 'interfaces/api.interface';
 import { ProductsFilters } from 'pages/category/components/productsFilters/productsFilters.component';
 import { getCategoryBreadcrumbPath } from 'pages/pageWrapper.helpers';
 import { Breadcrumbs } from 'pages/shared/components/breadcrumbs/breadcrumbs.component';
@@ -21,6 +21,8 @@ export class Category extends BaseComponent {
 
   private productsFilters: ProductsFilters;
 
+  private isInitProducts: boolean = true;
+
   constructor(private readonly category: ProductsCategories) {
     super(
       { className: styles.category },
@@ -37,20 +39,23 @@ export class Category extends BaseComponent {
       div({ className: sharedStyles.container }, this.productsList),
     ]);
 
-    this.setProducts({}, true);
+    this.setProducts();
   }
 
-  public setProducts(filterProps?: Omit<FilterProps, 'category'>, init: boolean = false): void {
+  public setProducts(filterProps?: Omit<FilterProps, 'category'>, sortProps?: SortProps): void {
     loader.open();
     apiService
-      .getFilteredProducts({ category: this.category, ...filterProps })
+      .getFilteredProducts({ category: this.category, ...filterProps }, sortProps)
       .then((res) => {
         const products = res.body.results;
 
         this.productsList.destroyChildren();
 
         if (products.length) {
-          if (init) this.productsFilters.setProductsOptions(products);
+          if (this.isInitProducts) {
+            this.productsFilters.setProductsOptions(products);
+            this.isInitProducts = false;
+          }
 
           this.productsList.appendChildren(getProducts(this.category, products));
         } else {

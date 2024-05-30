@@ -44,7 +44,8 @@ function getProductCard(
       src: variant.images?.[0].url ?? '',
       alt: 'product-card-img',
     }),
-    h3(`${getProductBrand(variant)} ${getProductName(name)} (${color})`, styles.cardName),
+    h3(`${getProductName(name)} (${color})`, styles.cardName),
+    h3(`${getProductBrand(variant)}`, styles.cardName),
     div({ className: styles.cardDescription, text: getProductDescription(description) }),
     cardPrices,
   );
