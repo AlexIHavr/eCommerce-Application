@@ -17,7 +17,7 @@ export class Slider {
       navigation: {
         nextEl: `.${SWIPER_CLASSES.buttonNext}`,
         prevEl: `.${SWIPER_CLASSES.buttonPrev}`,
-        disabledClass: `swiper-button-disabled ${styles.navigationDisabled}`,
+        disabledClass: `${SWIPER_CLASSES.swiperButtonDisabled} ${styles.navigationDisabled}`,
       },
       pagination: {
         el: `.${SWIPER_CLASSES.pagination}`,
@@ -28,29 +28,24 @@ export class Slider {
   }
 
   public static getSliderWrapper(...sliders: BaseComponent[]): Div {
-    const buttonPrev = div({ className: SWIPER_CLASSES.buttonPrev });
-    buttonPrev.addClass(styles.sliderButtonPrev);
-
-    const buttonNext = div({ className: SWIPER_CLASSES.buttonNext });
-    buttonNext.addClass(styles.sliderButtonNext);
-
-    const pagination = div({ className: SWIPER_CLASSES.pagination });
-    pagination.addClass(styles.pagination);
-
     return div(
       { className: SWIPER_CLASSES.swiper },
       div(
-        { className: 'swiper-wrapper' },
+        { className: SWIPER_CLASSES.swiperWrapper },
         ...sliders.map((slide) => {
-          const slideElem = div({ className: 'swiper-slide' }, slide);
+          const slideElem = div({ className: SWIPER_CLASSES.swiperSlide }, slide);
           slideElem.addClass(styles.slide);
 
           return slideElem;
         }),
       ),
-      pagination,
-      buttonPrev,
-      buttonNext,
+      div({ className: `${SWIPER_CLASSES.pagination} ${styles.pagination}` }),
+      div({
+        className: `${SWIPER_CLASSES.buttonPrev} ${styles.sliderButtonPrev}`,
+      }),
+      div({
+        className: `${SWIPER_CLASSES.buttonNext} ${styles.sliderButtonNext}`,
+      }),
     );
   }
 }

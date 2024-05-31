@@ -224,16 +224,23 @@ export class ProductsFilters extends BaseComponent {
       toValue = Number(toInputValue) * 100;
     }
 
-    this.searchInput.setProps({ value: '' });
+    const brands = this.getFilteredOptions<ProductsBrands>(ProductsAttributes.BRAND);
+    const colors = this.getFilteredOptions<ProductsColors>(ProductsAttributes.COLOR);
 
-    this.parent.setProducts(
-      {
-        price: { from: fromValue, to: toValue },
-        brands: this.getFilteredOptions(ProductsAttributes.BRAND),
-        colors: this.getFilteredOptions(ProductsAttributes.COLOR),
-      },
-      this.sortProps,
-    );
+    if (fromValue || toValue || brands.length || colors.length) {
+      this.searchInput.setProps({ value: '' });
+
+      this.parent.setProducts(
+        {
+          price: { from: fromValue, to: toValue },
+          brands,
+          colors,
+        },
+        this.sortProps,
+      );
+    } else {
+      this.parent.setProducts({}, this.sortProps, this.getSearchText());
+    }
   }
 
   private getFilteredOptions<T extends ProductsBrands | ProductsColors>(
@@ -251,11 +258,15 @@ export class ProductsFilters extends BaseComponent {
   private submitSearch(event?: KeyboardEvent): void {
     if (event && event.key !== 'Enter') return;
 
-    const searchText = this.searchInput.getNode().value;
+    const searchText = this.getSearchText();
 
     if (!searchText) return;
 
     this.filterFieldForm.getNode().reset();
     this.parent.setProducts({}, this.sortProps, searchText);
+  }
+
+  private getSearchText(): string {
+    return this.searchInput.getNode().value;
   }
 }

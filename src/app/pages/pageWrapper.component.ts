@@ -96,23 +96,24 @@ export class PageWrapper extends BaseComponent {
 
     if (isIncorrectCategoryPath(params.category)) {
       this.goToPage(this.notFound);
-    } else {
-      loader.open();
-      apiService
-        .getFilteredProducts({ id: params.id, colors: [params.color] })
-        .then((products) => {
-          const product = products.body.results;
-
-          if (!product.length) {
-            this.goToPage(this.notFound);
-          } else {
-            this.goToPage(new Product(params.category, product[0]));
-            routingService.updateLinks();
-            Slider.init();
-          }
-        })
-        .finally(() => loader.close());
+      return;
     }
+
+    loader.open();
+    apiService
+      .getFilteredProducts({ id: params.id, colors: [params.color] })
+      .then((products) => {
+        const product = products.body.results;
+
+        if (!product.length) {
+          this.goToPage(this.notFound);
+        } else {
+          this.goToPage(new Product(params.category, product[0]));
+          routingService.updateLinks();
+          Slider.init();
+        }
+      })
+      .finally(() => loader.close());
   }
 
   private goToProfile(): void {

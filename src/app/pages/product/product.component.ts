@@ -38,6 +38,8 @@ export class Product extends BaseComponent {
 
     const title = getProductName(name);
     const color = getProductColor(currentVariant);
+    const price = getProductPrice(currentVariant);
+    const discount = getProductDiscount(currentVariant);
 
     super(
       { className: styles.product },
@@ -48,11 +50,7 @@ export class Product extends BaseComponent {
       ]),
     );
 
-    const { images } = currentVariant;
-    const price = getProductPrice(currentVariant);
-    const discount = getProductDiscount(currentVariant);
-
-    this.slider = getSlider(images, styles.slider);
+    this.slider = getSlider(currentVariant.images, styles.slider);
     this.slider.setProps({ onclick: (event) => this.showSliderModal(event) });
 
     if (price && discount) {
@@ -69,7 +67,7 @@ export class Product extends BaseComponent {
       { className: styles.sliderModal, onclick: (event) => this.closeSliderModal(event) },
       div(
         { className: styles.sliderInModalWrapper },
-        getSlider(images),
+        getSlider(currentVariant.images),
         button({
           className: styles.closeSliderModalBtn,
           text: '❌',

@@ -74,11 +74,11 @@ export function getProducts(category: ProductsCategories, products: ProductProje
         productsCards.push(getProductCard(category, masterVariant, id, name, description));
       }
 
-      productsCards.push(
-        ...variants
-          .filter(({ isMatchingVariant }) => isMatchingVariant)
-          .map((variant) => getProductCard(category, variant, id, name, description)),
-      );
+      variants
+        .filter(({ isMatchingVariant }) => isMatchingVariant)
+        .forEach((variant) =>
+          productsCards.push(getProductCard(category, variant, id, name, description)),
+        );
 
       return productsCards;
     },

@@ -98,7 +98,6 @@ export class ApiService {
           markMatchingVariants: true,
           filter: queryFilter,
           sort: querySort,
-          fuzzy: false,
           'text.en': searchText,
         },
       })

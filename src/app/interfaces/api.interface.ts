@@ -23,11 +23,6 @@ export interface NewAddress {
   country: Country;
 }
 
-export interface ProductPriceFilter {
-  from?: number;
-  to?: number;
-}
-
 export interface SortProps {
   value: SortValue;
   direction: SortType;
@@ -36,7 +31,10 @@ export interface SortProps {
 export interface FilterProps {
   id?: string;
   category?: ProductsCategories;
-  price?: ProductPriceFilter;
+  price?: {
+    from?: number;
+    to?: number;
+  };
   brands?: ProductsBrands[];
   colors?: ProductsColors[];
 }
