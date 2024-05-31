@@ -1,9 +1,9 @@
 import { Customer, CustomerUpdateAction } from '@commercetools/platform-sdk';
 import { Button, Div, Form, Table } from 'globalTypes/elements';
-import { PasswordChange } from 'pages/profile/passwordChange/passwordChange.component';
-import { INVALID_DATA_WARNING } from 'pages/profile/profile.consts';
-import { TableRow } from 'pages/profile/tableRow/tableRow.component';
-import { TableRowProps } from 'pages/profile/tableRow/tableRow.types';
+import { PasswordChange } from 'pages/profile/components/passwordChange/passwordChange.component';
+import { TableRow } from 'pages/profile/components/tableRow/tableRow.component';
+import { TableRowProps } from 'pages/profile/components/tableRow/tableRow.types';
+import { DELETE_ADDRESS, INVALID_DATA_WARNING, NEW_ADDRESS } from 'pages/profile/profile.consts';
 import { FormField } from 'pages/shared/components/formField/formField.component';
 import formFieldStyles from 'pages/shared/components/formField/formField.module.scss';
 import sharedStyles from 'pages/shared/styles/common.module.scss';
@@ -27,9 +27,9 @@ import {
   setDefaultShippingAddressAction,
   setFirstNameAction,
   setLastNameAction,
-} from './actions';
+} from './profileInfo.actions';
 import styles from './profileInfo.module.scss';
-import { PasswordProps, ProfileInfoProps } from './profileInfo.types';
+import { AddressType, PasswordProps, ProfileInfoProps } from './profileInfo.types';
 
 export class ProfileInfo extends BaseComponent {
   private readonly profileWrapper: Div;
@@ -52,7 +52,7 @@ export class ProfileInfo extends BaseComponent {
 
   private readonly allCustomerData: Customer;
 
-  private addresses: TableRow[];
+  private readonly addresses: TableRow[];
 
   private newAddressCounter = 0;
 
@@ -208,7 +208,7 @@ export class ProfileInfo extends BaseComponent {
       street: '',
       postalCode: '',
       country: 'BY',
-      addressId: `newAddress${this.newAddressCounter}`,
+      addressId: NEW_ADDRESS + this.newAddressCounter,
     };
     const newAddress = new TableRow(
       emptyProps,
@@ -223,10 +223,14 @@ export class ProfileInfo extends BaseComponent {
 
   private deleteRowAddress(id: string): void {
     const delAddr = this.addresses.find((address) => address.addressId === id);
-    if (delAddr?.addressId.startsWith('newAddress')) {
+
+    if (delAddr?.addressId.startsWith(NEW_ADDRESS)) {
       const delAddrIndex = this.addresses.findIndex((address) => address.addressId === id);
       this.addresses.splice(delAddrIndex, 1);
-    } else if (delAddr) delAddr.addressId = `deleteAddress${delAddr?.addressId}`;
+    } else if (delAddr) {
+      delAddr.addressId = `${DELETE_ADDRESS}${delAddr?.addressId}`;
+    }
+
     delAddr?.destroy();
     this.saveChangesBtn.removeAttribute('disabled');
   }
@@ -251,10 +255,10 @@ export class ProfileInfo extends BaseComponent {
   }
 
   public getActionsForApi(customer?: Customer): CustomerUpdateAction[] {
-    const addrToAdd = this.addresses.filter((addr) => addr.addressId.startsWith('newAddress'));
+    const addrToAdd = this.addresses.filter((addr) => addr.addressId.startsWith(NEW_ADDRESS));
 
     // If there are new addresses to add
-    if (addrToAdd.length > 0 && !customer) {
+    if (addrToAdd.length && !customer) {
       const addressActionsArr: CustomerUpdateAction[] = addrToAdd.map((addr) => {
         const address = addr.getAddress();
         return addAddressAction(address);
@@ -267,36 +271,36 @@ export class ProfileInfo extends BaseComponent {
       const actions: CustomerUpdateAction[] = [];
       const address = addr.getAddress();
 
-      if (addr.addressId.startsWith('deleteAddress')) {
-        const originalAddrId = addr.addressId.replace('deleteAddress', '');
+      if (addr.addressId.startsWith(DELETE_ADDRESS)) {
+        const originalAddrId = addr.addressId.replace(DELETE_ADDRESS, '');
         actions.push(deleteAddressAction(originalAddrId));
-      } else if (!addr.addressId.startsWith('newAddress')) {
+      } else if (!addr.addressId.startsWith(NEW_ADDRESS)) {
         actions.push(changeAddressAction(addr.addressId, address));
       }
 
-      if (!addr.addressId.startsWith('deleteAddress')) {
+      if (!addr.addressId.startsWith(DELETE_ADDRESS)) {
         // If new addresses had been added and IDs were assigned, use data from customer attribute
         // otherwise the data will be taken from the original addresses
         const useId = customer ? customer.addresses[index].id : addr.addressId;
         const dataArr = customer || this.allCustomerData;
 
         actions.push(
-          addr.type === 'billing'
+          addr.type === AddressType.billing
             ? addBillingAddressAction(useId)
             : addShippingAddressAction(useId),
         );
 
-        if (addr.type === 'billing' && dataArr.shippingAddressIds?.includes(useId!)) {
+        if (addr.type === AddressType.billing && dataArr.shippingAddressIds?.includes(useId!)) {
           actions.push(removeShippingAddressAction(useId));
         }
 
-        if (addr.type === 'shipping' && dataArr.billingAddressIds?.includes(useId!)) {
+        if (addr.type === AddressType.shipping && dataArr.billingAddressIds?.includes(useId!)) {
           actions.push(removeBillingAddressAction(useId));
         }
 
         if (addr.isDefaultAddress) {
           actions.push(
-            addr.type === 'billing'
+            addr.type === AddressType.billing
               ? setDefaultBillingAddressAction(useId)
               : setDefaultShippingAddressAction(useId),
           );

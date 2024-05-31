@@ -1,5 +1,6 @@
 import { BaseAddress } from '@commercetools/platform-sdk';
 import { Button, Input, Select } from 'globalTypes/elements';
+import { AddressType } from 'pages/profile/components/profileInfo/profileInfo.types';
 import { FormField } from 'pages/shared/components/formField/formField.component';
 import formFieldStyles from 'pages/shared/components/formField/formField.module.scss';
 import { COUNTRIES_PROPS, SIGNUP_PROPS } from 'pages/signup/signup.consts';
@@ -62,13 +63,13 @@ export class TableRow extends BaseComponent {
     });
 
     this.cityField = new FormField(SIGNUP_PROPS.addressCity, props.city);
-    this.cityField.getNode().removeChild(this.cityField.getNode().firstChild!);
+    this.cityField.removeLabelText();
 
     this.streetField = new FormField(SIGNUP_PROPS.addressStreet, props.street);
-    this.streetField.getNode().removeChild(this.streetField.getNode().firstChild!);
+    this.streetField.removeLabelText();
 
     this.postalCodeField = new FormField(SIGNUP_PROPS.addressPostalCode, props.postalCode);
-    this.postalCodeField.getNode().removeChild(this.postalCodeField.getNode().firstChild!);
+    this.postalCodeField.removeLabelText();
     this.postalCodeField.addListener('input', () => this.isPostalCodeValid());
 
     this.typeField = select(
@@ -132,7 +133,7 @@ export class TableRow extends BaseComponent {
 
   private isAddressTypeValid(): boolean {
     const type = this.typeField.getNode().value;
-    return type === 'billing' || type === 'shipping';
+    return type === AddressType.billing || type === AddressType.shipping;
   }
 
   private typeChangeHandler(): void {

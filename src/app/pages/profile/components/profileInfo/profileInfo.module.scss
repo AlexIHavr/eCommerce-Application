@@ -129,19 +129,19 @@ $table-header-color: #efefef;
     font-size: 0.6em;
     border: 1px solid $table-border-color;
 
-    & td {
+    td {
       padding: 5px;
       word-break: break-word;
       border: 1px solid $table-border-color;
     }
 
-    & label {
+    label {
       max-width: 200px;
       margin-bottom: unset;
       font-size: 1em;
     }
 
-    & tr {
+    tr {
       display: grid;
       grid-template-columns:
         90px 146px minmax(160px, 1fr) minmax(160px, 1fr) minmax(100px, 140px)

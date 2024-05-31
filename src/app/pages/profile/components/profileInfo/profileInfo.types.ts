@@ -1,5 +1,10 @@
 import { CustomerChangePassword } from '@commercetools/platform-sdk';
-import { TableRowProps } from 'pages/profile/tableRow/tableRow.types';
+import { TableRowProps } from 'pages/profile/components/tableRow/tableRow.types';
+
+export enum AddressType {
+  billing = 'billing',
+  shipping = 'shipping',
+}
 
 export type ProfileInfoProps = {
   firstName: string;

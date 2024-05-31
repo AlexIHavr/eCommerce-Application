@@ -1,5 +1,5 @@
 import { Button, Div, Form } from 'globalTypes/elements';
-import { PasswordProps } from 'pages/profile/profileContent/profileInfo.types';
+import { PasswordProps } from 'pages/profile/components/profileInfo/profileInfo.types';
 import { FormField } from 'pages/shared/components/formField/formField.component';
 import formFieldStyles from 'pages/shared/components/formField/formField.module.scss';
 import formStyles from 'pages/shared/styles/formElements.module.scss';

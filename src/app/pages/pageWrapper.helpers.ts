@@ -29,13 +29,16 @@ export function isLogined(): boolean {
   return Boolean(LocalStorageService.getData('token'));
 }
 
-export function successLogin(title: string, customerId: string): void {
+export function saveTokensToLS(): void {
   if (tokenCache.cache.refreshToken) {
     LocalStorageService.saveData('refreshToken', tokenCache.cache.refreshToken);
   }
-
-  LocalStorageService.saveData('customerId', customerId);
   LocalStorageService.saveData('token', tokenCache.cache.token);
+}
+
+export function successLogin(title: string, customerId: string): void {
+  saveTokensToLS();
+  LocalStorageService.saveData('customerId', customerId);
 
   redirectToMain();
   alertModal.showAlert('success', title);

@@ -3,15 +3,17 @@ import {
   CustomerChangePassword,
   CustomerUpdateAction,
 } from '@commercetools/platform-sdk';
+import { Div } from 'globalTypes/elements';
+import { saveTokensToLS } from 'pages/pageWrapper.helpers';
 import { SectionTitle } from 'pages/shared/components/sectionTitle/sectionTitle.component';
 import { apiService } from 'services/api.service';
-import { LocalStorageService } from 'services/localStorage.service';
 import { alertModal } from 'shared/alert/alert.component';
 import { BaseComponent } from 'shared/base/base.component';
 import { loader } from 'shared/loader/loader.component';
 import { div } from 'shared/tags/tags.component';
-import { tokenCache } from 'utils/tokenCache.util';
 
+import { ProfileInfo } from './components/profileInfo/profileInfo.component';
+import { PasswordProps, ProfileInfoProps } from './components/profileInfo/profileInfo.types';
 import {
   FAIL_PASSWORD_UPDATE,
   FAIL_USER_UPDATE,
@@ -19,13 +21,11 @@ import {
   SUCCESS_PASSWORD_UPDATE,
   SUCCESS_USER_UPDATE,
 } from './profile.consts';
-import { makeProfileProps } from './profile.helpers';
+import { getCustomerIdFromLS, makeProfileProps } from './profile.helpers';
 import styles from './profile.module.scss';
-import { ProfileInfo } from './profileContent/profileInfo.component';
-import { PasswordProps, ProfileInfoProps } from './profileContent/profileInfo.types';
 
 export class Profile extends BaseComponent {
-  private readonly contentWrapper = div({});
+  private readonly contentWrapper: Div;
 
   private profileInfo: ProfileInfo | null;
 
@@ -33,6 +33,7 @@ export class Profile extends BaseComponent {
     super({ className: styles.profilePage }, new SectionTitle('Profile'));
     this.profileInfo = null;
 
+    this.contentWrapper = div({});
     this.append(this.contentWrapper);
     this.getCustomer();
   }
@@ -42,7 +43,7 @@ export class Profile extends BaseComponent {
     this.profileInfo = null;
     loader.open();
 
-    const customerId = LocalStorageService.getData('customerId');
+    const customerId = getCustomerIdFromLS();
 
     if (customerId) {
       apiService
@@ -51,7 +52,7 @@ export class Profile extends BaseComponent {
           const props = makeProfileProps(data.body);
           this.render(props, data.body);
         })
-        .catch(() => {
+        .finally(() => {
           loader.close();
         });
     } else {
@@ -68,7 +69,6 @@ export class Profile extends BaseComponent {
       this.passwordUpdateHandler.bind(this),
     );
     this.contentWrapper.append(this.profileInfo);
-    loader.close();
   }
 
   private showNoUserError(): void {
@@ -85,9 +85,10 @@ export class Profile extends BaseComponent {
     let currentActions = actions.slice();
 
     const actionAddAddr = currentActions.filter((obj) => obj.action === 'addAddress');
-    const customerId = LocalStorageService.getData('customerId');
+    const customerId = getCustomerIdFromLS();
 
     if (customerId) {
+      loader.open();
       const customer = await apiService.getCustomerById(customerId);
       version = customer.body.version;
 
@@ -103,6 +104,7 @@ export class Profile extends BaseComponent {
         alertModal.showAlert('success', SUCCESS_USER_UPDATE);
         this.getCustomer();
       } catch (error) {
+        loader.close();
         alertModal.showAlert('error', FAIL_USER_UPDATE);
       }
     } else {
@@ -115,7 +117,7 @@ export class Profile extends BaseComponent {
   private async passwordUpdateHandler(password: PasswordProps): Promise<void> {
     loader.open();
 
-    const customerId = LocalStorageService.getData('customerId');
+    const customerId = getCustomerIdFromLS();
     if (customerId) {
       const data = await apiService.getCustomerById(customerId);
 
@@ -126,23 +128,19 @@ export class Profile extends BaseComponent {
         newPassword: password.newPassword,
       };
 
-      apiService
-        .updateCustomerPassword(body)
-        .then(() =>
-          apiService.updatePasswordFlowCredentials({
-            email: data.body.email,
-            password: password.newPassword,
-          }),
-        )
-        .then(() => {
-          if (tokenCache.cache.refreshToken) {
-            LocalStorageService.saveData('refreshToken', tokenCache.cache.refreshToken);
-          }
-          LocalStorageService.saveData('token', tokenCache.cache.token);
-        })
-        .then(() => alertModal.showAlert('success', SUCCESS_PASSWORD_UPDATE))
-        .catch(() => alertModal.showAlert('error', FAIL_PASSWORD_UPDATE))
-        .finally(() => loader.close());
+      try {
+        await apiService.updateCustomerPassword(body);
+        await apiService.updatePasswordFlowCredentials({
+          email: data.body.email,
+          password: password.newPassword,
+        });
+        saveTokensToLS();
+        alertModal.showAlert('success', SUCCESS_PASSWORD_UPDATE);
+      } catch {
+        alertModal.showAlert('error', FAIL_PASSWORD_UPDATE);
+      } finally {
+        loader.close();
+      }
     } else {
       this.contentWrapper.destroyChildren();
       this.profileInfo = null;

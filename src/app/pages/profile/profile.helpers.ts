@@ -1,6 +1,6 @@
 import { Customer } from '@commercetools/platform-sdk';
-
-import { ProfileInfoProps } from './profileContent/profileInfo.types';
+import { ProfileInfoProps } from 'pages/profile/components/profileInfo/profileInfo.types';
+import { LocalStorageService } from 'services/localStorage.service';
 
 export function makeProfileProps(data: Customer): ProfileInfoProps {
   const customerAddresses = data.addresses.map((addr) => {
@@ -28,4 +28,8 @@ export function makeProfileProps(data: Customer): ProfileInfoProps {
     dateOfBirth: data.dateOfBirth,
     addresses: customerAddresses,
   } as ProfileInfoProps;
+}
+
+export function getCustomerIdFromLS(): string | null {
+  return LocalStorageService.getData('customerId');
 }
