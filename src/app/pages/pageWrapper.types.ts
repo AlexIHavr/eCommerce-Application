@@ -7,6 +7,6 @@ export type CategoryParams = {
 };
 
 export type ProductParams = CategoryParams & {
-  [CatalogParams.ID]: string;
+  [CatalogParams.SLUG]: string;
   [CatalogParams.COLOR]: ProductsColors;
 };

@@ -30,7 +30,7 @@ export class Product extends BaseComponent {
   private readonly slider: Div;
 
   constructor(category: ProductsCategories, product: ProductProjection) {
-    const { id, name, description, masterVariant, variants } = product;
+    const { slug, name, description, masterVariant, variants } = product;
 
     const currentVariant = masterVariant.isMatchingVariant
       ? masterVariant
@@ -46,7 +46,7 @@ export class Product extends BaseComponent {
       new SectionTitle(title),
       new Breadcrumbs([
         getCategoryBreadcrumbPath(category),
-        { name: `${title} (${color})`, path: getProductPath(category, id, color) },
+        { name: `${title} (${color})`, path: getProductPath(category, slug, color) },
       ]),
     );
 
@@ -81,7 +81,7 @@ export class Product extends BaseComponent {
       ...[masterVariant, ...variants].map((variant) => {
         const colorValue = getProductColor(variant);
 
-        const colorLink = getNavLink('', getProductPath(category, id, colorValue), styles.color);
+        const colorLink = getNavLink('', getProductPath(category, slug, colorValue), styles.color);
 
         if (colorValue) {
           colorLink.getNode().style.backgroundColor = colorValue;

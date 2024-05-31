@@ -64,13 +64,13 @@ export class ApiService {
     sortProps?: SortProps,
     searchText?: string,
   ): ApiClientResponse<ProductProjectionPagedSearchResponse> {
-    const { id, category, price, brands, colors } = filterProps;
+    const { slug, category, price, brands, colors } = filterProps;
 
     const queryFilter: string[] = [];
     const querySort: string[] = [];
 
-    if (id) {
-      queryFilter.push(`id: "${id}"`);
+    if (slug) {
+      queryFilter.push(`slug.en: "${slug}"`);
     }
 
     if (category) {
@@ -105,6 +105,7 @@ export class ApiService {
           markMatchingVariants: true,
           filter: queryFilter,
           sort: querySort,
+          fuzzy: false,
           'text.en': searchText,
         },
       })

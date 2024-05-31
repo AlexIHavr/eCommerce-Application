@@ -61,10 +61,10 @@ export function getCategoryPath(category: ProductsCategories): string {
 
 export function getProductPath(
   category: ProductsCategories,
-  id: string,
+  slug: LocalizedString,
   color?: ProductsColors,
 ): string {
-  return `${getCategoryPath(category)}/${id}/${color}`;
+  return `${getCategoryPath(category)}/${slug.en}/${color}`;
 }
 
 export function getCategoryBreadcrumbPath(category: ProductsCategories): BreadcrumbPath {

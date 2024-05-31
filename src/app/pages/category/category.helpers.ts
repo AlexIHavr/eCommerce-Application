@@ -21,7 +21,7 @@ import styles from './category.module.scss';
 function getProductCard(
   category: ProductsCategories,
   variant: ProductVariant,
-  id: string,
+  slug: LocalizedString,
   name: LocalizedString,
   description?: LocalizedString,
 ): Anchor {
@@ -36,7 +36,7 @@ function getProductCard(
 
   const productCard = getNavLink(
     '',
-    getProductPath(category, id, color),
+    getProductPath(category, slug, color),
     styles.productCard,
     img({
       className: styles.cardImg,
@@ -69,15 +69,15 @@ function getProductCard(
 
 export function getProducts(category: ProductsCategories, products: ProductProjection[]): Anchor[] {
   return products.reduce<Anchor[]>(
-    (productsCards, { id, name, description, masterVariant, variants }) => {
+    (productsCards, { slug, name, description, masterVariant, variants }) => {
       if (masterVariant.isMatchingVariant) {
-        productsCards.push(getProductCard(category, masterVariant, id, name, description));
+        productsCards.push(getProductCard(category, masterVariant, slug, name, description));
       }
 
       variants
         .filter(({ isMatchingVariant }) => isMatchingVariant)
         .forEach((variant) =>
-          productsCards.push(getProductCard(category, variant, id, name, description)),
+          productsCards.push(getProductCard(category, variant, slug, name, description)),
         );
 
       return productsCards;

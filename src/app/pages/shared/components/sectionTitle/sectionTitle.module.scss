@@ -9,6 +9,8 @@
 
   margin-bottom: 40px;
 
+  text-align: center;
+
   .sectionImage {
     width: 100%;
     height: auto;
@@ -20,6 +22,7 @@
 
   .sectionTitle {
     position: absolute;
+    padding: 10px;
     font-size: 1.8rem;
 
     @media (width <= $medium-width) {

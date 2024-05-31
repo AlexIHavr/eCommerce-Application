@@ -34,7 +34,7 @@ export interface SortProps {
 }
 
 export interface FilterProps {
-  id?: string;
+  slug?: string;
   category?: ProductsCategories;
   price?: {
     from?: number;

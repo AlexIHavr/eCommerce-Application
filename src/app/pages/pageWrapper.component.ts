@@ -101,7 +101,7 @@ export class PageWrapper extends BaseComponent {
 
     loader.open();
     apiService
-      .getFilteredProducts({ id: params.id, colors: [params.color] })
+      .getFilteredProducts({ slug: params.slug, colors: [params.color] })
       .then((products) => {
         const product = products.body.results;
 
