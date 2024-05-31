@@ -1,241 +1,150 @@
-import { Button, Div, Form, Table } from 'globalTypes/elements';
-import { FormField } from 'pages/shared/components/formField/formField.component';
-import formFieldStyles from 'pages/shared/components/formField/formField.module.scss';
+import {
+  Customer,
+  CustomerChangePassword,
+  CustomerUpdateAction,
+} from '@commercetools/platform-sdk';
+import { Div } from 'globalTypes/elements';
+import { saveTokensToLS } from 'pages/pageWrapper.helpers';
 import { SectionTitle } from 'pages/shared/components/sectionTitle/sectionTitle.component';
-import sharedStyles from 'pages/shared/styles/common.module.scss';
-import formStyles from 'pages/shared/styles/formElements.module.scss';
-import { SIGNUP_PROPS, USER_AVAILABLE_AGE } from 'pages/signup/signup.consts';
+import { apiService } from 'services/api.service';
+import { alertModal } from 'shared/alert/alert.component';
 import { BaseComponent } from 'shared/base/base.component';
-import { button, div, form, table, td, tr } from 'shared/tags/tags.component';
+import { loader } from 'shared/loader/loader.component';
+import { div } from 'shared/tags/tags.component';
 
-import { PasswordChange } from './passwordChange/passwordChange.component';
+import { ProfileInfo } from './components/profileInfo/profileInfo.component';
+import { PasswordProps, ProfileInfoProps } from './components/profileInfo/profileInfo.types';
+import {
+  FAIL_PASSWORD_UPDATE,
+  FAIL_USER_UPDATE,
+  NO_USER_ERROR,
+  SUCCESS_PASSWORD_UPDATE,
+  SUCCESS_USER_UPDATE,
+} from './profile.consts';
+import { getCustomerIdFromLS, makeProfileProps } from './profile.helpers';
 import styles from './profile.module.scss';
-import { TableRow } from './tableRow/tableRow.component';
-import { TableRowProps } from './tableRow/tableRow.types';
-
-const MOCK = {
-  firstname: 'Firstname',
-  lastname: 'Lastname',
-  email: 'dimatest@dimatest.com',
-  birthDate: '2024-05-22',
-};
-
-const ADDRESS_MOCK_1: TableRowProps = {
-  type: 'shipping',
-  city: 'Cityname',
-  street: 'Streetname',
-  postalCode: '222111',
-  country: 'BY',
-  addressId: 'mock_ship_id',
-  defaultBilAddress: '',
-  defaultShipAddress: 'mock_ship_id',
-};
-
-const ADDRESS_MOCK_2: TableRowProps = {
-  type: 'billing',
-  city: 'City',
-  street: 'Street',
-  postalCode: '111222',
-  country: 'UA',
-  addressId: 'mock_bill_id',
-  defaultBilAddress: '',
-  defaultShipAddress: '',
-};
-
-const ADDRESS_MOCK_3: TableRowProps = {
-  type: 'billing',
-  city: 'Asdasdasda',
-  street: 'Asdasd',
-  postalCode: '01234',
-  country: 'UA',
-  addressId: 'test',
-  defaultBilAddress: 'test',
-  defaultShipAddress: '',
-};
 
 export class Profile extends BaseComponent {
-  private readonly profileWrapper: Div;
+  private readonly contentWrapper: Div;
 
-  private readonly userInfoForm: Form;
-
-  private readonly addressTable: Table;
-
-  private readonly firstNameField: FormField;
-
-  private readonly lastNameField: FormField;
-
-  private readonly emailField: FormField;
-
-  private readonly birthField: FormField;
-
-  private readonly saveChangesBtn: Button;
-
-  private addresses: TableRow[];
-
-  private newAddressCounter = 0;
+  private profileInfo: ProfileInfo | null;
 
   constructor() {
     super({ className: styles.profilePage }, new SectionTitle('Profile'));
-    this.addresses = [];
+    this.profileInfo = null;
 
-    this.firstNameField = new FormField(SIGNUP_PROPS.firstName, MOCK.firstname);
-    this.lastNameField = new FormField(SIGNUP_PROPS.lastName, MOCK.lastname);
-    this.emailField = new FormField(SIGNUP_PROPS.email, MOCK.email);
-    this.birthField = new FormField(SIGNUP_PROPS.birthDate, MOCK.birthDate);
-    this.birthField.addListener('input', () => this.birthField.isBirthdayValid(USER_AVAILABLE_AGE));
-
-    this.userInfoForm = form(
-      {
-        className: `${styles.userInfoForm} ${formFieldStyles.error}`,
-        oninput: () => {
-          this.saveChangesBtn.removeAttribute('disabled');
-        },
-      },
-      this.firstNameField,
-      this.lastNameField,
-      this.emailField,
-      this.birthField,
-    );
-
-    this.addressTable = table(
-      { className: styles.table },
-      tr(
-        { className: styles.tableHeader },
-        td({ text: 'Default' }),
-        td({ text: 'Type' }),
-        td({ text: 'Street' }),
-        td({ text: 'City' }),
-        td({ text: 'Code' }),
-        td({ text: 'Country' }),
-        td({ text: 'Delete' }),
-      ),
-    );
-
-    this.profileWrapper = div(
-      { className: `${styles.profileWrapper} ${formFieldStyles.noEdit}` },
-      this.userInfoForm,
-      form(
-        {
-          className: styles.addressWrapper,
-          oninput: () => {
-            this.saveChangesBtn.removeAttribute('disabled');
-          },
-        },
-        div({ className: styles.tableTitle, text: 'Addresses' }),
-        this.addressTable,
-        button({
-          className: `${formStyles.formButton} ${styles.rowAddBtn}`,
-          text: 'Add',
-          type: 'button',
-          onclick: () => this.addNewRowAddress(),
-        }),
-      ),
-    );
-
-    this.saveChangesBtn = button({
-      className: `${formStyles.formButton} ${styles.saveEditBtn}`,
-      text: 'Save changes',
-      type: 'button',
-      disabled: true,
-      onclick: () => console.log('TODO SAVE CHANGES'),
-    });
-
-    this.appendChildren([
-      div(
-        { className: sharedStyles.container },
-        this.profileWrapper,
-        div(
-          { className: styles.btnWrapper },
-          button({
-            className: `${formStyles.formButton} ${styles.passwordEditBtn}`,
-            text: 'Change password',
-            type: 'button',
-            onclick: () => this.append(new PasswordChange()),
-          }),
-          div(
-            { className: styles.saveCancelWrapper },
-            this.saveChangesBtn,
-            button({
-              className: `${formStyles.formButton} ${styles.cancelEditBtn}`,
-              text: 'Cancel',
-              type: 'button',
-              onclick: () => this.stopEdit(),
-            }),
-          ),
-          button({
-            className: `${formStyles.formButton} ${styles.startEditBtn}`,
-            text: 'Edit',
-            type: 'button',
-            onclick: () => this.startEdit(),
-          }),
-        ),
-      ),
-    ]);
-
-    // TEST
-    const address1 = new TableRow(
-      ADDRESS_MOCK_1,
-      this.deleteRowAddress.bind(this),
-      this.defaultHandler.bind(this),
-    );
-    const address2 = new TableRow(
-      ADDRESS_MOCK_2,
-      this.deleteRowAddress.bind(this),
-      this.defaultHandler.bind(this),
-    );
-    const address3 = new TableRow(
-      ADDRESS_MOCK_3,
-      this.deleteRowAddress.bind(this),
-      this.defaultHandler.bind(this),
-    );
-    this.addressTable.appendChildren([address1, address2, address3]);
-    this.addresses.push(address1, address2, address3);
+    this.contentWrapper = div({});
+    this.append(this.contentWrapper);
+    this.getCustomer();
   }
 
-  private startEdit(): void {
-    this.profileWrapper.removeClass(formFieldStyles.noEdit);
-    this.profileWrapper.addClass(styles.edit);
+  private getCustomer(): void {
+    this.contentWrapper.destroyChildren();
+    this.profileInfo = null;
+    loader.open();
+
+    const customerId = getCustomerIdFromLS();
+
+    if (customerId) {
+      apiService
+        .getCustomerById(customerId)
+        .then((data) => {
+          const props = makeProfileProps(data.body);
+          this.render(props, data.body);
+        })
+        .finally(() => {
+          loader.close();
+        });
+    } else {
+      this.showNoUserError();
+    }
   }
 
-  private stopEdit(): void {
-    this.profileWrapper.addClass(formFieldStyles.noEdit);
-    this.profileWrapper.removeClass(styles.edit);
-    this.saveChangesBtn.setAttribute('disabled', '');
-  }
-
-  private addNewRowAddress(): void {
-    const emptyProps: TableRowProps = {
-      type: 'billing',
-      city: '',
-      street: '',
-      postalCode: '',
-      country: 'BY',
-      addressId: `newAddress${this.newAddressCounter}`,
-    };
-    const newAddress = new TableRow(
-      emptyProps,
-      this.deleteRowAddress.bind(this),
-      this.defaultHandler.bind(this),
+  private render(customerProps: ProfileInfoProps, data: Customer): void {
+    this.profileInfo = new ProfileInfo(
+      customerProps,
+      data,
+      this.saveChangesHandler.bind(this),
+      this.cancelEditHandler.bind(this),
+      this.passwordUpdateHandler.bind(this),
     );
-
-    this.addressTable.append(newAddress);
-    this.addresses.push(newAddress);
-    this.newAddressCounter += 1;
+    this.contentWrapper.append(this.profileInfo);
   }
 
-  private deleteRowAddress(id: string): void {
-    const delAddrIndex = this.addresses.findIndex((address) => address.addressId === id);
-    this.addresses[delAddrIndex].destroy();
-    this.addresses.splice(delAddrIndex, 1);
-    this.saveChangesBtn.removeAttribute('disabled');
+  private showNoUserError(): void {
+    this.contentWrapper.append(div({ className: styles.noUserError, text: NO_USER_ERROR }));
+    loader.close();
   }
 
-  private defaultHandler(id: string): void {
-    const defaultAddress = this.addresses.find((address) => address.addressId === id);
-    this.addresses
-      .filter((addr) => addr.type === defaultAddress?.type)
-      .forEach((addr) => {
-        if (addr !== defaultAddress) addr.resetDefault();
-      });
+  private cancelEditHandler(): void {
+    this.getCustomer();
+  }
+
+  private async saveChangesHandler(actions: CustomerUpdateAction[]): Promise<void> {
+    let version;
+    let currentActions = actions.slice();
+
+    const actionAddAddr = currentActions.filter((obj) => obj.action === 'addAddress');
+    const customerId = getCustomerIdFromLS();
+
+    if (customerId) {
+      loader.open();
+      const customer = await apiService.getCustomerById(customerId);
+      version = customer.body.version;
+
+      if (actionAddAddr.length > 0) {
+        const updatedInfo = await apiService.updateCustomerInfo(customerId, version, actionAddAddr);
+        version = updatedInfo.body.version;
+
+        if (this.profileInfo) currentActions = this.profileInfo.getActionsForApi(updatedInfo.body);
+      }
+
+      try {
+        await apiService.updateCustomerInfo(customerId, version, currentActions);
+        alertModal.showAlert('success', SUCCESS_USER_UPDATE);
+        this.getCustomer();
+      } catch (error) {
+        loader.close();
+        alertModal.showAlert('error', FAIL_USER_UPDATE);
+      }
+    } else {
+      this.contentWrapper.destroyChildren();
+      this.profileInfo = null;
+      this.showNoUserError();
+    }
+  }
+
+  private async passwordUpdateHandler(password: PasswordProps): Promise<void> {
+    loader.open();
+
+    const customerId = getCustomerIdFromLS();
+    if (customerId) {
+      const data = await apiService.getCustomerById(customerId);
+
+      const body: CustomerChangePassword = {
+        id: data.body.id,
+        version: data.body.version,
+        currentPassword: password.currentPassword,
+        newPassword: password.newPassword,
+      };
+
+      try {
+        await apiService.updateCustomerPassword(body);
+        await apiService.updatePasswordFlowCredentials({
+          email: data.body.email,
+          password: password.newPassword,
+        });
+        saveTokensToLS();
+        alertModal.showAlert('success', SUCCESS_PASSWORD_UPDATE);
+      } catch {
+        alertModal.showAlert('error', FAIL_PASSWORD_UPDATE);
+      } finally {
+        loader.close();
+      }
+    } else {
+      this.contentWrapper.destroyChildren();
+      this.profileInfo = null;
+      this.showNoUserError();
+    }
   }
 }

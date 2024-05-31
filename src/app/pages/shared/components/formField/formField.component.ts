@@ -80,6 +80,10 @@ export class FormField extends BaseComponent {
     );
   }
 
+  public removeLabelText(): void {
+    this.getNode().removeChild(this.getNode().firstChild!);
+  }
+
   private addPasswordButton(): void {
     this.passwordButton = div({
       className: styles.btnPassVis,
