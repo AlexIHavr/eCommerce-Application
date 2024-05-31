@@ -18,6 +18,14 @@ class CustomTokenCache implements TokenCache {
   public get(): TokenStore {
     return this.cache;
   }
+
+  public resetCache(): void {
+    this.cache = {
+      token: '',
+      expirationTime: 0,
+      refreshToken: undefined,
+    };
+  }
 }
 
 export const tokenCache = new CustomTokenCache();

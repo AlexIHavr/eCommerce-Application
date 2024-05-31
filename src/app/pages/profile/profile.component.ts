@@ -10,6 +10,7 @@ import { alertModal } from 'shared/alert/alert.component';
 import { BaseComponent } from 'shared/base/base.component';
 import { loader } from 'shared/loader/loader.component';
 import { div } from 'shared/tags/tags.component';
+import { tokenCache } from 'utils/tokenCache.util';
 
 import {
   FAIL_PASSWORD_UPDATE,
@@ -127,6 +128,18 @@ export class Profile extends BaseComponent {
 
       apiService
         .updateCustomerPassword(body)
+        .then(() =>
+          apiService.updatePasswordFlowCredentials({
+            email: data.body.email,
+            password: password.newPassword,
+          }),
+        )
+        .then(() => {
+          if (tokenCache.cache.refreshToken) {
+            LocalStorageService.saveData('refreshToken', tokenCache.cache.refreshToken);
+          }
+          LocalStorageService.saveData('token', tokenCache.cache.token);
+        })
         .then(() => alertModal.showAlert('success', SUCCESS_PASSWORD_UPDATE))
         .catch(() => alertModal.showAlert('error', FAIL_PASSWORD_UPDATE))
         .finally(() => loader.close());

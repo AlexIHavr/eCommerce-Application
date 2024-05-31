@@ -76,6 +76,12 @@ export class ApiService {
   public updateCustomerPassword(data: CustomerChangePassword): ApiClientResponse<Customer> {
     return this.apiRoot.customers().password().post({ body: data }).execute();
   }
+
+  public updatePasswordFlowCredentials(credentials: CustomerLoginData): ApiClientResponse<Project> {
+    tokenCache.resetCache();
+    this.apiRoot = clientBuild.getApiRootByPasswordFlow(credentials);
+    return this.apiRoot.get().execute();
+  }
 }
 
 export const apiService = new ApiService();
