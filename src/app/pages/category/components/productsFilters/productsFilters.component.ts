@@ -72,16 +72,16 @@ export class ProductsFilters extends BaseComponent {
       this.getMultipleSelectField(ProductsAttributes.BRAND),
       this.getMultipleSelectField(ProductsAttributes.COLOR),
       button({
-        className: styles.resetFilterBtn,
-        type: 'reset',
-        text: 'Reset',
-        onclick: () => this.resetFilters(),
-      }),
-      button({
         className: styles.submitFilterBtn,
         type: 'submit',
         text: 'Apply',
         onclick: (event) => this.submitFilter(event),
+      }),
+      button({
+        className: styles.resetFilterBtn,
+        type: 'reset',
+        text: 'Reset',
+        onclick: () => this.resetFilters(),
       }),
     );
 
@@ -205,7 +205,7 @@ export class ProductsFilters extends BaseComponent {
   }
 
   private resetFilters(): void {
-    this.parent.setProducts();
+    this.parent.setProducts({});
     this.searchInput.setProps({ value: '' });
 
     clearSortTypeClasses(this.nameSortField);

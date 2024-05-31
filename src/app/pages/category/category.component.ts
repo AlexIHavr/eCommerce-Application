@@ -39,11 +39,11 @@ export class Category extends BaseComponent {
       div({ className: sharedStyles.container }, this.productsList),
     ]);
 
-    this.setProducts();
+    this.setProducts({});
   }
 
   public setProducts(
-    filterProps?: Omit<FilterProps, 'category'>,
+    filterProps: Omit<FilterProps, 'category'>,
     sortProps?: SortProps,
     searchText?: string,
   ): void {
