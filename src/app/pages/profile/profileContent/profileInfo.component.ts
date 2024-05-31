@@ -13,6 +13,21 @@ import { alertModal } from 'shared/alert/alert.component';
 import { BaseComponent } from 'shared/base/base.component';
 import { button, div, form, table, td, tr } from 'shared/tags/tags.component';
 
+import {
+  addAddressAction,
+  addBillingAddressAction,
+  addShippingAddressAction,
+  changeAddressAction,
+  changeBirthAction,
+  changeEmailAction,
+  deleteAddressAction,
+  removeBillingAddressAction,
+  removeShippingAddressAction,
+  setDefaultBillingAddressAction,
+  setDefaultShippingAddressAction,
+  setFirstNameAction,
+  setLastNameAction,
+} from './actions';
 import styles from './profileInfo.module.scss';
 import { PasswordProps, ProfileInfoProps } from './profileInfo.types';
 
@@ -241,17 +256,8 @@ export class ProfileInfo extends BaseComponent {
     // If there are new addresses to add
     if (addrToAdd.length > 0 && !customer) {
       const addressActionsArr: CustomerUpdateAction[] = addrToAdd.map((addr) => {
-        const address = {
-          city: addr.cityField.value,
-          streetName: addr.streetField.value,
-          postalCode: addr.postalCodeField.value,
-          country: addr.countryField.getNode().value,
-        };
-
-        return {
-          action: 'addAddress',
-          address,
-        };
+        const address = addr.getAddress();
+        return addAddressAction(address);
       });
 
       return addressActionsArr;
@@ -259,86 +265,41 @@ export class ProfileInfo extends BaseComponent {
 
     const addressActionsArr: CustomerUpdateAction[][] = this.addresses.map((addr, index) => {
       const actions: CustomerUpdateAction[] = [];
-
-      const address = {
-        city: addr.cityField.value,
-        streetName: addr.streetField.value,
-        postalCode: addr.postalCodeField.value,
-        country: addr.countryField.getNode().value,
-      };
+      const address = addr.getAddress();
 
       if (addr.addressId.startsWith('deleteAddress')) {
         const originalAddrId = addr.addressId.replace('deleteAddress', '');
-        actions.push({
-          action: 'removeAddress',
-          addressId: originalAddrId,
-        });
+        actions.push(deleteAddressAction(originalAddrId));
       } else if (!addr.addressId.startsWith('newAddress')) {
-        actions.push({
-          action: 'changeAddress',
-          addressId: addr.addressId,
-          address,
-        });
+        actions.push(changeAddressAction(addr.addressId, address));
       }
 
       if (!addr.addressId.startsWith('deleteAddress')) {
-        if (customer) {
-          // This block executes if new addresses had been added and IDs were assigned
-          const { id } = customer.addresses[index];
-          actions.push({
-            action: addr.type === 'billing' ? 'addBillingAddressId' : 'addShippingAddressId',
-            addressId: id,
-          });
-          if (addr.type === 'billing' && customer.shippingAddressIds?.includes(id!)) {
-            actions.push({
-              action: 'removeShippingAddressId',
-              addressId: id,
-            });
-          }
-          if (addr.type === 'shipping' && customer.billingAddressIds?.includes(id!)) {
-            actions.push({
-              action: 'removeBillingAddressId',
-              addressId: id,
-            });
-          }
-          if (addr.isDefaultAddress) {
-            actions.push({
-              action:
-                addr.type === 'billing' ? 'setDefaultBillingAddress' : 'setDefaultShippingAddress',
-              addressId: id,
-            });
-          }
-        } else {
-          // This block executes if changes not included adding new addresses and all IDs are known
-          actions.push({
-            action: addr.type === 'billing' ? 'addBillingAddressId' : 'addShippingAddressId',
-            addressId: addr.addressId,
-          });
-          if (
-            addr.type === 'billing' &&
-            this.allCustomerData.shippingAddressIds?.includes(addr.addressId)
-          ) {
-            actions.push({
-              action: 'removeShippingAddressId',
-              addressId: addr.addressId,
-            });
-          }
-          if (
-            addr.type === 'shipping' &&
-            this.allCustomerData.billingAddressIds?.includes(addr.addressId)
-          ) {
-            actions.push({
-              action: 'removeBillingAddressId',
-              addressId: addr.addressId,
-            });
-          }
-          if (addr.isDefaultAddress) {
-            actions.push({
-              action:
-                addr.type === 'billing' ? 'setDefaultBillingAddress' : 'setDefaultShippingAddress',
-              addressId: addr.addressId,
-            });
-          }
+        // If new addresses had been added and IDs were assigned, use data from customer attribute
+        // otherwise the data will be taken from the original addresses
+        const useId = customer ? customer.addresses[index].id : addr.addressId;
+        const dataArr = customer || this.allCustomerData;
+
+        actions.push(
+          addr.type === 'billing'
+            ? addBillingAddressAction(useId)
+            : addShippingAddressAction(useId),
+        );
+
+        if (addr.type === 'billing' && dataArr.shippingAddressIds?.includes(useId!)) {
+          actions.push(removeShippingAddressAction(useId));
+        }
+
+        if (addr.type === 'shipping' && dataArr.billingAddressIds?.includes(useId!)) {
+          actions.push(removeBillingAddressAction(useId));
+        }
+
+        if (addr.isDefaultAddress) {
+          actions.push(
+            addr.type === 'billing'
+              ? setDefaultBillingAddressAction(useId)
+              : setDefaultShippingAddressAction(useId),
+          );
         }
       }
 
@@ -346,31 +307,13 @@ export class ProfileInfo extends BaseComponent {
     });
 
     return [
-      {
-        action: 'setFirstName',
-        firstName: this.firstNameField.value,
-      },
-      {
-        action: 'setLastName',
-        lastName: this.lastNameField.value,
-      },
-      {
-        action: 'changeEmail',
-        email: this.emailField.value,
-      },
-      {
-        action: 'setDateOfBirth',
-        dateOfBirth: this.birthField.value,
-      },
+      setFirstNameAction(this.firstNameField.value),
+      setLastNameAction(this.lastNameField.value),
+      changeEmailAction(this.emailField.value),
+      changeBirthAction(this.birthField.value),
       // Clear default addresses to reassign them later if needed
-      {
-        action: 'setDefaultBillingAddress',
-        addressId: undefined,
-      },
-      {
-        action: 'setDefaultShippingAddress',
-        addressId: undefined,
-      },
+      setDefaultBillingAddressAction(undefined),
+      setDefaultShippingAddressAction(undefined),
       ...addressActionsArr.flat(),
     ];
   }

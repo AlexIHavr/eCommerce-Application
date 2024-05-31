@@ -1,3 +1,4 @@
+import { BaseAddress } from '@commercetools/platform-sdk';
 import { Button, Input, Select } from 'globalTypes/elements';
 import { FormField } from 'pages/shared/components/formField/formField.component';
 import formFieldStyles from 'pages/shared/components/formField/formField.module.scss';
@@ -152,5 +153,14 @@ export class TableRow extends BaseComponent {
       this.cityField.isValid() &&
       this.isPostalCodeValid()
     );
+  }
+
+  public getAddress(): BaseAddress {
+    return {
+      city: this.cityField.value,
+      streetName: this.streetField.value,
+      postalCode: this.postalCodeField.value,
+      country: this.countryField.getNode().value,
+    };
   }
 }
