@@ -1,6 +1,7 @@
 import { BaseAddress } from '@commercetools/platform-sdk';
 import { Button, Input, Select } from 'globalTypes/elements';
 import { AddressType } from 'pages/profile/components/profileInfo/profileInfo.types';
+import { DELETE_ADDRESS } from 'pages/profile/profile.consts';
 import { FormField } from 'pages/shared/components/formField/formField.component';
 import formFieldStyles from 'pages/shared/components/formField/formField.module.scss';
 import { COUNTRIES_PROPS, SIGNUP_PROPS } from 'pages/signup/signup.consts';
@@ -41,7 +42,7 @@ export class TableRow extends BaseComponent {
     this.addressId = props.addressId;
     this.type = props.type;
     this.isDefaultAddress =
-      props.type === 'billing'
+      props.type === AddressType.billing
         ? props.addressId === props.defaultBilAddress
         : props.addressId === props.defaultShipAddress;
 
@@ -148,7 +149,7 @@ export class TableRow extends BaseComponent {
   }
 
   public isRowAddressValid(): boolean {
-    if (this.addressId.startsWith('deleteAddress')) return true;
+    if (this.addressId.startsWith(DELETE_ADDRESS)) return true;
 
     return (
       this.isAddressTypeValid() &&
