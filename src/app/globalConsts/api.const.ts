@@ -38,6 +38,11 @@ export const enum ProductsAttributes {
   COLOR = 'color',
 }
 
+export enum Address {
+  BILLING = 'billing',
+  SHIPPING = 'shipping',
+}
+
 export const PRODUCTS_CATEGORIES_IDS = {
   [ProductsCategories.CHAIRS]: 'aaf8c963-3c9a-4208-bef3-79c2560468f5',
   [ProductsCategories.SOFAS]: '152e9396-eaca-4ee2-bc32-2b37ab2ea8c8',

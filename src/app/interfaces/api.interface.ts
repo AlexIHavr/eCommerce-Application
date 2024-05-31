@@ -1,5 +1,10 @@
-import { ProductsBrands, ProductsCategories, ProductsColors } from 'globalConsts/api.const';
-import { Address, Country, SortType, SortValue } from 'globalTypes/api.type';
+import {
+  Address,
+  ProductsBrands,
+  ProductsCategories,
+  ProductsColors,
+} from 'globalConsts/api.const';
+import { Country, SortType, SortValue } from 'globalTypes/api.type';
 
 export interface CustomerLoginData {
   email: string;

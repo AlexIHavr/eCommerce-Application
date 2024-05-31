@@ -1,4 +1,5 @@
-import { Address, Country } from 'globalTypes/api.type';
+import { Address } from 'globalConsts/api.const';
+import { Country } from 'globalTypes/api.type';
 import { Fieldset, Select } from 'globalTypes/elements';
 import { NewAddress } from 'interfaces/api.interface';
 import { FormField } from 'pages/shared/components/formField/formField.component';
