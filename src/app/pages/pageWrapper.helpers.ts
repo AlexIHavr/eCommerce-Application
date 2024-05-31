@@ -5,7 +5,7 @@ import {
   ProductsCategories,
   ProductsColors,
 } from 'globalConsts/api.const';
-import { Anchor } from 'globalTypes/elements';
+import { Anchor } from 'globalTypes/elements.type';
 import { BreadcrumbPath } from 'pages/shared/components/breadcrumbs/breadcrumbs.interfaces';
 import { LocalStorageService } from 'services/localStorage.service';
 import { routingService } from 'services/routing.service';

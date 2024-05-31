@@ -1,7 +1,7 @@
 import { CustomerUpdateAction, ErrorResponse } from '@commercetools/platform-sdk';
 import { ClientResponse } from '@commercetools/sdk-client-v2';
 import { Address } from 'globalConsts/api.const';
-import { Form, Span } from 'globalTypes/elements';
+import { Form, Span } from 'globalTypes/elements.type';
 import { NewCustomer } from 'interfaces/api.interface';
 import { successLogin } from 'pages/pageWrapper.helpers';
 import { FormField } from 'pages/shared/components/formField/formField.component';

@@ -1,4 +1,4 @@
-import { Span } from 'globalTypes/elements';
+import { Span } from 'globalTypes/elements.type';
 import { BaseComponent } from 'shared/base/base.component';
 import { div, span } from 'shared/tags/tags.component';
 import { capitalizeFirstLetter } from 'utils/strings.util';

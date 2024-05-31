@@ -1,5 +1,5 @@
 import { ProductsCategories } from 'globalConsts/api.const';
-import { Div } from 'globalTypes/elements';
+import { Div } from 'globalTypes/elements.type';
 import { FilterProps, SortProps } from 'interfaces/api.interface';
 import { ProductsFilters } from 'pages/category/components/productsFilters/productsFilters.component';
 import { getCategoryBreadcrumbPath } from 'pages/pageWrapper.helpers';

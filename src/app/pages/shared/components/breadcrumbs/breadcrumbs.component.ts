@@ -1,4 +1,4 @@
-import { Anchor, Div } from 'globalTypes/elements';
+import { Anchor, Div } from 'globalTypes/elements.type';
 import { PagesPaths } from 'pages/pageWrapper.consts';
 import { getNavLink } from 'pages/pageWrapper.helpers';
 import { catalogNavLink } from 'pages/shared/components/navLinks/navLinks.component';

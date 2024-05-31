@@ -1,6 +1,6 @@
 import { BaseAddress } from '@commercetools/platform-sdk';
 import { Address } from 'globalConsts/api.const';
-import { Button, Input, Select } from 'globalTypes/elements';
+import { Button, Input, Select } from 'globalTypes/elements.type';
 import { DELETE_ADDRESS } from 'pages/profile/profile.consts';
 import { FormField } from 'pages/shared/components/formField/formField.component';
 import formFieldStyles from 'pages/shared/components/formField/formField.module.scss';

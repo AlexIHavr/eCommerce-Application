@@ -1,4 +1,4 @@
-import { Form } from 'globalTypes/elements';
+import { Form } from 'globalTypes/elements.type';
 import { successLogin } from 'pages/pageWrapper.helpers';
 import { FormField } from 'pages/shared/components/formField/formField.component';
 import formFieldStyles from 'pages/shared/components/formField/formField.module.scss';

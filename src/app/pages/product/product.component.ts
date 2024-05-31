@@ -1,6 +1,6 @@
 import { ProductProjection } from '@commercetools/platform-sdk';
 import { ProductsCategories } from 'globalConsts/api.const';
-import { Div } from 'globalTypes/elements';
+import { Div } from 'globalTypes/elements.type';
 import {
   getCategoryBreadcrumbPath,
   getDiscountPercent,

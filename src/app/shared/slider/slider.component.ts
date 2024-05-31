@@ -1,6 +1,6 @@
 import 'swiper/css/bundle';
 
-import { Div } from 'globalTypes/elements';
+import { Div } from 'globalTypes/elements.type';
 import { BaseComponent } from 'shared/base/base.component';
 import { div } from 'shared/tags/tags.component';
 import Swiper from 'swiper';

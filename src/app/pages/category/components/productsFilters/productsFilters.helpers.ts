@@ -1,5 +1,5 @@
 import { SortType } from 'globalTypes/api.type';
-import { Div } from 'globalTypes/elements';
+import { Div } from 'globalTypes/elements.type';
 import { div, img } from 'shared/tags/tags.component';
 
 import arrowIcon from './images/arrowIcon.png';

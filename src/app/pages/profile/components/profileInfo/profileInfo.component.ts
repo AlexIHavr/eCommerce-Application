@@ -1,6 +1,6 @@
 import { Customer, CustomerUpdateAction } from '@commercetools/platform-sdk';
 import { Address } from 'globalConsts/api.const';
-import { Button, Div, Form, Table } from 'globalTypes/elements';
+import { Button, Div, Form, Table } from 'globalTypes/elements.type';
 import { PasswordChange } from 'pages/profile/components/passwordChange/passwordChange.component';
 import { TableRow } from 'pages/profile/components/tableRow/tableRow.component';
 import { TableRowProps } from 'pages/profile/components/tableRow/tableRow.types';

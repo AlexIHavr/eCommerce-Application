@@ -1,5 +1,5 @@
 import { Image } from '@commercetools/platform-sdk';
-import { Div } from 'globalTypes/elements';
+import { Div } from 'globalTypes/elements.type';
 import { Slider } from 'shared/slider/slider.component';
 import { div, img } from 'shared/tags/tags.component';
 

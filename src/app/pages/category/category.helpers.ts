@@ -1,6 +1,6 @@
 import { LocalizedString, ProductProjection, ProductVariant } from '@commercetools/platform-sdk';
 import { ProductsCategories } from 'globalConsts/api.const';
-import { Anchor } from 'globalTypes/elements';
+import { Anchor } from 'globalTypes/elements.type';
 import {
   getDiscountPercent,
   getNavLink,

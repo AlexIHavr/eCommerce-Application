@@ -1,7 +1,7 @@
 import { ProductProjection } from '@commercetools/platform-sdk';
 import { ProductsAttributes, ProductsBrands, ProductsColors } from 'globalConsts/api.const';
 import { SortValue } from 'globalTypes/api.type';
-import { Div, Form, Input } from 'globalTypes/elements';
+import { Div, Form, Input } from 'globalTypes/elements.type';
 import { SortProps } from 'interfaces/api.interface';
 import { Category } from 'pages/category/category.component';
 import { getProductBrand, getProductColor } from 'pages/pageWrapper.helpers';

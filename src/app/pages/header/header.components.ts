@@ -1,4 +1,4 @@
-import { Anchor, Div, LI } from 'globalTypes/elements';
+import { Anchor, Div, LI } from 'globalTypes/elements.type';
 import { PagesPaths } from 'pages/pageWrapper.consts';
 import { getNavLink, isLogined } from 'pages/pageWrapper.helpers';
 import {
