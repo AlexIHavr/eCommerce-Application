@@ -1,4 +1,4 @@
-import { CategoriesTypes } from 'pages/pageWrapper.consts';
+import { ProductsCategories } from 'globalConsts/api.const';
 import { Breadcrumbs } from 'pages/shared/components/breadcrumbs/breadcrumbs.component';
 import { SectionTitle } from 'pages/shared/components/sectionTitle/sectionTitle.component';
 import sharedStyles from 'pages/shared/styles/common.module.scss';
@@ -24,9 +24,9 @@ export class Catalog extends BaseComponent {
           h3('Select category'),
           div(
             { className: styles.categories },
-            getCategory(CategoriesTypes.CHAIRS, chairsImage),
-            getCategory(CategoriesTypes.SOFAS, sofasImage),
-            getCategory(CategoriesTypes.BEDS, bedsImage),
+            getCategory(ProductsCategories.CHAIRS, chairsImage),
+            getCategory(ProductsCategories.SOFAS, sofasImage),
+            getCategory(ProductsCategories.BEDS, bedsImage),
           ),
         ),
       ),

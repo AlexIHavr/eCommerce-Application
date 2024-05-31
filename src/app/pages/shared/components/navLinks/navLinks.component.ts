@@ -1,4 +1,4 @@
-import { Anchor } from 'globalTypes/elements';
+import { Anchor } from 'globalTypes/elements.type';
 import { PagesPaths } from 'pages/pageWrapper.consts';
 import { getNavLink } from 'pages/pageWrapper.helpers';
 

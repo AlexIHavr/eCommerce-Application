@@ -1,4 +1,4 @@
-import { Div, Input, Span } from 'globalTypes/elements';
+import { Div, Input, Span } from 'globalTypes/elements.type';
 import { BaseComponent } from 'shared/base/base.component';
 import { div, input, span } from 'shared/tags/tags.component';
 

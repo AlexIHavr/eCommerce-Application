@@ -1,13 +1,10 @@
 @import '/src/styles/global';
 
-$filter-reset-background-color: crimson;
-$filter-apply-background-color: lightseagreen;
-
 .productsFilters {
   $text-font-size: 0.9em;
 
   display: flex;
-  gap: 40px;
+  gap: 20px;
   align-items: center;
   justify-content: center;
 
@@ -46,11 +43,11 @@ $filter-apply-background-color: lightseagreen;
     }
 
     .resetFilterBtn {
-      background-color: $filter-reset-background-color;
+      background-color: var(--discount-label-color);
     }
 
     .submitFilterBtn {
-      background-color: $filter-apply-background-color;
+      background-color: var(--add-to-card-background-color);
     }
 
     @media (width <= $catalog-medium-width) {
@@ -65,18 +62,19 @@ $filter-apply-background-color: lightseagreen;
 
   .filterField {
     $select-width: 100px;
+    $select-brand-width: 140px;
 
     display: flex;
     gap: 10px;
     align-items: center;
 
     .priceInput {
-      width: 100px;
+      width: $select-width;
       padding: 5px 10px;
       font-size: $text-font-size;
 
       &:not(:placeholder-shown) {
-        border-color: $filter-apply-background-color;
+        border-color: var(--add-to-card-background-color);
       }
     }
 
@@ -100,8 +98,12 @@ $filter-apply-background-color: lightseagreen;
       border: 2px solid var(--input-border-color);
       border-radius: 5px;
 
+      &:has(.brand) {
+        width: $select-brand-width;
+      }
+
       &:has(:checked) {
-        border-color: $filter-apply-background-color;
+        border-color: var(--add-to-card-background-color);
       }
 
       .selectIcon {
@@ -127,8 +129,12 @@ $filter-apply-background-color: lightseagreen;
         border: 2px solid var(--input-border-color);
         border-radius: 5px;
 
+        &.brand {
+          width: $select-brand-width;
+        }
+
         &:has(:checked) {
-          border-color: $filter-apply-background-color;
+          border-color: var(--add-to-card-background-color);
         }
 
         .multipleSelectLabel {
@@ -142,7 +148,7 @@ $filter-apply-background-color: lightseagreen;
 
           .selectCheckbox {
             width: 15px;
-            height: 20px;
+            height: 15px;
           }
         }
       }
@@ -180,8 +186,9 @@ $filter-apply-background-color: lightseagreen;
       border: 2px solid var(--input-border-color);
       border-radius: 5px;
 
-      &:has(.asc, .desc) {
-        border-color: $filter-apply-background-color;
+      &.asc,
+      &.desc {
+        border-color: var(--add-to-card-background-color);
       }
 
       .arrowIcon {
@@ -192,12 +199,16 @@ $filter-apply-background-color: lightseagreen;
         display: none;
 
         transition: rotate 0.3s;
+      }
 
-        &.asc {
+      &.asc {
+        .arrowIcon {
           display: block;
         }
+      }
 
-        &.desc {
+      &.desc {
+        .arrowIcon {
           rotate: 360deg;
           display: block;
         }

@@ -36,6 +36,8 @@ $product-card-color: whitesmoke;
 
       .cardImg {
         width: 100%;
+        height: 250px;
+        object-fit: cover;
       }
 
       .cardName,
@@ -50,7 +52,8 @@ $product-card-color: whitesmoke;
 
       .cardPrices {
         display: flex;
-        align-items: center;
+        flex-grow: 1;
+        align-items: flex-end;
         justify-content: space-between;
 
         padding-bottom: 10px;

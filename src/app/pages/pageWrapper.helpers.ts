@@ -1,4 +1,11 @@
-import { Anchor } from 'globalTypes/elements';
+import { LocalizedString, ProductVariant } from '@commercetools/platform-sdk';
+import {
+  ProductsAttributes,
+  ProductsBrands,
+  ProductsCategories,
+  ProductsColors,
+} from 'globalConsts/api.const';
+import { Anchor } from 'globalTypes/elements.type';
 import { BreadcrumbPath } from 'pages/shared/components/breadcrumbs/breadcrumbs.interfaces';
 import { LocalStorageService } from 'services/localStorage.service';
 import { routingService } from 'services/routing.service';
@@ -7,7 +14,7 @@ import { BaseComponent } from 'shared/base/base.component';
 import { a } from 'shared/tags/tags.component';
 import { tokenCache } from 'utils/tokenCache.util';
 
-import { CATEGORIES_TYPES_VALUES, CategoriesTypes, PagesPaths } from './pageWrapper.consts';
+import { PagesPaths, PRODUCTS_CATEGORIES_KEYS } from './pageWrapper.consts';
 
 export function redirectToMain(): void {
   routingService.navigate(PagesPaths.HOME);
@@ -44,24 +51,59 @@ export function successLogin(title: string, customerId: string): void {
   alertModal.showAlert('success', title);
 }
 
-export function isIncorrectCategoryPath(category: CategoriesTypes): boolean {
-  return !CATEGORIES_TYPES_VALUES.includes(category);
+export function isIncorrectCategoryPath(category: ProductsCategories): boolean {
+  return !PRODUCTS_CATEGORIES_KEYS.includes(category);
 }
 
-export function getCategoryPath(category: CategoriesTypes): string {
+export function getCategoryPath(category: ProductsCategories): string {
   return `${PagesPaths.CATALOG}/${category}`;
 }
 
-export function getProductPath(category: CategoriesTypes, id: string): string {
-  return `${getCategoryPath(category)}/${id}`;
+export function getProductPath(
+  category: ProductsCategories,
+  slug: LocalizedString,
+  color?: ProductsColors,
+): string {
+  return `${getCategoryPath(category)}/${slug.en}/${color}`;
 }
 
-export function getCategoryBreadcrumbPath(category: CategoriesTypes): BreadcrumbPath {
+export function getCategoryBreadcrumbPath(category: ProductsCategories): BreadcrumbPath {
   return { name: category, path: getCategoryPath(category) };
 }
 
-export function getDiscountPrice(price: string, discount?: string): string {
-  return discount
-    ? `${Number(price) - (Number(price) * Number(discount)) / 100} BYN`
-    : `${price} BYN`;
+export function getDiscountPercent(price: number, discount: number): string {
+  return String(Math.round((1 - discount / price) * 100));
+}
+
+export function getProductName(name: LocalizedString): string {
+  return name.en;
+}
+
+export function getProductDescription(description?: LocalizedString): string | undefined {
+  return description?.en;
+}
+
+export function getProductPrice(masterVariant: ProductVariant): number | undefined {
+  const priceInCent = masterVariant.prices?.[0].value.centAmount;
+
+  return priceInCent ? priceInCent / 100 : priceInCent;
+}
+
+export function getProductDiscount(masterVariant: ProductVariant): number | undefined {
+  const discountInCent = masterVariant.prices?.[0].discounted?.value.centAmount;
+
+  return discountInCent ? discountInCent / 100 : discountInCent;
+}
+
+export function getPriceWithCurrency(price?: number): string {
+  return new Intl.NumberFormat('en', { style: 'currency', currency: 'USD' }).format(price ?? 0);
+}
+
+export function getProductBrand(masterVariant: ProductVariant): ProductsBrands | undefined {
+  return masterVariant.attributes?.find(({ name }) => name === ProductsAttributes.BRAND)?.value;
+}
+
+export function getProductColor(masterVariant: ProductVariant): ProductsColors | undefined {
+  return masterVariant.attributes?.find(({ name }) => name === ProductsAttributes.COLOR)?.value
+    .label;
 }

@@ -1,4 +1,10 @@
-import { Div, Input } from 'globalTypes/elements';
+import { ProductProjection } from '@commercetools/platform-sdk';
+import { ProductsAttributes, ProductsBrands, ProductsColors } from 'globalConsts/api.const';
+import { SortValue } from 'globalTypes/api.type';
+import { Div, Form, Input } from 'globalTypes/elements.type';
+import { SortProps } from 'interfaces/api.interface';
+import { Category } from 'pages/category/category.component';
+import { getProductBrand, getProductColor } from 'pages/pageWrapper.helpers';
 import { BaseComponent } from 'shared/base/base.component';
 import { button, div, form, img, input, label } from 'shared/tags/tags.component';
 import { capitalizeFirstLetter } from 'utils/strings.util';
@@ -7,24 +13,40 @@ import filterIcon from './images/filterIcon.png';
 import searchIcon from './images/searchIcon.png';
 import selectArrowIcon from './images/selectArrowIcon.png';
 import sortIcon from './images/sortIcon.png';
-import { PRODUCTS_FILTERS_PROPS, PRODUCTS_OPTIONS } from './productsFilters.consts';
-import { getSortField } from './productsFilters.helpers';
+import { PRODUCTS_FILTERS_PROPS } from './productsFilters.consts';
+import { clearSortTypeClasses, getSortField, getSortType } from './productsFilters.helpers';
 import styles from './productsFilters.module.scss';
-import { OptionsType } from './productsFilters.types';
 
 export class ProductsFilters extends BaseComponent {
   private readonly priceFromInput: Input;
 
   private readonly priceToInput: Input;
 
-  private readonly inputOptions: Record<OptionsType, Input[]>;
+  private readonly inputOptions: Record<ProductsAttributes, Input[]>;
+
+  private readonly multipleSelects: Record<ProductsAttributes, Div>;
+
+  private readonly nameSortField: Div;
+
+  private readonly priceSortField: Div;
+
+  private readonly searchInput: Input;
+
+  private readonly filterFieldForm: Form;
 
   private selectFields: Div[] = [];
 
-  constructor() {
+  private sortProps?: SortProps;
+
+  constructor(private readonly parent: Category) {
     super({ className: styles.productsFilters });
 
     this.inputOptions = { color: [], brand: [] };
+
+    this.multipleSelects = {
+      color: div({ className: styles.multipleSelect }),
+      brand: div({ className: styles.multipleSelect }),
+    };
 
     this.priceFromInput = input({
       className: styles.priceInput,
@@ -36,7 +58,7 @@ export class ProductsFilters extends BaseComponent {
       ...PRODUCTS_FILTERS_PROPS.priceTo,
     });
 
-    const filterFieldForm = form(
+    this.filterFieldForm = form(
       { className: styles.filterFieldForm },
       label(
         { className: styles.filterFieldLabel },
@@ -47,33 +69,76 @@ export class ProductsFilters extends BaseComponent {
           this.priceToInput,
         ),
       ),
-      this.getMultipleSelectField('brand'),
-      this.getMultipleSelectField('color'),
-      button({ className: styles.resetFilterBtn, type: 'reset', text: 'Reset' }),
+      this.getMultipleSelectField(ProductsAttributes.BRAND),
+      this.getMultipleSelectField(ProductsAttributes.COLOR),
       button({
         className: styles.submitFilterBtn,
         type: 'submit',
         text: 'Apply',
         onclick: (event) => this.submitFilter(event),
       }),
+      button({
+        className: styles.resetFilterBtn,
+        type: 'reset',
+        text: 'Reset',
+        onclick: () => this.resetFilters(),
+      }),
     );
 
+    this.nameSortField = getSortField('Name');
+    this.priceSortField = getSortField('Price');
+
+    this.setSubmitFilter(this.nameSortField, this.priceSortField, 'name');
+    this.setSubmitFilter(this.priceSortField, this.nameSortField, 'price');
+
+    this.searchInput = input({
+      className: styles.searchInput,
+      ...PRODUCTS_FILTERS_PROPS.search,
+      onkeydown: (event) => this.submitSearch(event),
+    });
+
     this.appendChildren([
-      filterFieldForm,
+      this.filterFieldForm,
       div(
         { className: styles.filterField },
         img({ className: styles.icon, src: sortIcon, alt: 'sort-icon' }),
-        getSortField('Name'),
-        getSortField('Price'),
+        this.nameSortField,
+        this.priceSortField,
       ),
       label(
-        { className: styles.filterField },
+        {
+          className: styles.filterField,
+          onclick: (event) => {
+            if (event.target !== this.searchInput.getNode()) this.submitSearch();
+          },
+        },
         img({ className: styles.icon, src: searchIcon, alt: 'sort-icon' }),
-        input({ className: styles.searchInput, ...PRODUCTS_FILTERS_PROPS.search }),
+        this.searchInput,
       ),
     ]);
 
     window.onclick = (event): void => this.hideSelectFields(event);
+  }
+
+  public setProductsOptions(products: ProductProjection[]): void {
+    products.forEach(({ masterVariant, variants }) => {
+      this.addOptionToMultipleSelect(ProductsAttributes.BRAND, getProductBrand(masterVariant));
+      this.addOptionToMultipleSelect(ProductsAttributes.COLOR, getProductColor(masterVariant));
+
+      variants.forEach((variant) => {
+        this.addOptionToMultipleSelect(ProductsAttributes.COLOR, getProductColor(variant));
+      });
+    });
+  }
+
+  private setSubmitFilter(mainSortField: Div, neighborSortField: Div, sortValue: SortValue): void {
+    mainSortField.addListener('click', () => {
+      const sortType = getSortType(mainSortField, neighborSortField);
+
+      this.sortProps = sortType ? { value: sortValue, direction: sortType } : undefined;
+
+      this.submitFilter();
+    });
   }
 
   private hideSelectFields(event: MouseEvent): void {
@@ -84,21 +149,10 @@ export class ProductsFilters extends BaseComponent {
     });
   }
 
-  private getMultipleSelectField(optionsType: OptionsType): Div {
-    const multipleSelect = div(
-      { className: styles.multipleSelect },
-      ...PRODUCTS_OPTIONS[optionsType].map((option) => {
-        const inputOption = input({
-          className: styles.selectCheckbox,
-          value: option,
-          type: 'checkbox',
-        });
+  private getMultipleSelectField(optionsType: ProductsAttributes): Div {
+    const multipleSelect = this.multipleSelects[optionsType];
 
-        this.inputOptions[optionsType].push(inputOption);
-
-        return label({ className: styles.multipleSelectLabel, text: option }, inputOption);
-      }),
-    );
+    multipleSelect.addClass(styles[optionsType]);
 
     const selectIcon = img({
       className: styles.icon,
@@ -129,9 +183,90 @@ export class ProductsFilters extends BaseComponent {
     return multipleSelectField;
   }
 
-  private submitFilter(event: MouseEvent): void {
-    event.preventDefault();
-    // TODO: SUBMIT FILTER
-    console.log(this);
+  private addOptionToMultipleSelect(optionsType: ProductsAttributes, option?: string): void {
+    if (
+      !option ||
+      this.inputOptions[optionsType].find((inputOption) => inputOption.getNode().value === option)
+    ) {
+      return;
+    }
+
+    const inputOption = input({
+      className: styles.selectCheckbox,
+      value: option,
+      type: 'checkbox',
+    });
+
+    this.inputOptions[optionsType].push(inputOption);
+
+    this.multipleSelects[optionsType].append(
+      label({ className: styles.multipleSelectLabel, text: option }, inputOption),
+    );
+  }
+
+  private resetFilters(): void {
+    this.parent.setProducts({});
+    this.searchInput.setProps({ value: '' });
+
+    clearSortTypeClasses(this.nameSortField);
+    clearSortTypeClasses(this.priceSortField);
+  }
+
+  private submitFilter(event?: MouseEvent): void {
+    event?.preventDefault();
+
+    const toInputValue = this.priceToInput.getNode().value;
+
+    const fromValue = Number(this.priceFromInput.getNode().value) * 100;
+    let toValue: number | undefined;
+
+    if (toInputValue) {
+      toValue = Number(toInputValue) * 100;
+    }
+
+    const brands = this.getFilteredOptions<ProductsBrands>(ProductsAttributes.BRAND);
+    const colors = this.getFilteredOptions<ProductsColors>(ProductsAttributes.COLOR);
+
+    if (fromValue || toValue || brands.length || colors.length) {
+      this.searchInput.setProps({ value: '' });
+
+      this.parent.setProducts(
+        {
+          price: { from: fromValue, to: toValue },
+          brands,
+          colors,
+        },
+        this.sortProps,
+      );
+    } else {
+      this.parent.setProducts({}, this.sortProps, this.getSearchText());
+    }
+  }
+
+  private getFilteredOptions<T extends ProductsBrands | ProductsColors>(
+    optionsType: ProductsAttributes,
+  ): T[] {
+    return this.inputOptions[optionsType].reduce<T[]>((products, inputOption) => {
+      const node = inputOption.getNode();
+
+      if (node.checked) products.push(node.value as T);
+
+      return products;
+    }, []);
+  }
+
+  private submitSearch(event?: KeyboardEvent): void {
+    if (event && event.key !== 'Enter') return;
+
+    const searchText = this.getSearchText();
+
+    if (!searchText) return;
+
+    this.filterFieldForm.getNode().reset();
+    this.parent.setProducts({}, this.sortProps, searchText);
+  }
+
+  private getSearchText(): string {
+    return this.searchInput.getNode().value;
   }
 }

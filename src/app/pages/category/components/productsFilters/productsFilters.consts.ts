@@ -17,8 +17,3 @@ export const PRODUCTS_FILTERS_PROPS = {
     placeholder: 'Search',
   },
 } as const satisfies FormFieldsProps;
-
-export const PRODUCTS_OPTIONS = {
-  brand: ['Brand 1', 'Brand 2', 'Brand 3'],
-  color: ['Black', 'Red', 'Yellow', 'Green', 'White'],
-} as const satisfies Record<string, string[]>;

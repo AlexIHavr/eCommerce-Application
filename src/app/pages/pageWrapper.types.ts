@@ -1,9 +1,12 @@
-import { CatalogParams, CategoriesTypes } from './pageWrapper.consts';
+import { ProductsCategories, ProductsColors } from 'globalConsts/api.const';
+
+import { CatalogParams } from './pageWrapper.consts';
 
 export type CategoryParams = {
-  [CatalogParams.CATEGORY]: CategoriesTypes;
+  [CatalogParams.CATEGORY]: ProductsCategories;
 };
 
 export type ProductParams = CategoryParams & {
-  [CatalogParams.ID]: string;
+  [CatalogParams.SLUG]: string;
+  [CatalogParams.COLOR]: ProductsColors;
 };

@@ -1,4 +1,10 @@
-import { Address, Country } from 'globalTypes/api.type';
+import {
+  Address,
+  ProductsBrands,
+  ProductsCategories,
+  ProductsColors,
+} from 'globalConsts/api.const';
+import { Country, SortType, SortValue } from 'globalTypes/api.type';
 
 export interface CustomerLoginData {
   email: string;
@@ -20,4 +26,20 @@ export interface NewAddress {
   city: string;
   postalCode: string;
   country: Country;
+}
+
+export interface SortProps {
+  value: SortValue;
+  direction: SortType;
+}
+
+export interface FilterProps {
+  slug?: string;
+  category?: ProductsCategories;
+  price?: {
+    from?: number;
+    to?: number;
+  };
+  brands?: ProductsBrands[];
+  colors?: ProductsColors[];
 }

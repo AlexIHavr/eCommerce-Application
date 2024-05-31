@@ -3,7 +3,7 @@ import {
   CustomerChangePassword,
   CustomerUpdateAction,
 } from '@commercetools/platform-sdk';
-import { Div } from 'globalTypes/elements';
+import { Div } from 'globalTypes/elements.type';
 import { saveTokensToLS } from 'pages/pageWrapper.helpers';
 import { SectionTitle } from 'pages/shared/components/sectionTitle/sectionTitle.component';
 import { apiService } from 'services/api.service';

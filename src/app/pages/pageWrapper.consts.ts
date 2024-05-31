@@ -1,14 +1,11 @@
-export enum CategoriesTypes {
-  CHAIRS = 'chairs',
-  SOFAS = 'sofas',
-  BEDS = 'beds',
-}
+import { PRODUCTS_CATEGORIES_IDS } from 'globalConsts/api.const';
 
-export const CATEGORIES_TYPES_VALUES = Object.values(CategoriesTypes);
+export const PRODUCTS_CATEGORIES_KEYS = Object.keys(PRODUCTS_CATEGORIES_IDS);
 
 export const enum CatalogParams {
   CATEGORY = 'category',
-  ID = 'id',
+  SLUG = 'slug',
+  COLOR = 'color',
 }
 
 export const enum PagesPaths {
@@ -20,5 +17,5 @@ export const enum PagesPaths {
   LOGIN = 'login',
   PROFILE = 'profile',
   CATEGORY = `${PagesPaths.CATALOG}/:${CatalogParams.CATEGORY}`,
-  PRODUCT = `${PagesPaths.CATEGORY}/:${CatalogParams.ID}`,
+  PRODUCT = `${PagesPaths.CATEGORY}/:${CatalogParams.SLUG}/:${CatalogParams.COLOR}`,
 }

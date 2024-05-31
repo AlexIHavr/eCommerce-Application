@@ -1,6 +1,7 @@
 import { CustomerUpdateAction, ErrorResponse } from '@commercetools/platform-sdk';
 import { ClientResponse } from '@commercetools/sdk-client-v2';
-import { Form, Span } from 'globalTypes/elements';
+import { Address } from 'globalConsts/api.const';
+import { Form, Span } from 'globalTypes/elements.type';
 import { NewCustomer } from 'interfaces/api.interface';
 import { successLogin } from 'pages/pageWrapper.helpers';
 import { FormField } from 'pages/shared/components/formField/formField.component';
@@ -55,8 +56,8 @@ export class Signup extends BaseComponent {
     this.birthField = new FormField(SIGNUP_PROPS.birthDate);
     this.birthField.addListener('input', () => this.birthField.isBirthdayValid(USER_AVAILABLE_AGE));
 
-    this.bilAddressForm = new AddressForm('billing');
-    this.shipAddressForm = new AddressForm('shipping');
+    this.bilAddressForm = new AddressForm(Address.BILLING);
+    this.shipAddressForm = new AddressForm(Address.SHIPPING);
 
     this.commonTextError = span({ className: styles.commonErrorText, text: 'Error text' });
 

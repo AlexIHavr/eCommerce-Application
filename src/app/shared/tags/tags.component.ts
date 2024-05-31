@@ -18,7 +18,7 @@ import {
   TD,
   TR,
   UL,
-} from 'globalTypes/elements';
+} from 'globalTypes/elements.type';
 import { BaseComponent } from 'shared/base/base.component';
 
 import { TagProps } from './tags.types';

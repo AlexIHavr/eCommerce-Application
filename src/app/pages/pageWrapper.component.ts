@@ -1,18 +1,19 @@
 import { Match } from 'navigo';
 import { About } from 'pages/about/about.component';
 import { Catalog } from 'pages/catalog/catalog.component';
+import { Category } from 'pages/category/category.component';
 import { Footer } from 'pages/footer/footer.component';
 import { Header } from 'pages/header/header.components';
 import { Login } from 'pages/login/login.component';
 import { Main } from 'pages/main/main.component';
 import { NotFound } from 'pages/notFound/notFound.component';
 import { Signup } from 'pages/signup/signup.component';
+import { apiService } from 'services/api.service';
 import { routingService } from 'services/routing.service';
 import { BaseComponent } from 'shared/base/base.component';
+import { loader } from 'shared/loader/loader.component';
 import { Slider } from 'shared/slider/slider.component';
 
-import { Category } from './category/category.component';
-import { PRODUCTS_CARDS_MOCK } from './category/category.consts';
 import { PagesPaths } from './pageWrapper.consts';
 import { isIncorrectCategoryPath, isLogined, redirectToMain } from './pageWrapper.helpers';
 import styles from './pageWrapper.module.scss';
@@ -84,7 +85,7 @@ export class PageWrapper extends BaseComponent {
     if (isIncorrectCategoryPath(params.category)) {
       this.goToPage(this.notFound);
     } else {
-      this.goToPage(new Category(params));
+      this.goToPage(new Category(params.category));
     }
   }
 
@@ -93,15 +94,26 @@ export class PageWrapper extends BaseComponent {
 
     const params = data as ProductParams;
 
-    if (
-      isIncorrectCategoryPath(params.category) ||
-      !PRODUCTS_CARDS_MOCK.find(({ id }) => id === params.id)
-    ) {
+    if (isIncorrectCategoryPath(params.category)) {
       this.goToPage(this.notFound);
-    } else {
-      this.goToPage(new Product(params));
-      Slider.init();
+      return;
     }
+
+    loader.open();
+    apiService
+      .getFilteredProducts({ slug: params.slug, colors: [params.color] })
+      .then((products) => {
+        const product = products.body.results;
+
+        if (!product.length) {
+          this.goToPage(this.notFound);
+        } else {
+          this.goToPage(new Product(params.category, product[0]));
+          routingService.updateLinks();
+          Slider.init();
+        }
+      })
+      .finally(() => loader.close());
   }
 
   private goToProfile(): void {

@@ -1,5 +1,6 @@
 import { Customer, CustomerUpdateAction } from '@commercetools/platform-sdk';
-import { Button, Div, Form, Table } from 'globalTypes/elements';
+import { Address } from 'globalConsts/api.const';
+import { Button, Div, Form, Table } from 'globalTypes/elements.type';
 import { PasswordChange } from 'pages/profile/components/passwordChange/passwordChange.component';
 import { TableRow } from 'pages/profile/components/tableRow/tableRow.component';
 import { TableRowProps } from 'pages/profile/components/tableRow/tableRow.types';
@@ -29,7 +30,7 @@ import {
   setLastNameAction,
 } from './profileInfo.actions';
 import styles from './profileInfo.module.scss';
-import { AddressType, PasswordProps, ProfileInfoProps } from './profileInfo.types';
+import { PasswordProps, ProfileInfoProps } from './profileInfo.types';
 
 export class ProfileInfo extends BaseComponent {
   private readonly profileWrapper: Div;
@@ -203,7 +204,7 @@ export class ProfileInfo extends BaseComponent {
 
   private addNewRowAddress(): void {
     const emptyProps: TableRowProps = {
-      type: 'billing',
+      type: Address.BILLING,
       city: '',
       street: '',
       postalCode: '',
@@ -285,22 +286,22 @@ export class ProfileInfo extends BaseComponent {
         const dataArr = customer || this.allCustomerData;
 
         actions.push(
-          addr.type === AddressType.billing
+          addr.type === Address.BILLING
             ? addBillingAddressAction(useId)
             : addShippingAddressAction(useId),
         );
 
-        if (addr.type === AddressType.billing && dataArr.shippingAddressIds?.includes(useId!)) {
+        if (addr.type === Address.BILLING && dataArr.shippingAddressIds?.includes(useId!)) {
           actions.push(removeShippingAddressAction(useId));
         }
 
-        if (addr.type === AddressType.shipping && dataArr.billingAddressIds?.includes(useId!)) {
+        if (addr.type === Address.SHIPPING && dataArr.billingAddressIds?.includes(useId!)) {
           actions.push(removeBillingAddressAction(useId));
         }
 
         if (addr.isDefaultAddress) {
           actions.push(
-            addr.type === AddressType.billing
+            addr.type === Address.BILLING
               ? setDefaultBillingAddressAction(useId)
               : setDefaultShippingAddressAction(useId),
           );

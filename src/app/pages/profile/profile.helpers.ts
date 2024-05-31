@@ -1,11 +1,12 @@
 import { Customer } from '@commercetools/platform-sdk';
+import { Address } from 'globalConsts/api.const';
 import { ProfileInfoProps } from 'pages/profile/components/profileInfo/profileInfo.types';
 import { LocalStorageService } from 'services/localStorage.service';
 
 export function makeProfileProps(data: Customer): ProfileInfoProps {
   const customerAddresses = data.addresses.map((addr) => {
     const address = {
-      type: data.billingAddressIds?.includes(addr.id!) ? 'billing' : 'shipping',
+      type: data.billingAddressIds?.includes(addr.id!) ? Address.BILLING : Address.SHIPPING,
       city: addr.city,
       street: addr.streetName,
       postalCode: addr.postalCode,

@@ -1,4 +1,4 @@
-import { Button, Div, Form } from 'globalTypes/elements';
+import { Button, Div, Form } from 'globalTypes/elements.type';
 import { PasswordProps } from 'pages/profile/components/profileInfo/profileInfo.types';
 import { FormField } from 'pages/shared/components/formField/formField.component';
 import formFieldStyles from 'pages/shared/components/formField/formField.module.scss';

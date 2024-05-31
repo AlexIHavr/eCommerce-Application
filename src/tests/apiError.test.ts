@@ -1,10 +1,11 @@
+import { Address } from 'globalConsts/api.const';
 import { NewAddress, NewCustomer } from 'interfaces/api.interface';
 import { apiService } from 'services/api.service';
 import { describe, expect, test } from 'vitest';
 
 describe('check signup api errors', () => {
   const billingAddress: NewAddress = {
-    key: 'billing',
+    key: Address.BILLING,
     streetName: 'street',
     city: 'city',
     postalCode: '200000',
@@ -13,7 +14,7 @@ describe('check signup api errors', () => {
 
   const shippingAddress: NewAddress = {
     ...billingAddress,
-    key: 'shipping',
+    key: Address.SHIPPING,
   };
 
   const newCustomer: NewCustomer = {
