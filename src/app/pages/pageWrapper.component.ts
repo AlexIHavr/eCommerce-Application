@@ -9,6 +9,7 @@ import { NotFound } from 'pages/notFound/notFound.component';
 import { Signup } from 'pages/signup/signup.component';
 import { routingService } from 'services/routing.service';
 import { BaseComponent } from 'shared/base/base.component';
+import { Slider } from 'shared/slider/slider.component';
 
 import { Category } from './category/category.component';
 import { PRODUCTS_CARDS_MOCK } from './category/category.consts';
@@ -99,6 +100,7 @@ export class PageWrapper extends BaseComponent {
       this.goToPage(this.notFound);
     } else {
       this.goToPage(new Product(params));
+      Slider.init();
     }
   }
 

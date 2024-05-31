@@ -4,7 +4,7 @@ export interface ProductCardMock {
   id: string;
   name: string;
   description: string;
-  src: string;
+  images: string[];
   price: string;
   brand: string;
   color: string;

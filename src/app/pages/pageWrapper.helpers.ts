@@ -56,3 +56,9 @@ export function getProductPath(category: CategoriesTypes, id: string): string {
 export function getCategoryBreadcrumbPath(category: CategoriesTypes): BreadcrumbPath {
   return { name: category, path: getCategoryPath(category) };
 }
+
+export function getDiscountPrice(price: string, discount?: string): string {
+  return discount
+    ? `${Number(price) - (Number(price) * Number(discount)) / 100} BYN`
+    : `${price} BYN`;
+}

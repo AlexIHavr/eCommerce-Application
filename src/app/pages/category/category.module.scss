@@ -1,6 +1,4 @@
 $product-card-color: whitesmoke;
-$product-card-description-color: grey;
-$discount-label-color: rgb(233 113 113);
 
 .category {
   width: 100%;
@@ -47,7 +45,7 @@ $discount-label-color: rgb(233 113 113);
       }
 
       .cardDescription {
-        color: $product-card-description-color;
+        color: var(--product-card-description-color);
       }
 
       .cardPrices {
@@ -58,31 +56,6 @@ $discount-label-color: rgb(233 113 113);
         padding-bottom: 10px;
 
         font-weight: bold;
-
-        .discountPrice {
-          font-size: 0.9em;
-          font-weight: normal;
-          color: $product-card-description-color;
-          text-decoration: line-through;
-        }
-      }
-
-      .discountLabel {
-        position: absolute;
-        top: 10px;
-        right: 10px;
-
-        display: flex;
-        align-items: center;
-        justify-content: center;
-
-        width: 50px;
-        height: 50px;
-
-        color: var(--background-color);
-
-        background-color: $discount-label-color;
-        border-radius: 50%;
       }
 
       @media (hover: hover) and (pointer: fine) {
