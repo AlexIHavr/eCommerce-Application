@@ -1,7 +1,10 @@
 import {
   ByProjectKeyRequestBuilder,
+  Customer,
+  CustomerChangePassword,
   CustomerPagedQueryResponse,
   CustomerSignInResult,
+  CustomerUpdateAction,
   ProductProjectionPagedSearchResponse,
   Project,
 } from '@commercetools/platform-sdk';
@@ -42,6 +45,10 @@ export class ApiService {
       .customers()
       .get({ queryArgs: { where: `email="${customerEmail}"` } })
       .execute();
+  }
+
+  public getCustomerById(customerId: string): ApiClientResponse<Customer> {
+    return this.apiRoot.customers().withId({ ID: customerId }).get().execute();
   }
 
   public signupCustomer(newCustomer: NewCustomer): ApiClientResponse<CustomerSignInResult> {
@@ -102,6 +109,33 @@ export class ApiService {
         },
       })
       .execute();
+  }
+
+  public updateCustomerInfo(
+    customerId: string,
+    version: number,
+    data: CustomerUpdateAction[],
+  ): ApiClientResponse<Customer> {
+    return this.apiRoot
+      .customers()
+      .withId({ ID: customerId })
+      .post({
+        body: {
+          version,
+          actions: [...data],
+        },
+      })
+      .execute();
+  }
+
+  public updateCustomerPassword(data: CustomerChangePassword): ApiClientResponse<Customer> {
+    return this.apiRoot.customers().password().post({ body: data }).execute();
+  }
+
+  public updatePasswordFlowCredentials(credentials: CustomerLoginData): ApiClientResponse<Project> {
+    tokenCache.resetCache();
+    this.apiRoot = clientBuild.getApiRootByPasswordFlow(credentials);
+    return this.apiRoot.get().execute();
   }
 }
 

@@ -1,4 +1,7 @@
+import { BaseAddress } from '@commercetools/platform-sdk';
 import { Button, Input, Select } from 'globalTypes/elements';
+import { AddressType } from 'pages/profile/components/profileInfo/profileInfo.types';
+import { DELETE_ADDRESS } from 'pages/profile/profile.consts';
 import { FormField } from 'pages/shared/components/formField/formField.component';
 import formFieldStyles from 'pages/shared/components/formField/formField.module.scss';
 import { COUNTRIES_PROPS, SIGNUP_PROPS } from 'pages/signup/signup.consts';
@@ -39,7 +42,7 @@ export class TableRow extends BaseComponent {
     this.addressId = props.addressId;
     this.type = props.type;
     this.isDefaultAddress =
-      props.type === 'billing'
+      props.type === AddressType.billing
         ? props.addressId === props.defaultBilAddress
         : props.addressId === props.defaultShipAddress;
 
@@ -60,14 +63,14 @@ export class TableRow extends BaseComponent {
       },
     });
 
-    this.cityField = new FormField(SIGNUP_PROPS.firstName, props.city);
-    this.cityField.getNode().removeChild(this.cityField.getNode().firstChild!);
+    this.cityField = new FormField(SIGNUP_PROPS.addressCity, props.city);
+    this.cityField.removeLabelText();
 
-    this.streetField = new FormField(SIGNUP_PROPS.firstName, props.street);
-    this.streetField.getNode().removeChild(this.streetField.getNode().firstChild!);
+    this.streetField = new FormField(SIGNUP_PROPS.addressStreet, props.street);
+    this.streetField.removeLabelText();
 
     this.postalCodeField = new FormField(SIGNUP_PROPS.addressPostalCode, props.postalCode);
-    this.postalCodeField.getNode().removeChild(this.postalCodeField.getNode().firstChild!);
+    this.postalCodeField.removeLabelText();
     this.postalCodeField.addListener('input', () => this.isPostalCodeValid());
 
     this.typeField = select(
@@ -129,6 +132,11 @@ export class TableRow extends BaseComponent {
     return Boolean(postalCodeValue.match(`${country.pattern}`));
   }
 
+  private isAddressTypeValid(): boolean {
+    const type = this.typeField.getNode().value;
+    return type === AddressType.billing || type === AddressType.shipping;
+  }
+
   private typeChangeHandler(): void {
     this.type = this.typeField.getNode().value;
     this.resetDefault();
@@ -138,5 +146,25 @@ export class TableRow extends BaseComponent {
     this.defaultField.getNode().checked = false;
     this.isDefaultAddress = false;
     this.removeClass(styles.default);
+  }
+
+  public isRowAddressValid(): boolean {
+    if (this.addressId.startsWith(DELETE_ADDRESS)) return true;
+
+    return (
+      this.isAddressTypeValid() &&
+      this.streetField.isValid() &&
+      this.cityField.isValid() &&
+      this.isPostalCodeValid()
+    );
+  }
+
+  public getAddress(): BaseAddress {
+    return {
+      city: this.cityField.value,
+      streetName: this.streetField.value,
+      postalCode: this.postalCodeField.value,
+      country: this.countryField.getNode().value,
+    };
   }
 }

@@ -1,4 +1,4 @@
-import { ErrorResponse } from '@commercetools/platform-sdk';
+import { CustomerUpdateAction, ErrorResponse } from '@commercetools/platform-sdk';
 import { ClientResponse } from '@commercetools/sdk-client-v2';
 import { Form, Span } from 'globalTypes/elements';
 import { NewCustomer } from 'interfaces/api.interface';
@@ -136,7 +136,23 @@ export class Signup extends BaseComponent {
           password: this.passwordField.value,
         }),
       )
-      .then(() => successLogin('Signed up successfully'))
+      .then((data) => {
+        const { id, version, addresses } = data.body.customer;
+        const actions: CustomerUpdateAction[] = [
+          {
+            action: 'addBillingAddressId',
+            addressId: addresses[0].id,
+          },
+          {
+            action: 'addShippingAddressId',
+            addressId: addresses[1].id,
+          },
+        ];
+
+        apiService
+          .updateCustomerInfo(id, version, actions)
+          .then(() => successLogin('Signed up successfully', id));
+      })
       .catch((res) => this.showSignupErrors(res))
       .finally(() => {
         loader.close();

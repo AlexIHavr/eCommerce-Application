@@ -1,9 +1,11 @@
+import { Address, Country } from 'globalTypes/api.type';
+
 export type TableRowProps = {
-  type: 'billing' | 'shipping';
+  type: Address;
   city: string;
   street: string;
   postalCode: string;
-  country: 'BY' | 'UA';
+  country: Country;
   addressId: string;
   defaultBilAddress?: string;
   defaultShipAddress?: string;

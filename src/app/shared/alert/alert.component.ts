@@ -11,7 +11,12 @@ class Alert extends BaseComponent {
   private readonly infoText: Span;
 
   constructor() {
-    super({ className: styles.alert, onanimationend: () => this.removeClass(styles.show) });
+    super({
+      className: styles.alert,
+      onanimationend: () => {
+        this.getNode().className = styles.alert;
+      },
+    });
 
     this.infoTitle = span({ className: styles.infoTitle });
     this.infoText = span({ className: styles.infoText });
@@ -25,11 +30,15 @@ class Alert extends BaseComponent {
   }
 
   public showAlert(type: 'success' | 'error' | 'attention', text: string): void {
-    this.infoTitle.setText(capitalizeFirstLetter(type));
-    this.infoText.setText(text);
+    if (this.containsClass(styles.show)) this.getNode().className = styles.alert;
 
-    this.addClass(styles[type]);
-    this.addClass(styles.show);
+    setTimeout(() => {
+      this.infoTitle.setText(capitalizeFirstLetter(type));
+      this.infoText.setText(text);
+
+      this.addClass(styles[type]);
+      this.addClass(styles.show);
+    }, 10);
   }
 }
 

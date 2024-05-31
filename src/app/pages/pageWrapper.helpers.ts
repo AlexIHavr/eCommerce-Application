@@ -33,15 +33,19 @@ export function getNavLink(
 }
 
 export function isLogined(): boolean {
-  return Boolean(LocalStorageService.getData('refreshToken'));
+  return Boolean(LocalStorageService.getData('token'));
 }
 
-export function successLogin(title: string): void {
+export function saveTokensToLS(): void {
   if (tokenCache.cache.refreshToken) {
     LocalStorageService.saveData('refreshToken', tokenCache.cache.refreshToken);
   }
-
   LocalStorageService.saveData('token', tokenCache.cache.token);
+}
+
+export function successLogin(title: string, customerId: string): void {
+  saveTokensToLS();
+  LocalStorageService.saveData('customerId', customerId);
 
   redirectToMain();
   alertModal.showAlert('success', title);
