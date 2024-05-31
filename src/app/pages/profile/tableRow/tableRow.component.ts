@@ -147,6 +147,8 @@ export class TableRow extends BaseComponent {
   }
 
   public isRowAddressValid(): boolean {
+    if (this.addressId.startsWith('deleteAddress')) return true;
+
     return (
       this.isAddressTypeValid() &&
       this.streetField.isValid() &&
