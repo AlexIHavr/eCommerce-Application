@@ -1,3 +1,7 @@
+import {
+  setFirstNameAction,
+  setLastNameAction,
+} from 'pages/profile/components/profileInfo/profileInfo.actions';
 import { apiService } from 'services/api.service';
 import { describe, expect, test } from 'vitest';
 
@@ -18,23 +22,45 @@ describe('api success change password', () => {
 
     const currentPassword = 'Qwerty123';
 
-    const loginData = await apiService.loginCustomer({
+    const {
+      body: { customer },
+    } = await apiService.loginCustomer({
       email: 'test@mail.ru',
       password: currentPassword,
     });
 
-    const data = await apiService.getCustomerById(loginData.body.customer.id);
-
     await apiService.updateCustomerPassword({
-      id: data.body.id,
-      version: data.body.version,
+      id: customer.id,
+      version: customer.version,
       currentPassword,
       newPassword: currentPassword,
     });
 
     await apiService.updatePasswordFlowCredentials({
-      email: data.body.email,
+      email: customer.email,
       password: currentPassword,
     });
+  });
+});
+
+describe('api success change customer data', () => {
+  test('check no errors during changing first name and last name', async () => {
+    const newFirstName = 'New first name';
+    const newLastName = 'New last name';
+
+    const {
+      body: { customer },
+    } = await apiService.loginCustomer({
+      email: 'test@mail.ru',
+      password: 'Qwerty123',
+    });
+
+    const data = await apiService.updateCustomerInfo(customer.id, customer.version, [
+      setFirstNameAction(newFirstName),
+      setLastNameAction(newLastName),
+    ]);
+
+    expect(data.body.firstName).toBe(newFirstName);
+    expect(data.body.lastName).toBe(newLastName);
   });
 });
