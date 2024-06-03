@@ -1,5 +1,5 @@
 import {
-  Address,
+  Addresses,
   ProductsBrands,
   ProductsCategories,
   ProductsColors,
@@ -21,7 +21,7 @@ export interface NewCustomer extends CustomerLoginData {
 }
 
 export interface NewAddress {
-  key: Address;
+  key: Addresses;
   streetName: string;
   city: string;
   postalCode: string;

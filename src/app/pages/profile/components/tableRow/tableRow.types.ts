@@ -1,8 +1,8 @@
-import { Address } from 'globalConsts/api.const';
+import { Addresses } from 'globalConsts/api.const';
 import { Country } from 'globalTypes/api.type';
 
 export type TableRowProps = {
-  type: Address;
+  type: Addresses;
   city: string;
   street: string;
   postalCode: string;

@@ -1,12 +1,12 @@
 import { CustomerChangePassword } from '@commercetools/platform-sdk';
-import { Address } from 'globalConsts/api.const';
+import { Addresses } from 'globalConsts/api.const';
 import { NewAddress, NewCustomer } from 'interfaces/api.interface';
 import { apiService } from 'services/api.service';
 import { describe, expect, test } from 'vitest';
 
 describe('check signup api errors', () => {
   const billingAddress: NewAddress = {
-    key: Address.BILLING,
+    key: Addresses.BILLING,
     streetName: 'street',
     city: 'city',
     postalCode: '200000',
@@ -15,7 +15,7 @@ describe('check signup api errors', () => {
 
   const shippingAddress: NewAddress = {
     ...billingAddress,
-    key: Address.SHIPPING,
+    key: Addresses.SHIPPING,
   };
 
   const newCustomer: NewCustomer = {
