@@ -9,12 +9,16 @@ import {
   Heading,
   Image,
   Input,
+  Label,
   LI,
   Option,
   Select,
   Span,
+  Table,
+  TD,
+  TR,
   UL,
-} from 'globalTypes/elements';
+} from 'globalTypes/elements.type';
 import { BaseComponent } from 'shared/base/base.component';
 
 import { TagProps } from './tags.types';
@@ -31,10 +35,8 @@ export const h3 = (text: string, className: string = ''): Heading =>
 export const button = (props: TagProps<HTMLButtonElement>, ...children: BaseComponent[]): Button =>
   new BaseComponent({ ...props, tag: 'button' }, ...children);
 
-export const label = (
-  props: TagProps<HTMLLabelElement>,
-  ...children: BaseComponent[]
-): BaseComponent<HTMLLabelElement> => new BaseComponent({ ...props, tag: 'label' }, ...children);
+export const label = (props: TagProps<HTMLLabelElement>, ...children: BaseComponent[]): Label =>
+  new BaseComponent({ ...props, tag: 'label' }, ...children);
 
 export const input = (props: TagProps<HTMLInputElement>): Input =>
   new BaseComponent({ ...props, tag: 'input' });
@@ -70,3 +72,12 @@ export const ul = (props: TagProps<HTMLUListElement>, ...children: BaseComponent
 
 export const li = (props: TagProps<HTMLLIElement>, ...children: BaseComponent[]): LI =>
   new BaseComponent({ ...props, tag: 'li' }, ...children);
+
+export const table = (props: TagProps<HTMLTableElement>, ...children: BaseComponent[]): Table =>
+  new BaseComponent({ ...props, tag: 'table' }, ...children);
+
+export const tr = (props: TagProps<HTMLTableRowElement>, ...children: BaseComponent[]): TR =>
+  new BaseComponent({ ...props, tag: 'tr' }, ...children);
+
+export const td = (props: TagProps<HTMLTableCellElement>, ...children: BaseComponent[]): TD =>
+  new BaseComponent({ ...props, tag: 'td' }, ...children);

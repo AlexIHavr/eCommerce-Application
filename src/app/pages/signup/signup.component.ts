@@ -1,6 +1,7 @@
-import { ErrorResponse } from '@commercetools/platform-sdk';
+import { CustomerUpdateAction, ErrorResponse } from '@commercetools/platform-sdk';
 import { ClientResponse } from '@commercetools/sdk-client-v2';
-import { Form, Span } from 'globalTypes/elements';
+import { Addresses } from 'globalConsts/api.const';
+import { Form, Span } from 'globalTypes/elements.type';
 import { NewCustomer } from 'interfaces/api.interface';
 import { successLogin } from 'pages/pageWrapper.helpers';
 import { FormField } from 'pages/shared/components/formField/formField.component';
@@ -53,10 +54,10 @@ export class Signup extends BaseComponent {
     this.lastNameField = new FormField(SIGNUP_PROPS.lastName);
 
     this.birthField = new FormField(SIGNUP_PROPS.birthDate);
-    this.birthField.addListener('input', () => this.isBirthdayValid());
+    this.birthField.addListener('input', () => this.birthField.isBirthdayValid(USER_AVAILABLE_AGE));
 
-    this.bilAddressForm = new AddressForm('billing');
-    this.shipAddressForm = new AddressForm('shipping');
+    this.bilAddressForm = new AddressForm(Addresses.BILLING);
+    this.shipAddressForm = new AddressForm(Addresses.SHIPPING);
 
     this.commonTextError = span({ className: styles.commonErrorText, text: 'Error text' });
 
@@ -115,7 +116,7 @@ export class Signup extends BaseComponent {
       this.passwordField.isValid() &&
       this.firstNameField.isValid() &&
       this.lastNameField.isValid() &&
-      this.isBirthdayValid() &&
+      this.birthField.isBirthdayValid(USER_AVAILABLE_AGE) &&
       this.bilAddressForm.isValid() &&
       this.shipAddressForm.isValid()
     ) {
@@ -136,7 +137,23 @@ export class Signup extends BaseComponent {
           password: this.passwordField.value,
         }),
       )
-      .then(() => successLogin('Signed up successfully'))
+      .then((data) => {
+        const { id, version, addresses } = data.body.customer;
+        const actions: CustomerUpdateAction[] = [
+          {
+            action: 'addBillingAddressId',
+            addressId: addresses[0].id,
+          },
+          {
+            action: 'addShippingAddressId',
+            addressId: addresses[1].id,
+          },
+        ];
+
+        apiService
+          .updateCustomerInfo(id, version, actions)
+          .then(() => successLogin('Signed up successfully', id));
+      })
       .catch((res) => this.showSignupErrors(res))
       .finally(() => {
         loader.close();
@@ -196,22 +213,6 @@ export class Signup extends BaseComponent {
     }
 
     return newCustomer;
-  }
-
-  private isBirthdayValid(): boolean {
-    const birth = new Date(this.birthField.value);
-    birth.setHours(0);
-
-    const validationDate = new Date();
-    validationDate.setFullYear(new Date().getFullYear() - USER_AVAILABLE_AGE);
-
-    if (birth < validationDate) {
-      this.birthField.removeAttribute('area-invalid');
-      return true;
-    }
-
-    this.birthField.setAttribute('area-invalid', 'true');
-    return false;
   }
 
   private sameAddressHandler(): void {

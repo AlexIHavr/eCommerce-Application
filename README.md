@@ -26,7 +26,7 @@ The application is powered by CommerceTools 🌐, a leading provider of commerce
 - **Single Page Application (SPA)**
 - **CommerceTools API**
 - **Vite**
-- **Utils: eslint, stylelint, prettier, vitest, navigo**
+- **Utils: eslint, stylelint, prettier, vitest, navigo, swiper**
 
 ## Available scripts
 

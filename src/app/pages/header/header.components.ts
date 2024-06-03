@@ -1,10 +1,11 @@
-import { Anchor, Div, LI } from 'globalTypes/elements';
+import { Anchor, Div, LI } from 'globalTypes/elements.type';
 import { PagesPaths } from 'pages/pageWrapper.consts';
 import { getNavLink, isLogined } from 'pages/pageWrapper.helpers';
 import {
   aboutNavLink,
   catalogNavLink,
   loginNavLink,
+  profileNavLink,
   signupNavLink,
 } from 'pages/shared/components/navLinks/navLinks.component';
 import sharedStyles from 'pages/shared/styles/common.module.scss';
@@ -14,6 +15,7 @@ import { BaseComponent } from 'shared/base/base.component';
 import { div, li, span, ul } from 'shared/tags/tags.component';
 
 import styles from './header.module.scss';
+import { NavLinksEntries } from './header.types';
 
 export class Header extends BaseComponent {
   private readonly nav: BaseComponent;
@@ -22,14 +24,28 @@ export class Header extends BaseComponent {
 
   private readonly navLinks: Partial<Record<PagesPaths, Anchor>>;
 
-  private readonly navLinksEntries: [string, Anchor][];
+  private readonly navLinksEntries: NavLinksEntries;
+
+  private readonly allNavLinksEntries: NavLinksEntries;
 
   private readonly logoutNavLink: Anchor;
 
   private readonly loginNavLinkWrapper: LI;
 
+  private readonly profileLink: Anchor;
+
   constructor() {
     super({ tag: 'header', className: styles.header });
+
+    const homeLink = getNavLink(
+      '',
+      PagesPaths.HOME,
+      styles.titleWrapper,
+      div({ className: styles.logo }),
+      span({ className: styles.title, text: 'Furniture' }),
+    );
+
+    this.profileLink = profileNavLink(styles.profile);
 
     this.navLinks = {
       [PagesPaths.CATALOG]: catalogNavLink(styles.listItem),
@@ -37,7 +53,14 @@ export class Header extends BaseComponent {
       [PagesPaths.SIGNUP]: signupNavLink(styles.listItem),
       [PagesPaths.LOGIN]: loginNavLink(styles.listItem),
     };
+
+    const outerNavLinks = {
+      [PagesPaths.HOME]: homeLink,
+      [PagesPaths.PROFILE]: this.profileLink,
+    };
+
     this.navLinksEntries = Object.entries(this.navLinks);
+    this.allNavLinksEntries = this.navLinksEntries.concat(Object.entries(outerNavLinks));
 
     this.nav = new BaseComponent({ tag: 'nav', className: styles.nav });
 
@@ -58,14 +81,6 @@ export class Header extends BaseComponent {
 
     this.setLinkWrapper();
 
-    const homeLink = getNavLink(
-      '',
-      PagesPaths.HOME,
-      styles.titleWrapper,
-      div({ className: styles.logo }),
-      span({ className: styles.title, text: 'Furniture' }),
-    );
-
     this.appendChildren([
       div(
         { className: sharedStyles.container },
@@ -73,14 +88,14 @@ export class Header extends BaseComponent {
           { className: styles.headerInner },
           homeLink,
           this.nav,
-          div({ className: styles.sidePanel }, this.burger),
+          div({ className: styles.sidePanel }, this.profileLink, this.burger),
         ),
       ),
     ]);
   }
 
   public updateNavLinks(url: string): void {
-    this.navLinksEntries.forEach(([path, navLink]) => {
+    this.allNavLinksEntries.forEach(([path, navLink]) => {
       if (path === url) navLink.addClass(styles.active);
       else {
         navLink.removeClass(styles.active);
@@ -122,10 +137,18 @@ export class Header extends BaseComponent {
     this.loginNavLinkWrapper.append(
       isLogined() ? this.logoutNavLink : this.navLinks[PagesPaths.LOGIN]!,
     );
+
+    if (isLogined()) {
+      this.profileLink.removeClass(styles.hidden);
+    } else {
+      this.profileLink.addClass(styles.hidden);
+    }
   }
 
   private onLogoutEvent(): void {
     LocalStorageService.removeData('refreshToken');
+    LocalStorageService.removeData('token');
+    LocalStorageService.removeData('customerId');
 
     apiService.logout();
 

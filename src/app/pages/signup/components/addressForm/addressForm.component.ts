@@ -1,5 +1,6 @@
-import { Address, Country } from 'globalTypes/api.type';
-import { Fieldset, Select } from 'globalTypes/elements';
+import { Addresses } from 'globalConsts/api.const';
+import { Country } from 'globalTypes/api.type';
+import { Fieldset, Select } from 'globalTypes/elements.type';
 import { NewAddress } from 'interfaces/api.interface';
 import { FormField } from 'pages/shared/components/formField/formField.component';
 import formFieldStyles from 'pages/shared/components/formField/formField.module.scss';
@@ -24,7 +25,7 @@ export class AddressForm extends BaseComponent {
 
   public isDefaultAddress: boolean = false;
 
-  constructor(private readonly address: Address) {
+  constructor(private readonly address: Addresses) {
     super({});
 
     this.streetField = new FormField(SIGNUP_PROPS.addressStreet);

@@ -1,4 +1,4 @@
-import { Anchor } from 'globalTypes/elements';
+import { Anchor } from 'globalTypes/elements.type';
 import { PagesPaths } from 'pages/pageWrapper.consts';
 import { getNavLink } from 'pages/pageWrapper.helpers';
 
@@ -10,3 +10,5 @@ export const catalogNavLink = (className: string): Anchor =>
   getNavLink('Catalog', PagesPaths.CATALOG, className);
 export const aboutNavLink = (className: string): Anchor =>
   getNavLink('About', PagesPaths.ABOUT, className);
+export const profileNavLink = (className: string): Anchor =>
+  getNavLink('', PagesPaths.PROFILE, className);

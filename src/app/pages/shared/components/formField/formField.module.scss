@@ -11,6 +11,10 @@
     pointer-events: none;
   }
 
+  .noEdit & {
+    cursor: default;
+  }
+
   .btnPassVis {
     cursor: pointer;
 
@@ -30,6 +34,26 @@
     &.open {
       background-image: url('./images/eye-open.png');
     }
+
+    .noEdit & {
+      display: none;
+    }
+  }
+}
+
+.textValue {
+  cursor: default;
+
+  display: none;
+
+  margin: 16.7px 10px;
+
+  font-size: 0.9em;
+  font-weight: normal;
+
+  .noEdit & {
+    display: block;
+    word-break: break-word;
   }
 }
 
@@ -56,6 +80,11 @@
     padding-right: 36px;
   }
 
+  .noEdit & {
+    display: none;
+  }
+
+  .mismatchPassword &,
   .apiError &,
   .selfError &:invalid,
   .error &:invalid,
@@ -80,11 +109,35 @@
 
   visibility: hidden;
 
+  .noEdit & {
+    display: none;
+  }
+
+  .mismatchPassword &,
   .apiError &,
   .error .formLabel[area-invalid='true'] &,
   .error .formInput:invalid + &,
   .selfError .formInput:invalid + & {
     visibility: visible;
+  }
+}
+
+.noEdit {
+  select {
+    pointer-events: none;
+    background-color: transparent;
+    border-color: transparent;
+  }
+
+  input[type='checkbox'] {
+    pointer-events: none;
+    filter: grayscale(1);
+  }
+
+  button {
+    pointer-events: none;
+    color: gray;
+    background-color: rgb(200 200 200) !important;
   }
 }
 
