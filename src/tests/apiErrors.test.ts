@@ -1,3 +1,4 @@
+import { CustomerChangePassword } from '@commercetools/platform-sdk';
 import { Address } from 'globalConsts/api.const';
 import { NewAddress, NewCustomer } from 'interfaces/api.interface';
 import { apiService } from 'services/api.service';
@@ -81,5 +82,29 @@ describe('check login api errors', () => {
           'Customer account with the given credentials not found.',
         ),
       );
+  });
+});
+
+describe('change password api errors', () => {
+  test('check invalid current password', async () => {
+    const loginData = await apiService.loginCustomer({
+      email: 'test@mail.ru',
+      password: 'Qwerty123',
+    });
+
+    const data = await apiService.getCustomerById(loginData.body.customer.id);
+
+    const body: CustomerChangePassword = {
+      id: data.body.id,
+      version: data.body.version,
+      currentPassword: 'Qwerty12',
+      newPassword: 'Qwerty1234',
+    };
+
+    try {
+      await apiService.updateCustomerPassword(body);
+    } catch (error) {
+      expect((error as Error).message).toBe('The given current password does not match.');
+    }
   });
 });
