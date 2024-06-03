@@ -13,7 +13,7 @@ import { PRODUCTS_CATEGORIES_IDS } from 'globalConsts/api.const';
 import { ApiClientResponse } from 'globalTypes/api.type';
 import { CustomerLoginData, FilterProps, NewCustomer, SortProps } from 'interfaces/api.interface';
 import { clientBuild } from 'utils/clientBuild.util';
-import { createQueryStringForFilter } from 'utils/strings.util';
+import { getQueryFilterString } from 'utils/strings.util';
 import { tokenCache } from 'utils/tokenCache.util';
 
 export class ApiService {
@@ -84,11 +84,11 @@ export class ApiService {
     }
 
     if (brands && brands.length) {
-      queryFilter.push(`variants.attributes.brand: ${createQueryStringForFilter(brands)}`);
+      queryFilter.push(`variants.attributes.brand: ${getQueryFilterString(brands)}`);
     }
 
     if (colors && colors.length) {
-      queryFilter.push(`variants.attributes.color.label: ${createQueryStringForFilter(colors)}`);
+      queryFilter.push(`variants.attributes.color.label: ${getQueryFilterString(colors)}`);
     }
 
     if (sortProps?.value === 'name') {

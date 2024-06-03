@@ -3,7 +3,7 @@ import { tokenCache } from 'utils/tokenCache.util';
 import { describe, expect, test } from 'vitest';
 
 describe('check existing data for LS', () => {
-  test('check existing tokens ans customerId', () => {
+  test('check existing tokens and customerId', () => {
     expect(tokenCache.cache.refreshToken).toBeUndefined();
 
     return apiService

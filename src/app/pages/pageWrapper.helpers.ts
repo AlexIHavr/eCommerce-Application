@@ -40,6 +40,7 @@ export function saveTokensToLS(): void {
   if (tokenCache.cache.refreshToken) {
     LocalStorageService.saveData('refreshToken', tokenCache.cache.refreshToken);
   }
+
   LocalStorageService.saveData('token', tokenCache.cache.token);
 }
 

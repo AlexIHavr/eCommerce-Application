@@ -5,6 +5,11 @@ import {
 } from '@commercetools/platform-sdk';
 import { Div } from 'globalTypes/elements.type';
 import { saveTokensToLS } from 'pages/pageWrapper.helpers';
+import { ProfileInfo } from 'pages/profile/components/profileInfo/profileInfo.component';
+import {
+  PasswordProps,
+  ProfileInfoProps,
+} from 'pages/profile/components/profileInfo/profileInfo.types';
 import { SectionTitle } from 'pages/shared/components/sectionTitle/sectionTitle.component';
 import { apiService } from 'services/api.service';
 import { alertModal } from 'shared/alert/alert.component';
@@ -12,8 +17,6 @@ import { BaseComponent } from 'shared/base/base.component';
 import { loader } from 'shared/loader/loader.component';
 import { div } from 'shared/tags/tags.component';
 
-import { ProfileInfo } from './components/profileInfo/profileInfo.component';
-import { PasswordProps, ProfileInfoProps } from './components/profileInfo/profileInfo.types';
 import {
   FAIL_PASSWORD_UPDATE,
   FAIL_USER_UPDATE,
