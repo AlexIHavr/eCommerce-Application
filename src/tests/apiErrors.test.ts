@@ -87,16 +87,16 @@ describe('check login api errors', () => {
 
 describe('change password api errors', () => {
   test('check invalid current password', async () => {
-    const loginData = await apiService.loginCustomer({
+    const {
+      body: { customer },
+    } = await apiService.loginCustomer({
       email: 'test@mail.ru',
       password: 'Qwerty123',
     });
 
-    const data = await apiService.getCustomerById(loginData.body.customer.id);
-
     const body: CustomerChangePassword = {
-      id: data.body.id,
-      version: data.body.version,
+      id: customer.id,
+      version: customer.version,
       currentPassword: 'Qwerty12',
       newPassword: 'Qwerty1234',
     };

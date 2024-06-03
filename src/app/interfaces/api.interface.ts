@@ -37,8 +37,8 @@ export interface FilterProps {
   slug?: string;
   category?: ProductsCategories;
   price?: {
-    from?: number;
-    to?: number;
+    from?: number; // in dollars
+    to?: number; // in dollars
   };
   brands?: ProductsBrands[];
   colors?: ProductsColors[];

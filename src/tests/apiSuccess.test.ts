@@ -1,3 +1,11 @@
+import { ProductsBrands, ProductsColors } from 'globalConsts/api.const';
+import {
+  getProductBrand,
+  getProductColor,
+  getProductDiscount,
+  getProductName,
+  getProductPrice,
+} from 'pages/pageWrapper.helpers';
 import {
   setFirstNameAction,
   setLastNameAction,
@@ -62,5 +70,97 @@ describe('api success change customer data', () => {
 
     expect(data.body.firstName).toBe(newFirstName);
     expect(data.body.lastName).toBe(newLastName);
+  });
+});
+
+describe('api success filter products', () => {
+  test('check correct filter price', async () => {
+    const fromPrice = 100;
+    const toPrice = 150;
+
+    const products = await apiService.getFilteredProducts({
+      price: { from: fromPrice, to: toPrice },
+    });
+
+    products.body.results.forEach(({ masterVariant, variants }) => {
+      const price = getProductDiscount(masterVariant) ?? getProductPrice(masterVariant);
+
+      expect(price).toBeGreaterThanOrEqual(fromPrice);
+      expect(price).toBeLessThanOrEqual(toPrice);
+
+      variants
+        .filter(({ isMatchingVariant }) => isMatchingVariant)
+        .forEach((variant) => {
+          const variantPrice = getProductDiscount(variant) ?? getProductPrice(variant);
+
+          expect(variantPrice).toBeGreaterThanOrEqual(fromPrice);
+          expect(variantPrice).toBeLessThanOrEqual(toPrice);
+        });
+    });
+  });
+
+  test('check correct filter brand and color', async () => {
+    const brands = [ProductsBrands.COLAMY, ProductsBrands.MELLOW];
+    const colors = [ProductsColors.GREEN, ProductsColors.BLUE];
+
+    const products = await apiService.getFilteredProducts({ brands, colors });
+
+    products.body.results
+      .filter(({ masterVariant: { isMatchingVariant } }) => isMatchingVariant)
+      .forEach(({ masterVariant, variants }) => {
+        const brand = getProductBrand(masterVariant);
+        const color = getProductColor(masterVariant);
+
+        expect(brands).toContain(brand);
+        expect(colors).toContain(color);
+
+        variants
+          .filter(({ isMatchingVariant }) => isMatchingVariant)
+          .forEach((variant) => {
+            const variantBrand = getProductBrand(variant);
+            const variantColor = getProductColor(variant);
+
+            expect(brands).toContain(variantBrand);
+            expect(colors).toContain(variantColor);
+          });
+      });
+  });
+
+  test('check sort products by name', async () => {
+    const productsData = await apiService.getFilteredProducts({});
+    const products = productsData.body.results;
+
+    const productsWithSortName = await apiService.getFilteredProducts(
+      {},
+      { direction: 'asc', value: 'name' },
+    );
+
+    products.sort((a, b) => getProductName(a.name).localeCompare(getProductName(b.name)));
+
+    products.forEach(({ name }, index) => {
+      expect(productsWithSortName.body.results[index].name).toStrictEqual(name);
+    });
+  });
+
+  test('check sort products by price', async () => {
+    const productsData = await apiService.getFilteredProducts({});
+    const products = productsData.body.results;
+
+    const productsWithSortPrice = await apiService.getFilteredProducts(
+      {},
+      { direction: 'desc', value: 'price' },
+    );
+
+    products.sort(
+      (a, b) =>
+        (getProductDiscount(b.masterVariant) ?? getProductPrice(b.masterVariant) ?? 0) -
+        (getProductDiscount(a.masterVariant) ?? getProductPrice(a.masterVariant) ?? 0),
+    );
+
+    products.forEach(({ masterVariant }, index) => {
+      expect(getProductPrice(productsWithSortPrice.body.results[index].masterVariant)).toEqual(
+        getProductPrice(masterVariant),
+      );
+    });
   });
 });

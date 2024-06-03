@@ -79,7 +79,7 @@ export class ApiService {
 
     if (price) {
       queryFilter.push(
-        `variants.price.centAmount: range (${price.from ?? '*'} to ${price.to ?? '*'})`,
+        `variants.price.centAmount: range (${price.from ? price.from * 100 : 0} to ${price.to ? price.to * 100 : '*'})`,
       );
     }
 

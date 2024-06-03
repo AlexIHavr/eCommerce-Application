@@ -217,11 +217,11 @@ export class ProductsFilters extends BaseComponent {
 
     const toInputValue = this.priceToInput.getNode().value;
 
-    const fromValue = Number(this.priceFromInput.getNode().value) * 100;
+    const fromValue = Number(this.priceFromInput.getNode().value);
     let toValue: number | undefined;
 
     if (toInputValue) {
-      toValue = Number(toInputValue) * 100;
+      toValue = Number(toInputValue);
     }
 
     const brands = this.getFilteredOptions<ProductsBrands>(ProductsAttributes.BRAND);
