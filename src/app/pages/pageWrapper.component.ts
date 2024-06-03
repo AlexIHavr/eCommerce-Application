@@ -7,6 +7,8 @@ import { Header } from 'pages/header/header.components';
 import { Login } from 'pages/login/login.component';
 import { Main } from 'pages/main/main.component';
 import { NotFound } from 'pages/notFound/notFound.component';
+import { Product } from 'pages/product/product.component';
+import { Profile } from 'pages/profile/profile.component';
 import { Signup } from 'pages/signup/signup.component';
 import { apiService } from 'services/api.service';
 import { routingService } from 'services/routing.service';
@@ -18,8 +20,6 @@ import { PagesPaths } from './pageWrapper.consts';
 import { isIncorrectCategoryPath, isLogined, redirectToMain } from './pageWrapper.helpers';
 import styles from './pageWrapper.module.scss';
 import { CategoryParams, ProductParams } from './pageWrapper.types';
-import { Product } from './product/product.component';
-import { Profile } from './profile/profile.component';
 
 export class PageWrapper extends BaseComponent {
   private readonly pageContent;

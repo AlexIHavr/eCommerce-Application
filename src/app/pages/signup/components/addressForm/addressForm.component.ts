@@ -1,4 +1,4 @@
-import { Address } from 'globalConsts/api.const';
+import { Addresses } from 'globalConsts/api.const';
 import { Country } from 'globalTypes/api.type';
 import { Fieldset, Select } from 'globalTypes/elements.type';
 import { NewAddress } from 'interfaces/api.interface';
@@ -25,7 +25,7 @@ export class AddressForm extends BaseComponent {
 
   public isDefaultAddress: boolean = false;
 
-  constructor(private readonly address: Address) {
+  constructor(private readonly address: Addresses) {
     super({});
 
     this.streetField = new FormField(SIGNUP_PROPS.addressStreet);

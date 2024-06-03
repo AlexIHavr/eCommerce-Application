@@ -38,7 +38,7 @@ export const enum ProductsAttributes {
   COLOR = 'color',
 }
 
-export enum Address {
+export enum Addresses {
   BILLING = 'billing',
   SHIPPING = 'shipping',
 }

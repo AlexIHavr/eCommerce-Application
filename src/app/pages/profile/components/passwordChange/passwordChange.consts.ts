@@ -9,6 +9,7 @@ export const PASSWORD_CHANGE_PROPS: FormFieldsProps = {
     maxLength: 30,
     pattern: '(?=^[a-zA-Zа-яА-ЯёЁ\\d]{8,}$)(?=.*\\d)(?=.*[a-zа-яё])(?=.*[A-ZА-ЯЁ]).*',
     required: true,
+    autocomplete: 'current-password',
     errorText:
       '❌ At least one lowercase, uppercase letter and digit. Only letters and digits. Min 8 chars',
   },
@@ -17,6 +18,7 @@ export const PASSWORD_CHANGE_PROPS: FormFieldsProps = {
     type: 'password',
     labelName: 'New password',
     placeholder: 'New password',
+    autocomplete: 'new-password',
     maxLength: 30,
     pattern: '(?=^[a-zA-Zа-яА-ЯёЁ\\d]{8,}$)(?=.*\\d)(?=.*[a-zа-яё])(?=.*[A-ZА-ЯЁ]).*',
     required: true,
@@ -28,6 +30,7 @@ export const PASSWORD_CHANGE_PROPS: FormFieldsProps = {
     type: 'password',
     labelName: 'Confirm password',
     placeholder: 'Confirm password',
+    autocomplete: 'new-password',
     maxLength: 30,
     errorText: '❌ Passwords do NOT match',
   },

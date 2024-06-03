@@ -1,5 +1,5 @@
 import { BaseAddress } from '@commercetools/platform-sdk';
-import { Address } from 'globalConsts/api.const';
+import { Addresses } from 'globalConsts/api.const';
 import { Button, Input, Select } from 'globalTypes/elements.type';
 import { DELETE_ADDRESS } from 'pages/profile/profile.consts';
 import { FormField } from 'pages/shared/components/formField/formField.component';
@@ -42,7 +42,7 @@ export class TableRow extends BaseComponent {
     this.addressId = props.addressId;
     this.type = props.type;
     this.isDefaultAddress =
-      props.type === Address.BILLING
+      props.type === Addresses.BILLING
         ? props.addressId === props.defaultBilAddress
         : props.addressId === props.defaultShipAddress;
 
@@ -79,11 +79,15 @@ export class TableRow extends BaseComponent {
         name: 'type',
         onchange: () => this.typeChangeHandler(),
       },
-      option({ value: Address.BILLING, text: 'Billing', selected: props.type === Address.BILLING }),
       option({
-        value: Address.SHIPPING,
+        value: Addresses.BILLING,
+        text: 'Billing',
+        selected: props.type === Addresses.BILLING,
+      }),
+      option({
+        value: Addresses.SHIPPING,
         text: 'Shipping',
-        selected: props.type === Address.SHIPPING,
+        selected: props.type === Addresses.SHIPPING,
       }),
     );
 
@@ -138,7 +142,7 @@ export class TableRow extends BaseComponent {
 
   private isAddressTypeValid(): boolean {
     const type = this.typeField.getNode().value;
-    return type === Address.BILLING || type === Address.SHIPPING;
+    return type === Addresses.BILLING || type === Addresses.SHIPPING;
   }
 
   private typeChangeHandler(): void {
