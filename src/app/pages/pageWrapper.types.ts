@@ -10,7 +10,3 @@ export type ProductParams = CategoryParams & {
   [CatalogParams.SLUG]: string;
   [CatalogParams.COLOR]: ProductsColors;
 };
-
-export type CategorySearchParams = {
-  page: string;
-} | null;
