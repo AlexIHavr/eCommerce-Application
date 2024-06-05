@@ -14,3 +14,99 @@
 .cart {
   padding: 0;
 }
+
+.cartFooter {
+  // display: none;
+  margin-top: 30px;
+  padding: 20px;
+
+  @media (max-width: $medium-width) {
+    & {
+      padding: 0;
+    }
+  }
+}
+
+.promocodeWrapper {
+  display: flex;
+  gap: 14px;
+  align-items: flex-end;
+  margin-bottom: 20px;
+}
+
+.promocodeLabel {
+  width: 100%;
+  max-width: 400px;
+  font-size: 1.2rem;
+
+  @media (max-width: $medium-width) {
+    & {
+      width: 60%;
+      font-size: 1rem;
+    }
+  }
+}
+
+.promocode {
+  margin-top: 3px;
+  font-size: 1rem;
+
+  &::placeholder {
+    font-size: 0.9rem;
+    letter-spacing: initial;
+  }
+
+  @media (max-width: $medium-width) {
+    & {
+      font-size: 0.8rem;
+    }
+  }
+}
+
+.promocodeButton {
+  max-width: 200px;
+  height: 50px;
+  font-size: 1rem;
+
+  @media (max-width: $medium-width) {
+    & {
+      width: 40%;
+      height: 43px;
+      font-size: 0.8rem;
+    }
+  }
+}
+
+.cartTotal {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 100%;
+  height: 100px;
+  margin: 0 auto;
+
+  font-size: 1.4rem;
+  font-weight: bold;
+
+  background-color: var(--secondary-background-color);
+
+  @media (max-width: $medium-width) {
+    & {
+      font-size: 1.2rem;
+    }
+  }
+}
+
+.clearCartBtn {
+  max-width: 300px;
+  margin: 20px auto 0;
+  font-size: 1rem;
+
+  @media (max-width: $medium-width) {
+    & {
+      max-width: 200px;
+      font-size: 0.8rem;
+    }
+  }
+}
