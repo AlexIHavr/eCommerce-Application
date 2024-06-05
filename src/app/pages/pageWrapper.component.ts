@@ -77,15 +77,15 @@ export class PageWrapper extends BaseComponent {
     }
   }
 
-  private goToCategory({ data }: Match): void {
-    if (!data) return;
+  private goToCategory(match: Match): void {
+    if (!match.data) return;
 
-    const params = data as CategoryParams;
+    const params = match.data as CategoryParams;
 
     if (isIncorrectCategoryPath(params.category)) {
       this.goToPage(this.notFound);
     } else {
-      this.goToPage(new Category(params.category));
+      this.goToPage(new Category(params.category, match.params));
     }
   }
 

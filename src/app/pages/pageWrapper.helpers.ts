@@ -15,6 +15,7 @@ import { a } from 'shared/tags/tags.component';
 import { tokenCache } from 'utils/tokenCache.util';
 
 import { PagesPaths, PRODUCTS_CATEGORIES_KEYS } from './pageWrapper.consts';
+import { CategorySearchParams } from './pageWrapper.types';
 
 export function redirectToMain(): void {
   routingService.navigate(PagesPaths.HOME);
@@ -56,8 +57,17 @@ export function isIncorrectCategoryPath(category: ProductsCategories): boolean {
   return !PRODUCTS_CATEGORIES_KEYS.includes(category);
 }
 
-export function getCategoryPath(category: ProductsCategories): string {
-  return `${PagesPaths.CATALOG}/${category}`;
+export function getCategoryPath(
+  category: ProductsCategories,
+  searchParams?: CategorySearchParams,
+): string {
+  let categoryPath = `${PagesPaths.CATALOG}/${category}`;
+
+  if (searchParams) {
+    categoryPath += `?${new URLSearchParams(searchParams).toString()}`;
+  }
+
+  return categoryPath;
 }
 
 export function getProductPath(
