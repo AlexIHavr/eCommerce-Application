@@ -4,9 +4,11 @@
   --secondary-color: silver;
   --background-color: white;
   --secondary-background-color: oldlace;
+  --disabled-background-color: rgb(200 200 200);
+  --disabled-text-color: grey;
 
   /* Login-Registration forms */
-  --input-border-color: gray;
+  --input-border-color: grey;
   --input-focus-border-color: black;
   --input-error-border-color: crimson;
   --input-disabled-color: rgb(128 128 128 / 25%);
@@ -15,7 +17,7 @@
   --form-link-color: green;
   --form-link-color-hover: crimson;
   --form-checkbox-color: green;
-  --label-checkbox-inactive-color: gray;
+  --label-checkbox-inactive-color: grey;
   --label-checkbox-active-color: black;
 
   /* Profile */
