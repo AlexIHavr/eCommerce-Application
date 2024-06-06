@@ -8,7 +8,7 @@ import { button, div, img, input, label } from 'shared/tags/tags.component';
 import styles from './cart.module.scss';
 import { CartItem } from './components/cartItem/cartItem.component';
 import { CartItemProps } from './components/cartItem/cartItem.types';
-import { ConfirmClear } from './components/confirmClear.ts/confirmClear.component';
+import { ConfirmClear } from './components/confirmClear/confirmClear.component';
 import emptyCartImage from './images/empty-cart.png';
 
 export class Cart extends BaseComponent {
