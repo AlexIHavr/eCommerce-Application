@@ -1,4 +1,5 @@
 import { Div } from 'globalTypes/elements.type';
+import cartStyles from 'pages/cart/cart.module.scss';
 import { BaseComponent } from 'shared/base/base.component';
 import { button, div, img } from 'shared/tags/tags.component';
 
@@ -13,7 +14,7 @@ export class CartItem extends BaseComponent {
   private readonly subtotal: Div;
 
   constructor(props: CartItemProps) {
-    super({ className: styles.cartItem });
+    super({ className: cartStyles.cartItem });
 
     this.priceWrapper = div(
       { className: styles.priceWrapper },

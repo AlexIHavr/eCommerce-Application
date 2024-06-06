@@ -1,12 +1,14 @@
 import { Div } from 'globalTypes/elements.type';
+import { catalogNavLink } from 'pages/shared/components/navLinks/navLinks.component';
 import { SectionTitle } from 'pages/shared/components/sectionTitle/sectionTitle.component';
 import sharedStyles from 'pages/shared/styles/common.module.scss';
 import { BaseComponent } from 'shared/base/base.component';
-import { button, div, input, label } from 'shared/tags/tags.component';
+import { button, div, img, input, label } from 'shared/tags/tags.component';
 
 import styles from './cart.module.scss';
 import { CartItem } from './components/cartItem/cartItem.component';
 import { CartItemProps } from './components/cartItem/cartItem.types';
+import emptyCartImage from './images/empty-cart.png';
 
 export class Cart extends BaseComponent {
   private readonly cart: Div;
@@ -51,6 +53,19 @@ export class Cart extends BaseComponent {
             text: 'Clear Shopping Cart',
             onclick: () => console.log('TODO Clear cart'),
           }),
+        ),
+        div(
+          { className: styles.emptyCart },
+          div({ className: styles.emptyText, text: 'Your Cart Is Currently Empty' }),
+          img({
+            className: styles.emptyImage,
+            src: emptyCartImage,
+            alt: 'empty-cart-image',
+          }),
+          div(
+            { className: styles.emptyText, text: 'Find something in ' },
+            catalogNavLink(styles.emptyLink),
+          ),
         ),
       ),
     ]);

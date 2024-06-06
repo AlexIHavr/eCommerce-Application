@@ -1,32 +1,5 @@
 @import '/src/styles/global';
 
-.cartItem {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-
-  margin-bottom: 20px;
-  padding: 0 14px;
-
-  font-size: 1.2rem;
-
-  border-radius: 10px;
-  box-shadow: 0 0 8px var(--secondary-color);
-
-  @media (max-width: $large-width) {
-    & {
-      font-size: 1rem;
-    }
-  }
-
-  @media (max-width: $medium-width) {
-    & {
-      padding: 0 10px;
-      font-size: 0.8rem;
-    }
-  }
-}
-
 .cartContent {
   display: flex;
   gap: 20px;
