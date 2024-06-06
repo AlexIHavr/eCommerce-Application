@@ -33,9 +33,7 @@
   text-align: center;
 
   @media (max-width: $medium-width) {
-    & {
-      font-size: 1rem;
-    }
+    font-size: 1rem;
   }
 }
 
@@ -61,14 +59,12 @@
   }
 
   @media (max-width: $medium-width) {
-    & {
-      font-size: 0.8rem;
-    }
+    font-size: 0.8rem;
   }
 }
 
 .confirmBtn {
-  background-color: var(--confrim-button-color);
+  background-color: var(--confirm-button-color);
 }
 
 .rejectBtn {

@@ -10,10 +10,8 @@
   padding-bottom: 0;
 
   @media (max-width: $medium-width) {
-    & {
-      gap: 10px;
-      padding: 10px 0 0;
-    }
+    gap: 10px;
+    padding: 10px 0 0;
   }
 }
 
@@ -23,10 +21,8 @@
   border-radius: 10px;
 
   @media (max-width: $medium-width) {
-    & {
-      width: 70px;
-      height: 70px;
-    }
+    width: 70px;
+    height: 70px;
   }
 }
 
@@ -39,15 +35,11 @@
   text-align: center;
 
   @media (max-width: $large-width) {
-    & {
-      min-width: 100px;
-    }
+    min-width: 100px;
   }
 
   @media (max-width: $medium-width) {
-    & {
-      min-width: fit-content;
-    }
+    min-width: fit-content;
   }
 }
 
@@ -73,17 +65,13 @@
   margin-left: 30px;
 
   @media (max-width: $large-width) {
-    & {
-      margin-left: 0;
-    }
+    margin-left: 0;
   }
 
   @media (max-width: $medium-width) {
-    & {
-      width: 100%;
-      min-width: unset;
-      max-width: 60px;
-    }
+    width: 100%;
+    min-width: unset;
+    max-width: 60px;
   }
 }
 
@@ -100,10 +88,8 @@
   border-radius: 15px;
 
   @media (max-width: $medium-width) {
-    & {
-      flex-wrap: wrap;
-      justify-content: center;
-    }
+    flex-wrap: wrap;
+    justify-content: center;
   }
 }
 
@@ -128,10 +114,8 @@
   }
 
   @media (max-width: $medium-width) {
-    & {
-      width: 24px;
-      height: 24px;
-    }
+    width: 24px;
+    height: 24px;
   }
 }
 
@@ -141,11 +125,9 @@
   text-align: center;
 
   @media (max-width: $medium-width) {
-    & {
-      order: -1;
-      width: 100%;
-      text-align: center;
-    }
+    order: -1;
+    width: 100%;
+    text-align: center;
   }
 }
 
@@ -160,9 +142,7 @@
   border-top: 1px solid var(--secondary-color);
 
   @media (max-width: $medium-width) {
-    & {
-      padding: 10px 0;
-    }
+    padding: 10px 0;
   }
 }
 
@@ -171,15 +151,11 @@
   font-size: 0.8em;
 
   @media (max-width: $large-width) {
-    & {
-      font-size: 0.8em;
-    }
+    font-size: 0.8em;
   }
 
   @media (max-width: $medium-width) {
-    & {
-      max-width: 140px;
-    }
+    max-width: 140px;
   }
 }
 
