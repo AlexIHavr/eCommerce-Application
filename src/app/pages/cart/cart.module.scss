@@ -16,7 +16,7 @@
   flex-direction: column;
   gap: 10px;
 
-  margin-bottom: 20px;
+  margin-bottom: 14px;
   padding: 0 14px;
 
   font-size: 1.2rem;
@@ -69,7 +69,7 @@
   @media (max-width: $medium-width) {
     & {
       width: 60%;
-      font-size: 1rem;
+      font-size: 0.8rem;
     }
   }
 }
@@ -79,7 +79,7 @@
   font-size: 1rem;
 
   &::placeholder {
-    font-size: 0.9rem;
+    font-size: 0.9em;
     letter-spacing: initial;
   }
 
@@ -92,14 +92,14 @@
 
 .promocodeButton {
   max-width: 200px;
-  height: 50px;
+  height: 54px;
   font-size: 1rem;
 
   @media (max-width: $medium-width) {
     & {
       width: 40%;
-      height: 43px;
-      font-size: 0.8rem;
+      height: 49px;
+      font-size: 0.65rem;
     }
   }
 }
@@ -120,7 +120,8 @@
 
   @media (max-width: $medium-width) {
     & {
-      font-size: 1.2rem;
+      height: 80px;
+      font-size: 1rem;
     }
   }
 }
@@ -133,7 +134,7 @@
   @media (max-width: $medium-width) {
     & {
       max-width: 200px;
-      font-size: 0.8rem;
+      font-size: 0.65rem;
     }
   }
 }
