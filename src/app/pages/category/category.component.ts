@@ -115,5 +115,7 @@ export class Category extends BaseComponent {
           index >= (page - 1) * PRODUCTS_COUNT_ON_PAGE && index < page * PRODUCTS_COUNT_ON_PAGE,
       ),
     );
+
+    routingService.updateLinks();
   }
 }

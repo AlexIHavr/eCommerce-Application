@@ -5,7 +5,7 @@ import rsSchoolLogo from 'pages/about/images/rsSchoolLogo.jpg';
 import { SectionTitle } from 'pages/shared/components/sectionTitle/sectionTitle.component';
 import sharedStyles from 'pages/shared/styles/common.module.scss';
 import { BaseComponent } from 'shared/base/base.component';
-import { a, div, h3, img } from 'shared/tags/tags.component';
+import { a, div, h3, img, span } from 'shared/tags/tags.component';
 
 import { getMember } from './about.helpers';
 import styles from './about.module.scss';
@@ -22,7 +22,7 @@ export class About extends BaseComponent {
           h3('The Furniture Store Team'),
           div({
             className: styles.teamDescription,
-            text: 'Our team has tried to create the magnificent and spectacular the Furniture Store with an attractive and responsible design. We only used vanilla JavaScript with some reasonable libraries such as eslint, stylelint, prettier, vitest, navigo and swiper. The CommerceTools SDK was used for the backend. Our application is a full-featured store with various furniture products, a shopping cart and the ability to register users. Our team consists of confident, hard-working and experienced guys, who have done their best to perform a excellent job.',
+            text: 'Our team has tried to create the magnificent and spectacular the Furniture Store with an attractive and responsible design. We only used TypeScript with some reasonable libraries such as eslint, stylelint, prettier, vitest, navigo and swiper. The CommerceTools SDK was used for the backend. Our application is a full-featured store with various furniture products, a shopping cart and the ability to register users. Our team consists of confident, hard-working and experienced guys, who have done their best to perform a excellent job.',
           }),
           h3('Team members'),
           div(
@@ -50,8 +50,9 @@ export class About extends BaseComponent {
             ),
           ),
           a(
-            { href: 'https://rs.school/', target: 'blank' },
+            { className: styles.rsSchoolLink, href: 'https://rs.school/', target: 'blank' },
             img({ className: styles.rsSchoolLogo, src: rsSchoolLogo, alt: 'RSSchool-logo' }),
+            span({ text: 'RSSchool' }),
           ),
         ),
       ),
