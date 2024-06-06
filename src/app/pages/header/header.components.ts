@@ -3,6 +3,7 @@ import { PagesPaths } from 'pages/pageWrapper.consts';
 import { getNavLink, isLogined } from 'pages/pageWrapper.helpers';
 import {
   aboutNavLink,
+  cartNavLink,
   catalogNavLink,
   loginNavLink,
   profileNavLink,
@@ -34,6 +35,8 @@ export class Header extends BaseComponent {
 
   private readonly profileLink: Anchor;
 
+  private readonly cartLink: Anchor;
+
   constructor() {
     super({ tag: 'header', className: styles.header });
 
@@ -46,6 +49,7 @@ export class Header extends BaseComponent {
     );
 
     this.profileLink = profileNavLink(styles.profile);
+    this.cartLink = cartNavLink(styles.cart);
 
     this.navLinks = {
       [PagesPaths.CATALOG]: catalogNavLink(styles.listItem),
@@ -57,6 +61,7 @@ export class Header extends BaseComponent {
     const outerNavLinks = {
       [PagesPaths.HOME]: homeLink,
       [PagesPaths.PROFILE]: this.profileLink,
+      [PagesPaths.CART]: this.cartLink,
     };
 
     this.navLinksEntries = Object.entries(this.navLinks);
@@ -88,7 +93,7 @@ export class Header extends BaseComponent {
           { className: styles.headerInner },
           homeLink,
           this.nav,
-          div({ className: styles.sidePanel }, this.profileLink, this.burger),
+          div({ className: styles.sidePanel }, this.profileLink, this.cartLink, this.burger),
         ),
       ),
     ]);
