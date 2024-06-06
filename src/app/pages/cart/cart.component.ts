@@ -8,6 +8,7 @@ import { button, div, img, input, label } from 'shared/tags/tags.component';
 import styles from './cart.module.scss';
 import { CartItem } from './components/cartItem/cartItem.component';
 import { CartItemProps } from './components/cartItem/cartItem.types';
+import { ConfirmClear } from './components/confirmClear.ts/confirmClear.component';
 import emptyCartImage from './images/empty-cart.png';
 
 export class Cart extends BaseComponent {
@@ -37,7 +38,7 @@ export class Cart extends BaseComponent {
       }),
     );
 
-    this.cartTotal = div({ className: styles.cartTotal, text: 'Subtotal: $10 000.00' });
+    this.cartTotal = div({ className: styles.cartTotal, text: 'Cart Total: $10 000.00' });
 
     this.appendChildren([
       new SectionTitle('Cart'),
@@ -51,7 +52,7 @@ export class Cart extends BaseComponent {
           button({
             className: styles.clearCartBtn,
             text: 'Clear Shopping Cart',
-            onclick: () => console.log('TODO Clear cart'),
+            onclick: () => this.append(new ConfirmClear()),
           }),
         ),
         div(
@@ -75,7 +76,7 @@ export class Cart extends BaseComponent {
 
   private renderCartItems(): void {
     const item1: CartItemProps = {
-      imageSrc: '',
+      imageSrc: emptyCartImage,
       name: 'Upholstered 360° Swivel Accent Chair (brown)',
       originPrice: '$1 449.50',
       promoPrice: '$65.00',
@@ -83,7 +84,7 @@ export class Cart extends BaseComponent {
     };
 
     const item2: CartItemProps = {
-      imageSrc: '',
+      imageSrc: emptyCartImage,
       name: 'Lyon Sofa (orange)',
       originPrice: '$126.99',
       promoPrice: '$100.00',
