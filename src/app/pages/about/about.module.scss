@@ -1,3 +1,97 @@
+@import '/src/styles/global';
+
 .about {
   width: 100%;
+
+  .teamDetails {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
+
+    .teamDescription {
+      text-align: justify;
+      text-indent: 30px;
+
+      &::first-letter {
+        font-size: 1.5em;
+        line-height: 100%;
+      }
+    }
+
+    .members {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+
+      .member {
+        display: flex;
+        gap: 40px;
+        align-items: center;
+
+        .memberName,
+        .memberRole {
+          font-weight: bold;
+        }
+
+        .memberName {
+          min-width: 100px;
+        }
+
+        .memberRole {
+          min-width: 115px;
+        }
+
+        .memberDescription {
+          text-align: justify;
+        }
+
+        .githubLink {
+          text-decoration: underline;
+        }
+
+        .memberPhoto {
+          max-width: 150px;
+          border-radius: 20px;
+        }
+      }
+
+      @media (width <= $large-width) {
+        gap: 40px;
+
+        .member {
+          flex-direction: column;
+          gap: 10px;
+
+          .memberName {
+            min-width: auto;
+          }
+
+          .memberRole {
+            min-width: auto;
+          }
+
+          .memberPhoto {
+            max-width: 200px;
+          }
+        }
+      }
+
+      @media (width <= $medium-width) {
+        gap: 20px;
+
+        .member .memberPhoto {
+          max-width: 150px;
+        }
+      }
+    }
+
+    @media (width <= $medium-width) {
+      font-size: 0.8em;
+    }
+  }
+
+  .rsSchoolLogo {
+    width: 50px;
+  }
 }
