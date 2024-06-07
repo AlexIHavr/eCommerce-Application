@@ -118,7 +118,17 @@ export class Product extends BaseComponent {
               div({ className: styles.brandName, text: getProductBrand(currentVariant) }),
             ),
             div({ className: styles.colorsSelect }, div({ text: 'Color' }), colors),
-            button({ className: styles.addToCardBtn, text: 'Add to cart' }),
+            button({
+              className: styles.addToCardBtn,
+              text: 'Add to cart',
+              onclick: () => this.addToCartHandler(),
+            }),
+            button({
+              className: styles.removeFromCardBtn,
+              text: 'Remove from cart',
+              onclick: () => this.removeFromCartHandler(),
+              disabled: true,
+            }),
           ),
         ),
       ),
@@ -139,5 +149,15 @@ export class Product extends BaseComponent {
     if (event && event.target !== this.sliderModal.getNode()) return;
 
     this.sliderModal.removeClass(styles.show);
+  }
+
+  private addToCartHandler(): void {
+    // TODO: addToCart
+    console.log(this);
+  }
+
+  private removeFromCartHandler(): void {
+    // TODO: removeFromCart
+    console.log(this);
   }
 }

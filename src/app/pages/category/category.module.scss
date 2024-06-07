@@ -68,4 +68,27 @@ $product-card-color: whitesmoke;
       }
     }
   }
+
+  .pagination {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+
+    .pageLink {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      width: 40px;
+      height: 40px;
+
+      font-size: 0.8em;
+
+      &.active {
+        pointer-events: none;
+        background-color: var(--add-to-card-background-color);
+        box-shadow: none;
+      }
+    }
+  }
 }
