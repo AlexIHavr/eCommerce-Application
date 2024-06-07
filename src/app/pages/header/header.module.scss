@@ -153,6 +153,25 @@
           }
         }
       }
+
+      .cart {
+        cursor: pointer;
+
+        width: 40px;
+        height: 40px;
+
+        background: url('./images/cart-icon.svg') center no-repeat;
+        border: 2px solid var(--base-color);
+        border-radius: 50%;
+
+        transition: background-color 0.3s ease-in;
+
+        @media (hover: hover) and (pointer: fine) {
+          &:hover {
+            background-color: var(--secondary-color);
+          }
+        }
+      }
     }
 
     .mobileMenu ~ .sidePanel .burger .burgerElem {

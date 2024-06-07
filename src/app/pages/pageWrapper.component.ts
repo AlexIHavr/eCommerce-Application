@@ -16,6 +16,7 @@ import { BaseComponent } from 'shared/base/base.component';
 import { loader } from 'shared/loader/loader.component';
 import { Slider } from 'shared/slider/slider.component';
 
+import { Cart } from './cart/cart.component';
 import { PagesPaths } from './pageWrapper.consts';
 import { isIncorrectCategoryPath, isLogined, redirectToMain } from './pageWrapper.helpers';
 import styles from './pageWrapper.module.scss';
@@ -64,6 +65,7 @@ export class PageWrapper extends BaseComponent {
       [PagesPaths.CATEGORY]: (match) => this.goToCategory(match),
       [PagesPaths.PRODUCT]: (match) => this.goToProduct(match),
       [PagesPaths.PROFILE]: () => this.goToProfile(),
+      [PagesPaths.CART]: () => this.goToPage(new Cart()),
     });
 
     routingService.setNotFound(() => this.goToPage(this.notFound));

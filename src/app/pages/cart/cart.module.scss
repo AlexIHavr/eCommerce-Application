@@ -1,0 +1,167 @@
+@import '/src/styles/global';
+
+.cartPage {
+  align-self: flex-start;
+  width: 100%;
+  padding-bottom: 40px;
+  font-size: 1.8rem;
+
+  @media (width <= $profile-medium-width) {
+    font-size: 1.5rem;
+  }
+}
+
+.cartItem {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  margin-bottom: 14px;
+  padding: 0 14px;
+
+  font-size: 1.2rem;
+
+  border-radius: 10px;
+  box-shadow: 0 0 8px var(--secondary-color);
+
+  @media (max-width: $large-width) {
+    font-size: 1rem;
+  }
+
+  @media (max-width: $medium-width) {
+    padding: 0 10px;
+    font-size: 0.8rem;
+  }
+}
+
+.cartFooter {
+  display: none;
+  margin-top: 30px;
+  padding: 20px;
+
+  .cart:has(.cartItem) ~ & {
+    display: block;
+  }
+
+  @media (max-width: $medium-width) {
+    padding: 0;
+  }
+}
+
+.promocodeWrapper {
+  display: flex;
+  gap: 14px;
+  align-items: flex-end;
+  margin-bottom: 20px;
+}
+
+.promocodeLabel {
+  width: 100%;
+  max-width: 400px;
+  font-size: 1.2rem;
+
+  @media (max-width: $medium-width) {
+    width: 60%;
+    font-size: 0.8rem;
+  }
+}
+
+.promocode {
+  margin-top: 3px;
+  font-size: 1rem;
+
+  &::placeholder {
+    font-size: 0.9em;
+    letter-spacing: initial;
+  }
+
+  @media (max-width: $medium-width) {
+    font-size: 0.8rem;
+  }
+}
+
+.promocodeButton {
+  max-width: 200px;
+  height: 54px;
+  font-size: 1rem;
+
+  @media (max-width: $medium-width) {
+    width: 40%;
+    height: 49px;
+    font-size: 0.65rem;
+  }
+}
+
+.cartTotal {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 100%;
+  height: 100px;
+  margin: 0 auto;
+
+  font-size: 1.4rem;
+  font-weight: bold;
+
+  background-color: var(--secondary-background-color);
+
+  @media (max-width: $medium-width) {
+    height: 80px;
+    font-size: 1rem;
+  }
+}
+
+.clearCartBtn {
+  max-width: 300px;
+  margin: 20px auto 0;
+  font-size: 1rem;
+
+  @media (max-width: $medium-width) {
+    max-width: 200px;
+    font-size: 0.65rem;
+  }
+}
+
+.emptyCart {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  .cart:has(.cartItem) ~ & {
+    display: none;
+  }
+}
+
+.emptyText {
+  font-size: 1.2rem;
+
+  @media (max-width: $medium-width) {
+    font-size: 1rem;
+  }
+}
+
+.emptyLink {
+  cursor: pointer;
+
+  font-size: 1.2rem;
+  font-weight: normal;
+  font-style: normal;
+  color: var(--form-link-color);
+  text-decoration: underline;
+
+  transition: color 0.2s ease-in;
+
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      color: var(--form-link-color-hover);
+    }
+  }
+}
+
+.emptyImage {
+  width: 100%;
+  max-width: 320px;
+  height: auto;
+  object-fit: cover;
+}
