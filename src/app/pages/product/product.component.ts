@@ -22,7 +22,7 @@ import { apiService } from 'services/api.service';
 import { BaseComponent } from 'shared/base/base.component';
 import { button, div, h3 } from 'shared/tags/tags.component';
 
-import { getSlider } from './product.helpers';
+import { findItemInCart, getSlider } from './product.helpers';
 import styles from './product.module.scss';
 
 export class Product extends BaseComponent {
@@ -54,6 +54,8 @@ export class Product extends BaseComponent {
         { name: `${title} (${color})`, path: getProductPath(category, slug, color) },
       ]),
     );
+
+    this.getDataFromCart();
 
     this.currentVariant = currentVariant;
 
@@ -159,22 +161,40 @@ export class Product extends BaseComponent {
   }
 
   private addToCartHandler(): void {
-    // TODO: addToCart Styles
-    console.log(this.currentVariant.sku);
-    apiService.addProductToCart(this.currentVariant.sku!).then((cart) => {
-      if (cart) {
-        this.lineItem = cart.body.lineItems.find(
-          (item) => item.variant.key === this.currentVariant.key,
-        );
-      }
-    });
+    // TODO: change addToCart button styles
+    if (!this.lineItem) {
+      apiService.addProductToCart(this.currentVariant.sku!).then((cart) => {
+        console.log('added in cart');
+        this.lineItem = findItemInCart(cart.body.lineItems, this.currentVariant.key!);
+      });
+    }
   }
 
   private removeFromCartHandler(): void {
-    // TODO: removeFromCart Styles
+    // TODO: change removeFromCart button styles
     if (this.lineItem) {
-      console.log(this.lineItem.id);
-      apiService.removeProductFromCart(this.lineItem.id);
+      apiService.removeProductFromCart(this.lineItem.id).then(() => {
+        console.log('removed from cart');
+        this.lineItem = undefined;
+      });
+    }
+  }
+
+  private async getDataFromCart(): Promise<void> {
+    const cart = await apiService.getCart();
+
+    this.lineItem = findItemInCart(cart.body.lineItems, this.currentVariant.key!);
+
+    const isItemInCart = cart.body.lineItems.some(
+      (lineItem) => lineItem.variant.sku === this.currentVariant.sku,
+    );
+
+    if (isItemInCart) {
+      console.log('Product variant found in cart!');
+      // TODO: block add to cart button
+    } else {
+      console.log('Product variant not found in cart.');
+      // TODO: block remove from cart button
     }
   }
 }

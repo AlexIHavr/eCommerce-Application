@@ -1,6 +1,5 @@
 import { PageWrapper } from 'pages/pageWrapper.component';
 import { apiService } from 'services/api.service';
-import { LocalStorageService } from 'services/localStorage.service';
 import { routingService } from 'services/routing.service';
 import { alertModal } from 'shared/alert/alert.component';
 import { BaseComponent } from 'shared/base/base.component';
@@ -16,12 +15,6 @@ class App {
     Slider.init();
 
     apiService.createAnonymousCart();
-
-    apiService.apiRoot
-      .carts()
-      .withCustomerId({ customerId: LocalStorageService.getData('customerId')! })
-      .get()
-      .execute();
   }
 }
 

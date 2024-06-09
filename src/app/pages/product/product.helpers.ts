@@ -1,4 +1,4 @@
-import { Image } from '@commercetools/platform-sdk';
+import { Image, LineItem } from '@commercetools/platform-sdk';
 import { Div } from 'globalTypes/elements.type';
 import { Slider } from 'shared/slider/slider.component';
 import { div, img } from 'shared/tags/tags.component';
@@ -18,4 +18,8 @@ export function getSlider(images: Image[] = [], className?: string): Div {
   if (className) slider.addClass(className);
 
   return slider;
+}
+
+export function findItemInCart(lineItems: LineItem[], key: string): LineItem | undefined {
+  return lineItems.find((item) => item.variant.key === key);
 }
