@@ -6,6 +6,7 @@ import {
   Customer,
   CustomerChangePassword,
   CustomerPagedQueryResponse,
+  CustomerSignin,
   CustomerSignInResult,
   CustomerUpdateAction,
   ProductProjectionPagedSearchResponse,
@@ -39,15 +40,7 @@ export class ApiService {
     this.tokenCache = tokenCache;
   }
 
-  public getProject(): ApiClientResponse<Project> {
-    return this.apiRoot.get().execute();
-  }
-
-  public getCustomers(): ApiClientResponse<CustomerPagedQueryResponse> {
-    return this.apiRoot.customers().get().execute();
-  }
-
-  public loginCustomer(newCustomer: CustomerLoginData): ApiClientResponse<CustomerSignInResult> {
+  public loginCustomer(newCustomer: CustomerSignin): ApiClientResponse<CustomerSignInResult> {
     this.apiRoot = clientBuild.getApiRootByPasswordFlow(newCustomer);
 
     return this.apiRoot.login().post({ body: newCustomer }).execute();
@@ -70,6 +63,7 @@ export class ApiService {
 
   public logout(): void {
     this.apiRoot = clientBuild.getApiRootByAnonymousFlow();
+    this.createAnonymousCart();
   }
 
   public getFilteredProducts(
@@ -153,8 +147,9 @@ export class ApiService {
   }
 
   public async createAnonymousCart(): Promise<ClientResponse<Cart> | void> {
-    const cartId = LocalStorageService.getData('cartId');
-    if (!cartId) {
+    const anonymousCartId = LocalStorageService.getData('anonymousCartId');
+    const customerCartId = LocalStorageService.getData('customerCartId');
+    if (!anonymousCartId && !customerCartId) {
       const cart = await this.apiRoot
         .carts()
         .post({
@@ -164,94 +159,95 @@ export class ApiService {
           },
         })
         .execute();
-      LocalStorageService.saveData('cartId', cart.body.id);
+      LocalStorageService.saveData('anonymousCartId', cart.body.id);
       return cart;
     }
     return undefined;
   }
 
-  public getCart(): Promise<ClientResponse<Cart>> | void {
-    const cartId = LocalStorageService.getData('cartId');
-    if (cartId) {
-      return this.apiRoot.carts().withId({ ID: cartId }).get().execute();
+  public getCart(): ApiClientResponse<Cart> {
+    const anonymousCartId = LocalStorageService.getData('anonymousCartId');
+    const customerCartId = LocalStorageService.getData('customerCartId');
+    if (customerCartId) {
+      return this.apiRoot.carts().withId({ ID: customerCartId }).get().execute();
     }
-    return undefined;
+    return this.apiRoot.carts().withId({ ID: anonymousCartId! }).get().execute();
   }
 
-  public async addProductToCart(sku: string): Promise<ClientResponse<Cart> | void> {
+  public async addProductToCart(sku: string): ApiClientResponse<Cart> {
     const cart = await this.getCart();
-    if (cart) {
-      return this.apiRoot
-        .carts()
-        .withId({ ID: cart.body.id })
-        .post({
-          body: {
-            actions: [{ action: 'addLineItem', sku }],
-            version: cart.body.version,
-          },
-        })
-        .execute();
-    }
-    return undefined;
+
+    return this.apiRoot
+      .carts()
+      .withId({ ID: cart.body.id })
+      .post({
+        body: {
+          actions: [{ action: 'addLineItem', sku }],
+          version: cart.body.version,
+        },
+      })
+      .execute();
   }
 
-  public async removeProductFromCart(lineItemId: string): Promise<ClientResponse<Cart> | void> {
+  public async removeProductFromCart(lineItemId: string): ApiClientResponse<Cart> {
     const cart = await this.getCart();
-    if (cart) {
-      return this.apiRoot
-        .carts()
-        .withId({ ID: cart.body.id })
-        .post({
-          body: {
-            actions: [{ action: 'removeLineItem', lineItemId }],
-            version: cart.body.version,
-          },
-        })
-        .execute();
-    }
-    return undefined;
+
+    return this.apiRoot
+      .carts()
+      .withId({ ID: cart.body.id })
+      .post({
+        body: {
+          actions: [{ action: 'removeLineItem', lineItemId }],
+          version: cart.body.version,
+        },
+      })
+      .execute();
   }
 
   public async changeProductQuantity(
     quantity: number,
     lineItemId: string,
-  ): Promise<ClientResponse<Cart> | void> {
+  ): ApiClientResponse<Cart> {
     const cart = await this.getCart();
-    if (cart) {
-      return this.apiRoot
-        .carts()
-        .withId({ ID: cart.body.id })
-        .post({
-          body: {
-            actions: [{ action: 'changeLineItemQuantity', lineItemId, quantity }],
-            version: cart.body.version,
-          },
-        })
-        .execute();
-    }
-    return undefined;
+
+    return this.apiRoot
+      .carts()
+      .withId({ ID: cart.body.id })
+      .post({
+        body: {
+          actions: [{ action: 'changeLineItemQuantity', lineItemId, quantity }],
+          version: cart.body.version,
+        },
+      })
+      .execute();
   }
 
-  public async clearCart(): Promise<ClientResponse<Cart> | void> {
+  public async clearCart(): ApiClientResponse<Cart> {
     const cart = await this.getCart();
-    if (cart) {
-      const updateActions: CartUpdateAction[] = cart.body.lineItems.map((lineItem) => ({
-        action: 'removeLineItem',
-        lineItemId: lineItem.id,
-      }));
 
-      return this.apiRoot
-        .carts()
-        .withId({ ID: cart.body.id })
-        .post({
-          body: {
-            actions: updateActions,
-            version: cart.body.version,
-          },
-        })
-        .execute();
-    }
-    return undefined;
+    const updateActions: CartUpdateAction[] = cart.body.lineItems.map((lineItem) => ({
+      action: 'removeLineItem',
+      lineItemId: lineItem.id,
+    }));
+
+    return this.apiRoot
+      .carts()
+      .withId({ ID: cart.body.id })
+      .post({
+        body: {
+          actions: updateActions,
+          version: cart.body.version,
+        },
+      })
+      .execute();
+  }
+
+  public createCustomerCart(): ApiClientResponse<Cart> {
+    return this.apiRoot
+      .me()
+      .carts()
+      .post({ body: { currency: 'USD' } })
+      .execute();
   }
 }
 

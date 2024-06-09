@@ -2,7 +2,7 @@ import { CustomerUpdateAction, ErrorResponse } from '@commercetools/platform-sdk
 import { ClientResponse } from '@commercetools/sdk-client-v2';
 import { Addresses } from 'globalConsts/api.const';
 import { Form, Span } from 'globalTypes/elements.type';
-import { NewCustomer } from 'interfaces/api.interface';
+import { CustomerLoginData, NewCustomer } from 'interfaces/api.interface';
 import { successLogin } from 'pages/pageWrapper.helpers';
 import { FormField } from 'pages/shared/components/formField/formField.component';
 import formFieldStyles from 'pages/shared/components/formField/formField.module.scss';
@@ -12,6 +12,7 @@ import sharedStyles from 'pages/shared/styles/common.module.scss';
 import formStyles from 'pages/shared/styles/formElements.module.scss';
 import { AddressForm } from 'pages/signup/components/addressForm/addressForm.component';
 import { apiService } from 'services/api.service';
+import { LocalStorageService } from 'services/localStorage.service';
 import { BaseComponent } from 'shared/base/base.component';
 import { loader } from 'shared/loader/loader.component';
 import { button, div, form, input, label, span } from 'shared/tags/tags.component';
@@ -131,13 +132,30 @@ export class Signup extends BaseComponent {
 
     apiService
       .signupCustomer(this.getNewCustomerFromForm())
-      .then(() =>
-        apiService.loginCustomer({
+      .then(() => {
+        const customerLoginData: CustomerLoginData = {
           email: this.emailField.value,
           password: this.passwordField.value,
-        }),
-      )
+        };
+        const anonymousCartId = LocalStorageService.getData('anonymousCartId');
+        if (anonymousCartId) {
+          customerLoginData.anonymousCart = {
+            typeId: 'cart',
+            id: anonymousCartId,
+          };
+        }
+        return apiService.loginCustomer(customerLoginData);
+      })
       .then((data) => {
+        LocalStorageService.removeData('anonymousCartId');
+        if (data.body.cart) {
+          LocalStorageService.saveData('customerCartId', data.body.cart.id);
+        } else {
+          apiService.createCustomerCart().then((cart) => {
+            LocalStorageService.saveData('customerCartId', cart.body.id);
+          });
+        }
+
         const { id, version, addresses } = data.body.customer;
         const actions: CustomerUpdateAction[] = [
           {

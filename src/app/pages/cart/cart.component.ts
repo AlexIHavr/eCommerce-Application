@@ -76,12 +76,11 @@ export class CartComponent extends BaseComponent {
 
   private async renderCart(): Promise<void> {
     const cart = await apiService.getCart();
-    if (cart) {
-      this.renderCartItems(cart.body.lineItems);
-      this.cartTotal.setText(
-        `Cart Total: ${(cart.body.totalPrice.centAmount / 100).toLocaleString('en-US', { currency: 'USD', style: 'currency' })}`,
-      );
-    }
+
+    this.renderCartItems(cart.body.lineItems);
+    this.cartTotal.setText(
+      `Cart Total: ${(cart.body.totalPrice.centAmount / 100).toLocaleString('en-US', { currency: 'USD', style: 'currency' })}`,
+    );
   }
 
   private renderCartItems(lineItems: LineItem[]): void {

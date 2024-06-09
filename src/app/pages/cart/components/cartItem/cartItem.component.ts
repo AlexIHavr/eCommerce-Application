@@ -107,11 +107,9 @@ export class CartItem extends BaseComponent {
   private increaseCartItem(): void {
     // TODO: disable button during request
     // TODO: recount Cart Total
-    apiService.changeProductQuantity(this.lineItemQuantity + 1, this.lineItemId).then((cart) => {
-      if (cart) {
-        this.lineItemQuantity += 1;
-        this.quantity.setText(`${this.lineItemQuantity}`);
-      }
+    apiService.changeProductQuantity(this.lineItemQuantity + 1, this.lineItemId).then(() => {
+      this.lineItemQuantity += 1;
+      this.quantity.setText(`${this.lineItemQuantity}`);
     });
   }
 
@@ -119,11 +117,9 @@ export class CartItem extends BaseComponent {
     // TODO: disable button during request
     // TODO: recount Cart Total
     if (this.lineItemQuantity > 1) {
-      apiService.changeProductQuantity(this.lineItemQuantity - 1, this.lineItemId).then((cart) => {
-        if (cart) {
-          this.lineItemQuantity -= 1;
-          this.quantity.setText(`${this.lineItemQuantity}`);
-        }
+      apiService.changeProductQuantity(this.lineItemQuantity - 1, this.lineItemId).then(() => {
+        this.lineItemQuantity -= 1;
+        this.quantity.setText(`${this.lineItemQuantity}`);
       });
     }
   }
