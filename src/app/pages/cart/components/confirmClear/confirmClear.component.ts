@@ -1,3 +1,4 @@
+import { apiService } from 'services/api.service';
 import { BaseComponent } from 'shared/base/base.component';
 import { button, div } from 'shared/tags/tags.component';
 
@@ -16,7 +17,16 @@ export class ConfirmClear extends BaseComponent {
           button({
             className: styles.rejectBtn,
             text: 'Yes',
-            onclick: () => console.log('TODO Yes'),
+            onclick: () => {
+              console.log('TODO Yes');
+              apiService
+                .clearCart()
+                .then((cart) => {
+                  // TODO: remove items on page
+                  console.log(cart);
+                })
+                .finally(() => this.closeModal());
+            },
           }),
           button({
             className: styles.confirmBtn,

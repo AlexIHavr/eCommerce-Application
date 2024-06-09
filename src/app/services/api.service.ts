@@ -1,6 +1,7 @@
 import {
   ByProjectKeyRequestBuilder,
   Cart,
+  CartUpdateAction,
   ClientResponse,
   Customer,
   CustomerChangePassword,
@@ -223,6 +224,28 @@ export class ApiService {
         .post({
           body: {
             actions: [{ action: 'changeLineItemQuantity', lineItemId, quantity }],
+            version: cart.body.version,
+          },
+        })
+        .execute();
+    }
+    return undefined;
+  }
+
+  public async clearCart(): Promise<ClientResponse<Cart> | void> {
+    const cart = await this.getCart();
+    if (cart) {
+      const updateActions: CartUpdateAction[] = cart.body.lineItems.map((lineItem) => ({
+        action: 'removeLineItem',
+        lineItemId: lineItem.id,
+      }));
+
+      return this.apiRoot
+        .carts()
+        .withId({ ID: cart.body.id })
+        .post({
+          body: {
+            actions: updateActions,
             version: cart.body.version,
           },
         })

@@ -1,4 +1,4 @@
-import { Cart, ClientResponse, LineItem } from '@commercetools/platform-sdk';
+import { LineItem } from '@commercetools/platform-sdk';
 import { Div } from 'globalTypes/elements.type';
 import { catalogNavLink } from 'pages/shared/components/navLinks/navLinks.component';
 import { SectionTitle } from 'pages/shared/components/sectionTitle/sectionTitle.component';
@@ -16,8 +16,6 @@ export class CartComponent extends BaseComponent {
   private readonly cart: Div;
 
   private readonly cartTotal: Div;
-
-  private cartResponse: ClientResponse<Cart> | undefined;
 
   constructor() {
     super({ className: styles.cartPage });
@@ -42,7 +40,7 @@ export class CartComponent extends BaseComponent {
       }),
     );
 
-    this.cartTotal = div({ className: styles.cartTotal, text: 'Cart Total: $10 000.00' });
+    this.cartTotal = div({ className: styles.cartTotal, text: 'Cart Total: $0' });
 
     this.appendChildren([
       new SectionTitle('Cart'),
@@ -76,28 +74,9 @@ export class CartComponent extends BaseComponent {
     ]);
   }
 
-  // private renderCartItems(): void {
-  //   const item1: CartItemProps = {
-  //     imageSrc: emptyCartImage,
-  //     name: 'Upholstered 360° Swivel Accent Chair (brown)',
-  //     originPrice: '$1 449.50',
-  //     promoPrice: '$65.00',
-  //     pricePerOne: '$37 502.00',
-  //   };
-
-  //   const item2: CartItemProps = {
-  //     imageSrc: emptyCartImage,
-  //     name: 'Lyon Sofa (orange)',
-  //     originPrice: '$126.99',
-  //     promoPrice: '$100.00',
-  //     pricePerOne: '$2 920.11',
-  //   };
-  // }
-
   private async renderCart(): Promise<void> {
     const cart = await apiService.getCart();
     if (cart) {
-      this.cartResponse = cart;
       this.renderCartItems(cart.body.lineItems);
       this.cartTotal.setText(
         `Cart Total: ${(cart.body.totalPrice.centAmount / 100).toLocaleString('en-US', { currency: 'USD', style: 'currency' })}`,
