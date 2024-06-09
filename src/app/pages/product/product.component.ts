@@ -159,9 +159,9 @@ export class Product extends BaseComponent {
   }
 
   private addToCartHandler(): void {
-    // TODO: addToCart
+    // TODO: addToCart Styles
     console.log(this.currentVariant.sku);
-    apiService.addProductToCart(this.currentVariant.sku!, 1).then((cart) => {
+    apiService.addProductToCart(this.currentVariant.sku!).then((cart) => {
       if (cart) {
         this.lineItem = cart.body.lineItems.find(
           (item) => item.variant.key === this.currentVariant.key,
@@ -171,7 +171,7 @@ export class Product extends BaseComponent {
   }
 
   private removeFromCartHandler(): void {
-    // TODO: removeFromCart
+    // TODO: removeFromCart Styles
     if (this.lineItem) {
       console.log(this.lineItem.id);
       apiService.removeProductFromCart(this.lineItem.id);

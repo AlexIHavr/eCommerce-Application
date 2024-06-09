@@ -177,10 +177,7 @@ export class ApiService {
     return undefined;
   }
 
-  public async addProductToCart(
-    sku: string,
-    quantity: number,
-  ): Promise<ClientResponse<Cart> | void> {
+  public async addProductToCart(sku: string): Promise<ClientResponse<Cart> | void> {
     const cart = await this.getCart();
     if (cart) {
       return this.apiRoot
@@ -188,7 +185,7 @@ export class ApiService {
         .withId({ ID: cart.body.id })
         .post({
           body: {
-            actions: [{ action: 'addLineItem', quantity, sku }],
+            actions: [{ action: 'addLineItem', sku }],
             version: cart.body.version,
           },
         })
@@ -206,6 +203,26 @@ export class ApiService {
         .post({
           body: {
             actions: [{ action: 'removeLineItem', lineItemId }],
+            version: cart.body.version,
+          },
+        })
+        .execute();
+    }
+    return undefined;
+  }
+
+  public async changeProductQuantity(
+    quantity: number,
+    lineItemId: string,
+  ): Promise<ClientResponse<Cart> | void> {
+    const cart = await this.getCart();
+    if (cart) {
+      return this.apiRoot
+        .carts()
+        .withId({ ID: cart.body.id })
+        .post({
+          body: {
+            actions: [{ action: 'changeLineItemQuantity', lineItemId, quantity }],
             version: cart.body.version,
           },
         })

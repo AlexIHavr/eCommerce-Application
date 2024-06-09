@@ -23,18 +23,23 @@ export class CartItem extends BaseComponent {
 
   private readonly lineItemId: string;
 
+  private lineItemQuantity: number;
+
   constructor(props: LineItem) {
     super({ className: cartStyles.cartItem });
 
     this.lineItemId = props.id;
+    this.lineItemQuantity = props.quantity;
 
     this.priceWrapper = div(
       { className: styles.priceWrapper },
       div({
+        // TODO: Add logic for origin price (if there is discount)
         className: styles.originPrice,
         text: centToDollar(props.price.value.centAmount),
       }),
       div({
+        // TODO: Add logic for discount price
         className: styles.promoPrice,
         text: centToDollar(props.price.discounted?.value.centAmount),
       }),
@@ -51,13 +56,17 @@ export class CartItem extends BaseComponent {
       button({
         className: styles.quantityButton,
         text: '-',
-        onclick: () => console.log('TODO MINUS'),
+        onclick: () => {
+          this.decreaseCartItem();
+        },
       }),
       this.quantity,
       button({
         className: styles.quantityButton,
         text: '+',
-        onclick: () => console.log('TODO PLUS'),
+        onclick: () => {
+          this.increaseCartItem();
+        },
       }),
     );
 
@@ -79,7 +88,6 @@ export class CartItem extends BaseComponent {
           className: styles.removeButton,
           text: 'Remove from Cart',
           onclick: () => {
-            console.log('TODO remove');
             this.removeCartItem();
           },
         }),
@@ -94,5 +102,29 @@ export class CartItem extends BaseComponent {
 
   private removeCartItem(): void {
     apiService.removeProductFromCart(this.lineItemId).then(() => this.destroy());
+  }
+
+  private increaseCartItem(): void {
+    // TODO: disable button during request
+    // TODO: recount Cart Total
+    apiService.changeProductQuantity(this.lineItemQuantity + 1, this.lineItemId).then((cart) => {
+      if (cart) {
+        this.lineItemQuantity += 1;
+        this.quantity.setText(`${this.lineItemQuantity}`);
+      }
+    });
+  }
+
+  private decreaseCartItem(): void {
+    // TODO: disable button during request
+    // TODO: recount Cart Total
+    if (this.lineItemQuantity > 1) {
+      apiService.changeProductQuantity(this.lineItemQuantity - 1, this.lineItemId).then((cart) => {
+        if (cart) {
+          this.lineItemQuantity -= 1;
+          this.quantity.setText(`${this.lineItemQuantity}`);
+        }
+      });
+    }
   }
 }
