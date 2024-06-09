@@ -1,5 +1,7 @@
 import {
   ByProjectKeyRequestBuilder,
+  Cart,
+  ClientResponse,
   Customer,
   CustomerChangePassword,
   CustomerPagedQueryResponse,
@@ -15,6 +17,16 @@ import { CustomerLoginData, FilterProps, NewCustomer, SortProps } from 'interfac
 import { clientBuild } from 'utils/clientBuild.util';
 import { getQueryFilterString } from 'utils/strings.util';
 import { tokenCache } from 'utils/tokenCache.util';
+
+import { LocalStorageService } from './localStorage.service';
+
+// import { LocalStorageService } from './localStorage.service';
+
+// function setCartAnonymousId(): string {
+//   const anonymousId = crypto.randomUUID();
+//   LocalStorageService.saveData('cartAnonymousId', anonymousId);
+//   return anonymousId;
+// }
 
 export class ApiService {
   public apiRoot: ByProjectKeyRequestBuilder;
@@ -137,6 +149,69 @@ export class ApiService {
     tokenCache.resetCache();
     this.apiRoot = clientBuild.getApiRootByPasswordFlow(credentials);
     return this.apiRoot.get().execute();
+  }
+
+  public async createAnonymousCart(): Promise<ClientResponse<Cart> | void> {
+    const cartId = LocalStorageService.getData('cartId');
+    if (!cartId) {
+      const cart = await this.apiRoot
+        .carts()
+        .post({
+          body: {
+            currency: 'USD',
+            anonymousId: crypto.randomUUID(),
+          },
+        })
+        .execute();
+      LocalStorageService.saveData('cartId', cart.body.id);
+      return cart;
+    }
+    return undefined;
+  }
+
+  public getCart(): Promise<ClientResponse<Cart>> | void {
+    const cartId = LocalStorageService.getData('cartId');
+    if (cartId) {
+      return this.apiRoot.carts().withId({ ID: cartId }).get().execute();
+    }
+    return undefined;
+  }
+
+  public async addProductToCart(
+    sku: string,
+    quantity: number,
+  ): Promise<ClientResponse<Cart> | void> {
+    const cart = await this.getCart();
+    if (cart) {
+      return this.apiRoot
+        .carts()
+        .withId({ ID: cart.body.id })
+        .post({
+          body: {
+            actions: [{ action: 'addLineItem', quantity, sku }],
+            version: cart.body.version,
+          },
+        })
+        .execute();
+    }
+    return undefined;
+  }
+
+  public async removeProductFromCart(lineItemId: string): Promise<ClientResponse<Cart> | void> {
+    const cart = await this.getCart();
+    if (cart) {
+      return this.apiRoot
+        .carts()
+        .withId({ ID: cart.body.id })
+        .post({
+          body: {
+            actions: [{ action: 'removeLineItem', lineItemId }],
+            version: cart.body.version,
+          },
+        })
+        .execute();
+    }
+    return undefined;
   }
 }
 

@@ -43,6 +43,7 @@ class ClientBuild {
     },
     scopes: [VITE_CTP_SCOPES],
     fetch,
+    tokenCache,
   };
 
   private passwordAuthMiddlewareOptions: PasswordAuthMiddlewareOptions = {

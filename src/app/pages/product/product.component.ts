@@ -1,4 +1,4 @@
-import { ProductProjection } from '@commercetools/platform-sdk';
+import { LineItem, ProductProjection, ProductVariant } from '@commercetools/platform-sdk';
 import { ProductsCategories } from 'globalConsts/api.const';
 import { Div } from 'globalTypes/elements.type';
 import {
@@ -18,6 +18,7 @@ import { Breadcrumbs } from 'pages/shared/components/breadcrumbs/breadcrumbs.com
 import { SectionTitle } from 'pages/shared/components/sectionTitle/sectionTitle.component';
 import sharedStyles from 'pages/shared/styles/common.module.scss';
 import productsStyles from 'pages/shared/styles/products.module.scss';
+import { apiService } from 'services/api.service';
 import { BaseComponent } from 'shared/base/base.component';
 import { button, div, h3 } from 'shared/tags/tags.component';
 
@@ -28,6 +29,10 @@ export class Product extends BaseComponent {
   private readonly sliderModal: Div;
 
   private readonly slider: Div;
+
+  private readonly currentVariant!: ProductVariant;
+
+  private lineItem: LineItem | undefined;
 
   constructor(category: ProductsCategories, product: ProductProjection) {
     const { slug, name, description, masterVariant, variants } = product;
@@ -49,6 +54,8 @@ export class Product extends BaseComponent {
         { name: `${title} (${color})`, path: getProductPath(category, slug, color) },
       ]),
     );
+
+    this.currentVariant = currentVariant;
 
     this.slider = getSlider(currentVariant.images, styles.slider);
     this.slider.setProps({ onclick: (event) => this.showSliderModal(event) });
@@ -127,7 +134,7 @@ export class Product extends BaseComponent {
               className: styles.removeFromCardBtn,
               text: 'Remove from cart',
               onclick: () => this.removeFromCartHandler(),
-              disabled: true,
+              // disabled: true,
             }),
           ),
         ),
@@ -153,11 +160,21 @@ export class Product extends BaseComponent {
 
   private addToCartHandler(): void {
     // TODO: addToCart
-    console.log(this);
+    console.log(this.currentVariant.sku);
+    apiService.addProductToCart(this.currentVariant.sku!, 1).then((cart) => {
+      if (cart) {
+        this.lineItem = cart.body.lineItems.find(
+          (item) => item.variant.key === this.currentVariant.key,
+        );
+      }
+    });
   }
 
   private removeFromCartHandler(): void {
     // TODO: removeFromCart
-    console.log(this);
+    if (this.lineItem) {
+      console.log(this.lineItem.id);
+      apiService.removeProductFromCart(this.lineItem.id);
+    }
   }
 }
