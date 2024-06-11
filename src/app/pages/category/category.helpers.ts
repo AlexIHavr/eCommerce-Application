@@ -13,6 +13,7 @@ import {
   getProductPath,
   getProductPrice,
 } from 'pages/pageWrapper.helpers';
+import { ProductCartButtons } from 'pages/shared/components/productCartButtons/productCartButtons.component';
 import productsStyles from 'pages/shared/styles/products.module.scss';
 import { div, h3, img } from 'shared/tags/tags.component';
 
@@ -47,6 +48,7 @@ function getProductCard(
     h3(`${getProductBrand(variant)}`, styles.cardName),
     div({ className: styles.cardDescription, text: getProductDescription(description) }),
     cardPrices,
+    div({}, new ProductCartButtons(variant.sku, true)),
   );
 
   if (discount) {

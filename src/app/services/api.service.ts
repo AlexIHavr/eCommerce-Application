@@ -159,31 +159,35 @@ export class ApiService {
       .execute();
   }
 
-  public async addProductToCart(cartId: string, sku: string): ApiClientResponse<Cart> {
-    const cart = await this.getCart(cartId);
-
+  public async addProductToCart(
+    cartId: string,
+    version: number,
+    sku: string,
+  ): ApiClientResponse<Cart> {
     return this.apiRoot
       .carts()
       .withId({ ID: cartId })
       .post({
         body: {
           actions: [{ action: 'addLineItem', sku }],
-          version: cart.body.version,
+          version,
         },
       })
       .execute();
   }
 
-  public async removeProductFromCart(cartId: string, lineItemId: string): ApiClientResponse<Cart> {
-    const cart = await this.getCart(cartId);
-
+  public async removeProductFromCart(
+    cartId: string,
+    version: number,
+    lineItemId: string,
+  ): ApiClientResponse<Cart> {
     return this.apiRoot
       .carts()
       .withId({ ID: cartId })
       .post({
         body: {
           actions: [{ action: 'removeLineItem', lineItemId }],
-          version: cart.body.version,
+          version,
         },
       })
       .execute();

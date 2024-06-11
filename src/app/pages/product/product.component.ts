@@ -1,8 +1,7 @@
-import { Cart, ClientResponse, ProductProjection } from '@commercetools/platform-sdk';
+import { ProductProjection } from '@commercetools/platform-sdk';
 import { ProductsCategories } from 'globalConsts/api.const';
-import { Button, Div } from 'globalTypes/elements.type';
+import { Div } from 'globalTypes/elements.type';
 import {
-  getCartId,
   getCategoryBreadcrumbPath,
   getDiscountPercent,
   getNavLink,
@@ -14,17 +13,13 @@ import {
   getProductName,
   getProductPath,
   getProductPrice,
-  isLogined,
 } from 'pages/pageWrapper.helpers';
 import { Breadcrumbs } from 'pages/shared/components/breadcrumbs/breadcrumbs.component';
+import { ProductCartButtons } from 'pages/shared/components/productCartButtons/productCartButtons.component';
 import { SectionTitle } from 'pages/shared/components/sectionTitle/sectionTitle.component';
 import sharedStyles from 'pages/shared/styles/common.module.scss';
 import productsStyles from 'pages/shared/styles/products.module.scss';
-import { apiService } from 'services/api.service';
-import { LocalStorageService } from 'services/localStorage.service';
-import { alertModal } from 'shared/alert/alert.component';
 import { BaseComponent } from 'shared/base/base.component';
-import { loader } from 'shared/loader/loader.component';
 import { button, div, h3 } from 'shared/tags/tags.component';
 
 import { getSlider } from './product.helpers';
@@ -34,14 +29,6 @@ export class Product extends BaseComponent {
   private readonly sliderModal: Div;
 
   private readonly slider: Div;
-
-  private readonly addToCard: Button;
-
-  private readonly removeFromCart: Button;
-
-  private readonly sku?: string;
-
-  private lineItemId?: string;
 
   constructor(category: ProductsCategories, product: ProductProjection) {
     const { slug, name, description, masterVariant, variants } = product;
@@ -109,22 +96,6 @@ export class Product extends BaseComponent {
       }),
     );
 
-    this.sku = currentVariant.sku;
-
-    this.addToCard = button({
-      className: styles.addToCardBtn,
-      text: 'Add to cart',
-      onclick: () => this.addToCartHandler(),
-      disabled: true,
-    });
-
-    this.removeFromCart = button({
-      className: styles.removeFromCardBtn,
-      text: 'Remove from cart',
-      onclick: () => this.removeFromCartHandler(),
-      disabled: true,
-    });
-
     this.appendChildren([
       div(
         { className: sharedStyles.container },
@@ -148,32 +119,12 @@ export class Product extends BaseComponent {
               div({ className: styles.brandName, text: getProductBrand(currentVariant) }),
             ),
             div({ className: styles.colorsSelect }, div({ text: 'Color' }), colors),
-            this.addToCard,
-            this.removeFromCart,
+            new ProductCartButtons(currentVariant.sku),
           ),
         ),
       ),
       this.sliderModal,
     ]);
-
-    this.setCartButtonsVisibility();
-  }
-
-  private async setCartButtonsVisibility(): Promise<void> {
-    const cartId = getCartId();
-    let isProductInCart: boolean = Boolean(cartId);
-
-    if (cartId) {
-      const cart = await apiService.getCart(cartId);
-      const product = cart.body.lineItems.find(({ variant }) => variant.sku === this.sku);
-
-      isProductInCart = Boolean(product);
-
-      this.lineItemId = product?.id;
-    }
-
-    this.addToCard.setProps({ disabled: isProductInCart });
-    this.removeFromCart.setProps({ disabled: !isProductInCart });
   }
 
   private showSliderModal(event: MouseEvent): void {
@@ -189,59 +140,5 @@ export class Product extends BaseComponent {
     if (event && event.target !== this.sliderModal.getNode()) return;
 
     this.sliderModal.removeClass(styles.show);
-  }
-
-  private async addToCartHandler(): Promise<void> {
-    if (!this.sku) return;
-
-    const cartId = getCartId();
-
-    loader.open();
-
-    try {
-      if (cartId) {
-        await apiService.addProductToCart(cartId, this.sku);
-      } else {
-        let cart: ClientResponse<Cart>;
-
-        if (isLogined()) {
-          cart = await apiService.createCustomerCart();
-        } else {
-          cart = await apiService.createAnonymousCart(crypto.randomUUID());
-        }
-
-        LocalStorageService.saveData('cartId', cart.body.id);
-
-        await apiService.addProductToCart(cart.body.id, this.sku);
-      }
-
-      await this.setCartButtonsVisibility();
-      alertModal.showAlert('success', 'The product has been added to Cart');
-    } catch (error) {
-      alertModal.showAlert('error', (error as Error).message);
-    } finally {
-      loader.close();
-    }
-  }
-
-  private removeFromCartHandler(): void {
-    const cartId = getCartId();
-
-    if (cartId && this.lineItemId) {
-      loader.open();
-
-      apiService
-        .removeProductFromCart(cartId, this.lineItemId)
-        .then(() => {
-          this.setCartButtonsVisibility();
-          alertModal.showAlert('success', 'The product has been removed from Cart');
-        })
-        .catch((error) => {
-          alertModal.showAlert('error', (error as Error).message);
-        })
-        .finally(() => {
-          loader.close();
-        });
-    }
   }
 }
