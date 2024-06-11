@@ -71,27 +71,27 @@ export class ProductCartButtons extends BaseComponent {
     loader.open();
 
     try {
-      let currentCart: ClientResponse<Cart> | undefined;
+      let newCart: ClientResponse<Cart> | undefined;
 
       if (cartId) {
         const cart = await apiService.getCart(cartId);
-        currentCart = await apiService.addProductToCart(cartId, cart.body.version, this.sku);
+        newCart = await apiService.addProductToCart(cartId, cart.body.version, this.sku);
       } else {
         if (isLogined()) {
-          currentCart = await apiService.createCustomerCart();
+          newCart = await apiService.createCustomerCart();
         } else {
-          currentCart = await apiService.createAnonymousCart(crypto.randomUUID());
+          newCart = await apiService.createAnonymousCart(crypto.randomUUID());
         }
 
-        const newCartId = currentCart.body.id;
+        const newCartId = newCart.body.id;
         const cart = await apiService.getCart(newCartId);
 
         LocalStorageService.saveData('cartId', newCartId);
 
-        currentCart = await apiService.addProductToCart(newCartId, cart.body.version, this.sku);
+        newCart = await apiService.addProductToCart(newCartId, cart.body.version, this.sku);
       }
 
-      await this.setCartButtonsVisibility(currentCart);
+      await this.setCartButtonsVisibility(newCart);
       alertModal.showAlert('success', 'The product has been added to Cart');
     } catch (error) {
       alertModal.showAlert('error', (error as Error).message);
@@ -109,9 +109,13 @@ export class ProductCartButtons extends BaseComponent {
       try {
         const cart = await apiService.getCart(cartId);
 
-        await apiService.removeProductFromCart(cartId, cart.body.version, this.lineItemId);
+        const newCart = await apiService.removeProductFromCart(
+          cartId,
+          cart.body.version,
+          this.lineItemId,
+        );
 
-        this.setCartButtonsVisibility(cart);
+        this.setCartButtonsVisibility(newCart);
 
         alertModal.showAlert('success', 'The product has been removed from Cart');
       } catch (error) {

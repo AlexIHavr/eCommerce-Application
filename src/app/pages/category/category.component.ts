@@ -1,6 +1,6 @@
 import { ProductProjection } from '@commercetools/platform-sdk';
 import { ProductsCategories } from 'globalConsts/api.const';
-import { Anchor, Div } from 'globalTypes/elements.type';
+import { Div } from 'globalTypes/elements.type';
 import { FilterProps, SortProps } from 'interfaces/api.interface';
 import { ProductsFilters } from 'pages/category/components/productsFilters/productsFilters.component';
 import { getCategoryBreadcrumbPath } from 'pages/pageWrapper.helpers';
@@ -25,7 +25,7 @@ export class Category extends BaseComponent {
 
   private readonly pagination: Div;
 
-  private productsLinks: Anchor[] = [];
+  private productsLinks: Div[] = [];
 
   private isInitProducts: boolean = true;
 
