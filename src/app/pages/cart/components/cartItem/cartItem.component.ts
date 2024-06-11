@@ -2,7 +2,7 @@ import { Div } from 'globalTypes/elements.type';
 import { centToDollar } from 'pages/cart/cart.helpers';
 import cartStyles from 'pages/cart/cart.module.scss';
 import { BaseComponent } from 'shared/base/base.component';
-import { button, div, img } from 'shared/tags/tags.component';
+import { button, div, img, input } from 'shared/tags/tags.component';
 
 import styles from './cartItem.module.scss';
 import { CartItemProps } from './cartItem.types';
@@ -11,6 +11,8 @@ export class CartItem extends BaseComponent {
   private readonly priceWrapper: Div;
 
   private readonly quantity: Div;
+
+  private readonly quantityError: Div;
 
   private readonly subtotal: Div;
 
@@ -26,11 +28,19 @@ export class CartItem extends BaseComponent {
       div({ className: styles.promoPrice, text: centToDollar(props.promoPricePerOne) }),
     );
 
-    this.quantity = div({ className: styles.quantity, text: '1' });
+    this.quantity = input({
+      className: styles.quantity,
+      type: 'text',
+      value: '1',
+      autocomplete: 'off',
+      onchange: () => console.log('TODO CHANGE'),
+    });
     this.subtotal = div({
       className: styles.subtotal,
       text: `Subtotal: ${centToDollar(props.subtotal)}`,
     });
+
+    this.quantityError = div({ className: styles.quantityError });
 
     const quantityContent = div(
       { className: styles.quantityContent },
@@ -53,7 +63,7 @@ export class CartItem extends BaseComponent {
         img({ className: styles.itemImage, src: props.imageSrc, alt: 'image' }),
         div({ className: styles.itemName, text: props.name }),
         this.priceWrapper,
-        div({ className: styles.quantityWrapper }, quantityContent),
+        div({ className: styles.quantityWrapper }, quantityContent, this.quantityError),
       ),
       div(
         { className: styles.itemFooter },

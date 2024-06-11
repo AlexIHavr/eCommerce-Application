@@ -120,15 +120,30 @@
 }
 
 .quantity {
-  min-width: 20px;
-  line-height: 1;
+  flex-grow: 1;
+
+  width: 50px;
+  padding: 0;
+
+  font-size: inherit;
   text-align: center;
+
+  border: none;
+
+  &:focus {
+    border: none;
+  }
 
   @media (max-width: $medium-width) {
     order: -1;
-    width: 100%;
     text-align: center;
   }
+}
+
+.quantityError {
+  font-size: 0.8em;
+  color: var(--text-error-color);
+  text-align: center;
 }
 
 .itemFooter {
