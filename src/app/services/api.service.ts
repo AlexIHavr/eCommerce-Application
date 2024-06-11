@@ -1,5 +1,6 @@
 import {
   ByProjectKeyRequestBuilder,
+  Cart,
   Customer,
   CustomerChangePassword,
   CustomerPagedQueryResponse,
@@ -137,6 +138,55 @@ export class ApiService {
     tokenCache.resetCache();
     this.apiRoot = clientBuild.getApiRootByPasswordFlow(credentials);
     return this.apiRoot.get().execute();
+  }
+
+  public getCart(cartId: string): ApiClientResponse<Cart> {
+    return this.apiRoot.carts().withId({ ID: cartId }).get().execute();
+  }
+
+  public createCustomerCart(): ApiClientResponse<Cart> {
+    return this.apiRoot
+      .me()
+      .carts()
+      .post({ body: { currency: 'USD' } })
+      .execute();
+  }
+
+  public createAnonymousCart(anonymousId: string): ApiClientResponse<Cart> {
+    return this.apiRoot
+      .carts()
+      .post({ body: { currency: 'USD', anonymousId } })
+      .execute();
+  }
+
+  public async addProductToCart(cartId: string, sku: string): ApiClientResponse<Cart> {
+    const cart = await this.getCart(cartId);
+
+    return this.apiRoot
+      .carts()
+      .withId({ ID: cartId })
+      .post({
+        body: {
+          actions: [{ action: 'addLineItem', sku }],
+          version: cart.body.version,
+        },
+      })
+      .execute();
+  }
+
+  public async removeProductFromCart(cartId: string, lineItemId: string): ApiClientResponse<Cart> {
+    const cart = await this.getCart(cartId);
+
+    return this.apiRoot
+      .carts()
+      .withId({ ID: cartId })
+      .post({
+        body: {
+          actions: [{ action: 'removeLineItem', lineItemId }],
+          version: cart.body.version,
+        },
+      })
+      .execute();
   }
 }
 

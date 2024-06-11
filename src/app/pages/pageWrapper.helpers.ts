@@ -108,3 +108,7 @@ export function getProductColor(masterVariant: ProductVariant): ProductsColors |
   return masterVariant.attributes?.find(({ name }) => name === ProductsAttributes.COLOR)?.value
     .label;
 }
+
+export function getCartId(): string | null {
+  return LocalStorageService.getData('cartId');
+}
