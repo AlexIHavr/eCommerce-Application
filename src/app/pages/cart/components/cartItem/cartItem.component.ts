@@ -1,4 +1,4 @@
-import { Div } from 'globalTypes/elements.type';
+import { Div, Input } from 'globalTypes/elements.type';
 import { centToDollar } from 'pages/cart/cart.helpers';
 import cartStyles from 'pages/cart/cart.module.scss';
 import { BaseComponent } from 'shared/base/base.component';
@@ -10,7 +10,7 @@ import { CartItemProps } from './cartItem.types';
 export class CartItem extends BaseComponent {
   private readonly priceWrapper: Div;
 
-  private readonly quantity: Div;
+  private readonly quantity: Input;
 
   private readonly quantityError: Div;
 
@@ -34,6 +34,9 @@ export class CartItem extends BaseComponent {
       value: '1',
       autocomplete: 'off',
       onchange: () => console.log('TODO CHANGE'),
+      oninput: () => {
+        this.quantity.getNode().value = this.quantity.getNode().value.replace(/\D/g, '');
+      },
     });
     this.subtotal = div({
       className: styles.subtotal,
