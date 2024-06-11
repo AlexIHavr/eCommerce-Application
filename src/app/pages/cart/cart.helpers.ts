@@ -10,6 +10,7 @@ export function makeCartItemProps(data: Cart): CartItemProps[] {
       id: item.id,
       imageSrc: item.variant.images![0].url,
       name: `${item.name.en} (${getProductColor(item.variant)})`,
+      quantity: String(item.quantity),
       originPricePerOne: item.price.discounted
         ? item.price.discounted.value.centAmount
         : item.price.value.centAmount,

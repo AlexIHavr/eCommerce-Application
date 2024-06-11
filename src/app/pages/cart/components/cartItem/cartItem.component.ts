@@ -4,6 +4,7 @@ import cartStyles from 'pages/cart/cart.module.scss';
 import { BaseComponent } from 'shared/base/base.component';
 import { button, div, img, input } from 'shared/tags/tags.component';
 
+import { MAX_PRODUCTS_QUANTITY_TO_ORDER, OVERQUANTITY_TEXT_ERROR } from './cartItem.consts';
 import styles from './cartItem.module.scss';
 import { CartItemProps } from './cartItem.types';
 
@@ -16,11 +17,18 @@ export class CartItem extends BaseComponent {
 
   private readonly subtotal: Div;
 
+  private readonly quantityCallback: (id: string, quantity: number) => void;
+
   public readonly id: string;
 
-  constructor(props: CartItemProps, removeHandler: (id: string) => void) {
+  constructor(
+    props: CartItemProps,
+    removeHandler: (id: string) => void,
+    quantityHandler: (id: string, quantity: number) => void,
+  ) {
     super({ className: cartStyles.cartItem });
     this.id = props.id;
+    this.quantityCallback = quantityHandler;
 
     this.priceWrapper = div(
       { className: styles.priceWrapper },
@@ -31,16 +39,9 @@ export class CartItem extends BaseComponent {
     this.quantity = input({
       className: styles.quantity,
       type: 'text',
-      value: '1',
+      value: props.quantity,
       autocomplete: 'off',
-      onchange: () => {
-        if (+this.quantity.getNode().value >= 50) {
-          this.quantityError.setText('Not enough products');
-        } else {
-          this.quantityError.setText('');
-          console.log('TODO CHANGE');
-        }
-      },
+      onchange: () => this.changeQuantityHandler(),
       oninput: () => {
         this.quantity.getNode().value = this.quantity.getNode().value.replace(/\D/g, '');
       },
@@ -57,13 +58,13 @@ export class CartItem extends BaseComponent {
       button({
         className: styles.quantityButton,
         text: '-',
-        onclick: () => console.log('TODO MINUS'),
+        onclick: () => this.changeQuantityHandler('minus'),
       }),
       this.quantity,
       button({
         className: styles.quantityButton,
         text: '+',
-        onclick: () => console.log('TODO PLUS'),
+        onclick: () => this.changeQuantityHandler('plus'),
       }),
     );
 
@@ -87,7 +88,27 @@ export class CartItem extends BaseComponent {
     ]);
   }
 
+  private changeQuantityHandler(action?: 'plus' | 'minus'): void {
+    let quantity = +this.quantity.getNode().value;
+
+    if (action === 'plus') quantity += 1;
+    if (action === 'minus') quantity -= 1;
+    this.quantity.setProps({ value: String(quantity) });
+
+    if (quantity >= MAX_PRODUCTS_QUANTITY_TO_ORDER) {
+      this.quantityError.setText(OVERQUANTITY_TEXT_ERROR);
+    } else {
+      this.quantityError.setText('');
+      this.quantityCallback(this.id, quantity);
+    }
+  }
+
   public showPromoPrice(): void {
     this.priceWrapper.addClass(styles.promo);
+  }
+
+  public updateQuantity(quantity: number, subtotal: number): void {
+    this.quantity.setProps({ value: String(quantity) });
+    this.subtotal.setText(`Subtotal: ${centToDollar(subtotal)}`);
   }
 }

@@ -106,7 +106,7 @@ export class CartComponent extends BaseComponent {
 
     const data = await apiService.getCart(cartId);
     this.cartData = data.body;
-    return this.cartData;
+    return data.body;
   }
 
   private renderCartItems(cart: Cart): void {
@@ -115,7 +115,11 @@ export class CartComponent extends BaseComponent {
 
     this.cart.appendChildren(
       cartItems.map((item) => {
-        const cartItem = new CartItem(item, this.removeHandler.bind(this));
+        const cartItem = new CartItem(
+          item,
+          this.removeHandler.bind(this),
+          this.changeQuantity.bind(this),
+        );
         this.cartItems.push(cartItem);
         return cartItem;
       }),
@@ -148,7 +152,6 @@ export class CartComponent extends BaseComponent {
 
         this.deleteItem(lineItemId);
         this.updateCartTotal(updCart.body.totalPrice.centAmount);
-        this.cartData = updCart.body;
       } catch (error) {
         alertModal.showAlert('error', NO_SERVICE_AVAILABLE);
       } finally {
@@ -170,12 +173,44 @@ export class CartComponent extends BaseComponent {
 
         const { version } = cart.body;
         const actions = makeCartClearActions(this.cartItems);
-        console.log(actions);
-        const updCart = await apiService.clearCart(cartId, version, actions);
+        await apiService.clearCart(cartId, version, actions);
 
         this.cart.destroyChildren();
-        this.cartData = updCart.body;
         this.cartItems = [];
+      } catch (error) {
+        alertModal.showAlert('error', NO_SERVICE_AVAILABLE);
+      } finally {
+        loader.close();
+      }
+    } else {
+      this.cart.destroyChildren();
+      alertModal.showAlert('error', NO_SUCH_CART);
+    }
+  }
+
+  private async changeQuantity(id: string, quantity: number): Promise<void> {
+    const cartId = getCartId();
+
+    if (cartId) {
+      try {
+        loader.open();
+        const cart = await apiService.getCart(cartId);
+
+        const { version } = cart.body;
+        const updCart = await apiService.changeProductQuantity(cartId, version, id, quantity);
+
+        const updLineItem = updCart.body.lineItems.find((item) => item.id === id);
+        const currentLineItem = this.cartItems.find((item) => item.id === id);
+
+        if (updLineItem) {
+          currentLineItem?.updateQuantity(
+            updLineItem?.quantity,
+            updLineItem?.totalPrice.centAmount,
+          );
+        }
+
+        this.updateCartTotal(updCart.body.totalPrice.centAmount);
+        if (quantity === 0) this.deleteItem(id);
       } catch (error) {
         alertModal.showAlert('error', NO_SERVICE_AVAILABLE);
       } finally {

@@ -175,6 +175,24 @@ export class ApiService {
       })
       .execute();
   }
+
+  public changeProductQuantity(
+    cartId: string,
+    version: number,
+    lineItemId: string,
+    quantity: number,
+  ): ApiClientResponse<Cart> {
+    return this.apiRoot
+      .carts()
+      .withId({ ID: cartId })
+      .post({
+        body: {
+          actions: [{ action: 'changeLineItemQuantity', lineItemId, quantity }],
+          version,
+        },
+      })
+      .execute();
+  }
 }
 
 export const apiService = new ApiService();
