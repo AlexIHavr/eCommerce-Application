@@ -11,7 +11,7 @@ import { loader } from 'shared/loader/loader.component';
 import { button, div, img, input, label } from 'shared/tags/tags.component';
 
 import { NO_SERVICE_AVAILABLE, NO_SUCH_CART } from './cart.consts';
-import { centToDollar, makeCartItemProps } from './cart.helpers';
+import { centToDollar, makeCartClearActions, makeCartItemProps } from './cart.helpers';
 import styles from './cart.module.scss';
 import { CartItem } from './components/cartItem/cartItem.component';
 import { ConfirmClear } from './components/confirmClear/confirmClear.component';
@@ -69,7 +69,7 @@ export class CartComponent extends BaseComponent {
           button({
             className: styles.clearCartBtn,
             text: 'Clear Shopping Cart',
-            onclick: () => this.append(new ConfirmClear()),
+            onclick: () => this.append(new ConfirmClear(this.clearCart.bind(this))),
           }),
         ),
         div(
@@ -149,6 +149,33 @@ export class CartComponent extends BaseComponent {
         this.deleteItem(lineItemId);
         this.updateCartTotal(updCart.body.totalPrice.centAmount);
         this.cartData = updCart.body;
+      } catch (error) {
+        alertModal.showAlert('error', NO_SERVICE_AVAILABLE);
+      } finally {
+        loader.close();
+      }
+    } else {
+      this.cart.destroyChildren();
+      alertModal.showAlert('error', NO_SUCH_CART);
+    }
+  }
+
+  private async clearCart(): Promise<void> {
+    const cartId = getCartId();
+
+    if (cartId) {
+      try {
+        loader.open();
+        const cart = await apiService.getCart(cartId);
+
+        const { version } = cart.body;
+        const actions = makeCartClearActions(this.cartItems);
+        console.log(actions);
+        const updCart = await apiService.clearCart(cartId, version, actions);
+
+        this.cart.destroyChildren();
+        this.cartData = updCart.body;
+        this.cartItems = [];
       } catch (error) {
         alertModal.showAlert('error', NO_SERVICE_AVAILABLE);
       } finally {

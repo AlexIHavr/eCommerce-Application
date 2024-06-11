@@ -1,6 +1,7 @@
-import { Cart } from '@commercetools/platform-sdk';
+import { Cart, CartUpdateAction } from '@commercetools/platform-sdk';
 import { getProductColor } from 'pages/pageWrapper.helpers';
 
+import { CartItem } from './components/cartItem/cartItem.component';
 import { CartItemProps } from './components/cartItem/cartItem.types';
 
 export function makeCartItemProps(data: Cart): CartItemProps[] {
@@ -20,4 +21,13 @@ export function makeCartItemProps(data: Cart): CartItemProps[] {
 
 export function centToDollar(centAmount: number): string {
   return (centAmount / 100).toLocaleString('en-US', { currency: 'USD', style: 'currency' });
+}
+
+export function makeCartClearActions(cartItems: CartItem[]): CartUpdateAction[] {
+  return cartItems.map((item) => {
+    return {
+      action: 'removeLineItem',
+      lineItemId: item.id,
+    } as CartUpdateAction;
+  });
 }

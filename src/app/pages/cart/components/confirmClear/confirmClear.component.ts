@@ -4,7 +4,7 @@ import { button, div } from 'shared/tags/tags.component';
 import styles from './confirmClear.module.scss';
 
 export class ConfirmClear extends BaseComponent {
-  constructor() {
+  constructor(clearHandler: () => void) {
     super({ className: styles.overlay });
 
     this.appendChildren([
@@ -16,7 +16,10 @@ export class ConfirmClear extends BaseComponent {
           button({
             className: styles.rejectBtn,
             text: 'Yes',
-            onclick: () => console.log('TODO Yes'),
+            onclick: () => {
+              this.closeModal();
+              clearHandler();
+            },
           }),
           button({
             className: styles.confirmBtn,

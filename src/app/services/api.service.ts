@@ -1,6 +1,7 @@
 import {
   ByProjectKeyRequestBuilder,
   Cart,
+  CartUpdateAction,
   Customer,
   CustomerChangePassword,
   CustomerPagedQueryResponse,
@@ -157,6 +158,20 @@ export class ApiService {
           actions: [{ action: 'removeLineItem', lineItemId }],
           version,
         },
+      })
+      .execute();
+  }
+
+  public clearCart(
+    cartId: string,
+    version: number,
+    actions: CartUpdateAction[],
+  ): ApiClientResponse<Cart> {
+    return this.apiRoot
+      .carts()
+      .withId({ ID: cartId })
+      .post({
+        body: { actions, version },
       })
       .execute();
   }
