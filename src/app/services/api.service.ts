@@ -1,5 +1,6 @@
 import {
   ByProjectKeyRequestBuilder,
+  Cart,
   Customer,
   CustomerChangePassword,
   CustomerPagedQueryResponse,
@@ -137,6 +138,10 @@ export class ApiService {
     tokenCache.resetCache();
     this.apiRoot = clientBuild.getApiRootByPasswordFlow(credentials);
     return this.apiRoot.get().execute();
+  }
+
+  public getCart(cartId: string): ApiClientResponse<Cart> {
+    return this.apiRoot.carts().withId({ ID: cartId }).get().execute();
   }
 }
 

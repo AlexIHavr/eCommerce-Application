@@ -1,4 +1,5 @@
 import { Div } from 'globalTypes/elements.type';
+import { centToDollar } from 'pages/cart/cart.helpers';
 import cartStyles from 'pages/cart/cart.module.scss';
 import { BaseComponent } from 'shared/base/base.component';
 import { button, div, img } from 'shared/tags/tags.component';
@@ -13,17 +14,23 @@ export class CartItem extends BaseComponent {
 
   private readonly subtotal: Div;
 
+  public readonly id: string;
+
   constructor(props: CartItemProps) {
     super({ className: cartStyles.cartItem });
+    this.id = props.id;
 
     this.priceWrapper = div(
       { className: styles.priceWrapper },
-      div({ className: styles.originPrice, text: props.originPrice }),
-      div({ className: styles.promoPrice, text: props.promoPrice }),
+      div({ className: styles.originPrice, text: centToDollar(props.originPricePerOne) }),
+      div({ className: styles.promoPrice, text: centToDollar(props.promoPricePerOne) }),
     );
 
     this.quantity = div({ className: styles.quantity, text: '1' });
-    this.subtotal = div({ className: styles.subtotal, text: `Subtotal: ${props.pricePerOne}` });
+    this.subtotal = div({
+      className: styles.subtotal,
+      text: `Subtotal: ${centToDollar(props.subtotal)}`,
+    });
 
     const quantityContent = div(
       { className: styles.quantityContent },
