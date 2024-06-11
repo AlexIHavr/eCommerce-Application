@@ -89,24 +89,21 @@ export class CartComponent extends BaseComponent {
     loader.open();
     this.initCart()
       .then((data) => {
-        if (data?.lineItems) this.renderCartItems(data);
+        if (data?.lineItems) {
+          this.renderCartItems(data);
+        } else {
+          this.cart.destroyChildren();
+        }
       })
       .finally(() => loader.close());
   }
 
   private async initCart(): Promise<Cart | null> {
-    // My Cart ID: "866f3ac5-7489-4e93-96d0-ba9707f5ea38"
-    const anonymousCartId = LocalStorageService.getData('anonymousCartId');
-    const customerCartId = LocalStorageService.getData('customerCartId');
+    const cartId = LocalStorageService.getData('cartId');
+    if (!cartId) return null;
 
-    if (anonymousCartId) {
-      const data = await apiService.getCart(anonymousCartId);
-      this.cartData = data.body;
-    } else if (customerCartId) {
-      const data = await apiService.getCart(customerCartId);
-      this.cartData = data.body;
-    }
-
+    const data = await apiService.getCart(cartId);
+    this.cartData = data.body;
     return this.cartData;
   }
 
