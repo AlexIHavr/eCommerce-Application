@@ -1,5 +1,5 @@
 import { LineItem } from '@commercetools/platform-sdk';
-import { Div } from 'globalTypes/elements.type';
+import { Div, Input } from 'globalTypes/elements.type';
 import { catalogNavLink } from 'pages/shared/components/navLinks/navLinks.component';
 import { SectionTitle } from 'pages/shared/components/sectionTitle/sectionTitle.component';
 import sharedStyles from 'pages/shared/styles/common.module.scss';
@@ -17,26 +17,29 @@ export class CartComponent extends BaseComponent {
 
   private readonly cartTotal: Div;
 
+  private readonly promoCodeInput: Input;
+
   constructor() {
     super({ className: styles.cartPage });
     this.cart = div({ className: styles.cart });
     this.renderCart();
 
+    this.promoCodeInput = input({
+      className: styles.promocode,
+      type: 'text',
+      name: 'promocode',
+      placeholder: 'Enter promocode',
+    });
+
     const promocode = div(
       { className: styles.promocodeWrapper },
-      label(
-        { className: styles.promocodeLabel, text: 'Promocode' },
-        input({
-          className: styles.promocode,
-          type: 'text',
-          name: 'promocode',
-          placeholder: 'Enter promocode',
-        }),
-      ),
+      label({ className: styles.promocodeLabel, text: 'Promocode' }, this.promoCodeInput),
       button({
         className: styles.promocodeButton,
         text: 'Apply',
-        onclick: () => console.log('TODO Apply promocode'),
+        onclick: () => {
+          this.applyPromoCode();
+        },
       }),
     );
 
@@ -85,5 +88,19 @@ export class CartComponent extends BaseComponent {
 
   private renderCartItems(lineItems: LineItem[]): void {
     lineItems.forEach((lineItem) => this.cart.appendChildren([new CartItem(lineItem)]));
+  }
+
+  private async applyPromoCode(): Promise<void> {
+    const promoCode = this.promoCodeInput.getNode().value;
+
+    if (!promoCode) return;
+
+    try {
+      const cart = await apiService.getCart();
+      const { version, id } = cart.body;
+      await apiService.addPromoCodeToCart(id, version, promoCode);
+    } catch (error) {
+      console.log(error);
+    }
   }
 }

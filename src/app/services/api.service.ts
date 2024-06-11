@@ -249,6 +249,58 @@ export class ApiService {
       .post({ body: { currency: 'USD' } })
       .execute();
   }
+
+  public addPromoCodeToCart(
+    cartID: string,
+    cartVersion: number,
+    promoCode: string,
+  ): ApiClientResponse<Cart> {
+    const updateActions: CartUpdateAction[] = [
+      {
+        action: 'addDiscountCode',
+        code: promoCode,
+      },
+    ];
+
+    return this.apiRoot
+      .carts()
+      .withId({ ID: cartID })
+      .post({
+        body: {
+          version: cartVersion,
+          actions: updateActions,
+        },
+      })
+      .execute();
+  }
+
+  public removePromoCodeFromCart(
+    cartID: string,
+    cartVersion: number,
+    promoCodeID: string,
+  ): ApiClientResponse<Cart> {
+    const updateActions: CartUpdateAction[] = [
+      {
+        action: 'removeDiscountCode',
+
+        discountCode: {
+          id: promoCodeID,
+          typeId: 'discount-code',
+        },
+      },
+    ];
+
+    return this.apiRoot
+      .carts()
+      .withId({ ID: cartID })
+      .post({
+        body: {
+          version: cartVersion,
+          actions: updateActions,
+        },
+      })
+      .execute();
+  }
 }
 
 export const apiService = new ApiService();
