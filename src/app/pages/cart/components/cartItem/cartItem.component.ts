@@ -33,7 +33,14 @@ export class CartItem extends BaseComponent {
       type: 'text',
       value: '1',
       autocomplete: 'off',
-      onchange: () => console.log('TODO CHANGE'),
+      onchange: () => {
+        if (+this.quantity.getNode().value >= 50) {
+          this.quantityError.setText('Not enough products');
+        } else {
+          this.quantityError.setText('');
+          console.log('TODO CHANGE');
+        }
+      },
       oninput: () => {
         this.quantity.getNode().value = this.quantity.getNode().value.replace(/\D/g, '');
       },

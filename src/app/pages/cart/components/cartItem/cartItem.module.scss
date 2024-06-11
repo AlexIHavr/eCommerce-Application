@@ -141,7 +141,11 @@
 }
 
 .quantityError {
+  max-width: 120px;
+  margin-top: 3px;
+
   font-size: 0.8em;
+  line-height: 1.1;
   color: var(--text-error-color);
   text-align: center;
 }
