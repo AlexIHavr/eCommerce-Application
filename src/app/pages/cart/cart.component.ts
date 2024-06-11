@@ -1,14 +1,16 @@
 import { Cart } from '@commercetools/platform-sdk';
 import { Div } from 'globalTypes/elements.type';
+import { getCartId } from 'pages/pageWrapper.helpers';
 import { catalogNavLink } from 'pages/shared/components/navLinks/navLinks.component';
 import { SectionTitle } from 'pages/shared/components/sectionTitle/sectionTitle.component';
 import sharedStyles from 'pages/shared/styles/common.module.scss';
 import { apiService } from 'services/api.service';
-import { LocalStorageService } from 'services/localStorage.service';
+import { alertModal } from 'shared/alert/alert.component';
 import { BaseComponent } from 'shared/base/base.component';
 import { loader } from 'shared/loader/loader.component';
 import { button, div, img, input, label } from 'shared/tags/tags.component';
 
+import { NO_SERVICE_AVAILABLE, NO_SUCH_CART } from './cart.consts';
 import { centToDollar, makeCartItemProps } from './cart.helpers';
 import styles from './cart.module.scss';
 import { CartItem } from './components/cartItem/cartItem.component';
@@ -53,7 +55,7 @@ export class CartComponent extends BaseComponent {
       }),
     );
 
-    this.cartTotal = div({ className: styles.cartTotal, text: 'Cart Total: $10 000.00' });
+    this.cartTotal = div({ className: styles.cartTotal });
 
     this.appendChildren([
       new SectionTitle('Cart'),
@@ -99,7 +101,7 @@ export class CartComponent extends BaseComponent {
   }
 
   private async initCart(): Promise<Cart | null> {
-    const cartId = LocalStorageService.getData('cartId');
+    const cartId = getCartId();
     if (!cartId) return null;
 
     const data = await apiService.getCart(cartId);
@@ -113,7 +115,7 @@ export class CartComponent extends BaseComponent {
 
     this.cart.appendChildren(
       cartItems.map((item) => {
-        const cartItem = new CartItem(item);
+        const cartItem = new CartItem(item, this.removeHandler.bind(this));
         this.cartItems.push(cartItem);
         return cartItem;
       }),
@@ -124,5 +126,37 @@ export class CartComponent extends BaseComponent {
 
   private updateCartTotal(price: number): void {
     this.cartTotal.setText(`Cart Total: ${centToDollar(price)}`);
+  }
+
+  private deleteItem(id: string): void {
+    const delItem = this.cartItems.find((item) => item.id === id);
+    const delItemIndex = this.cartItems.findIndex((item) => item.id === id);
+    this.cartItems.splice(delItemIndex, 1);
+    delItem?.destroy();
+  }
+
+  private async removeHandler(lineItemId: string): Promise<void> {
+    const cartId = getCartId();
+
+    if (cartId) {
+      try {
+        loader.open();
+        const cart = await apiService.getCart(cartId);
+
+        const { version } = cart.body;
+        const updCart = await apiService.removeProductFromCart(cartId, version, lineItemId);
+
+        this.deleteItem(lineItemId);
+        this.updateCartTotal(updCart.body.totalPrice.centAmount);
+        this.cartData = updCart.body;
+      } catch (error) {
+        alertModal.showAlert('error', NO_SERVICE_AVAILABLE);
+      } finally {
+        loader.close();
+      }
+    } else {
+      this.cart.destroyChildren();
+      alertModal.showAlert('error', NO_SUCH_CART);
+    }
   }
 }

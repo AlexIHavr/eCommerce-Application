@@ -143,6 +143,23 @@ export class ApiService {
   public getCart(cartId: string): ApiClientResponse<Cart> {
     return this.apiRoot.carts().withId({ ID: cartId }).get().execute();
   }
+
+  public removeProductFromCart(
+    cartId: string,
+    version: number,
+    lineItemId: string,
+  ): ApiClientResponse<Cart> {
+    return this.apiRoot
+      .carts()
+      .withId({ ID: cartId })
+      .post({
+        body: {
+          actions: [{ action: 'removeLineItem', lineItemId }],
+          version,
+        },
+      })
+      .execute();
+  }
 }
 
 export const apiService = new ApiService();

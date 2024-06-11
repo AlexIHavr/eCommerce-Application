@@ -16,7 +16,7 @@ export class CartItem extends BaseComponent {
 
   public readonly id: string;
 
-  constructor(props: CartItemProps) {
+  constructor(props: CartItemProps, removeHandler: (id: string) => void) {
     super({ className: cartStyles.cartItem });
     this.id = props.id;
 
@@ -60,7 +60,7 @@ export class CartItem extends BaseComponent {
         button({
           className: styles.removeButton,
           text: 'Remove from Cart',
-          onclick: () => console.log('TODO remove'),
+          onclick: () => removeHandler(props.id),
         }),
         this.subtotal,
       ),
