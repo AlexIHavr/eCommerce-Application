@@ -1,6 +1,5 @@
 import { Form } from 'globalTypes/elements.type';
-import { CustomerLoginData } from 'interfaces/api.interface';
-import { getCartId, successLogin } from 'pages/pageWrapper.helpers';
+import { getLoginDataWithCart, successLogin } from 'pages/pageWrapper.helpers';
 import { FormField } from 'pages/shared/components/formField/formField.component';
 import formFieldStyles from 'pages/shared/components/formField/formField.module.scss';
 import { signupNavLink } from 'pages/shared/components/navLinks/navLinks.component';
@@ -8,7 +7,6 @@ import { SectionTitle } from 'pages/shared/components/sectionTitle/sectionTitle.
 import sharedStyles from 'pages/shared/styles/common.module.scss';
 import formStyles from 'pages/shared/styles/formElements.module.scss';
 import { apiService } from 'services/api.service';
-import { LocalStorageService } from 'services/localStorage.service';
 import { BaseComponent } from 'shared/base/base.component';
 import { loader } from 'shared/loader/loader.component';
 import { button, div, form, span } from 'shared/tags/tags.component';
@@ -88,23 +86,14 @@ export class Login extends BaseComponent {
   }
 
   private sendLogin(): void {
-    const cartId = getCartId();
-
-    const loginData: CustomerLoginData = {
-      email: this.emailField.value,
-      password: this.passwordField.value,
-    };
-
-    if (cartId) loginData.anonymousCart = { typeId: 'cart', id: cartId };
-
     apiService
-      .loginCustomer(loginData)
-      .then((data) => {
-        successLogin('Login successfully', data.body.customer.id);
-        if (data.body.cart) {
-          LocalStorageService.saveData('cartId', data.body.cart.id);
-        }
-      })
+      .loginCustomer(
+        getLoginDataWithCart({
+          email: this.emailField.value,
+          password: this.passwordField.value,
+        }),
+      )
+      .then((data) => successLogin('Login successfully', data.body.customer.id, data.body.cart))
       .catch(() => {
         this.passwordField.showApiError(LOGIN_API_ERROR_TEXT.password);
         apiService.apiRoot = clientBuild.getApiRootByAnonymousFlow();

@@ -3,7 +3,7 @@ import { ClientResponse } from '@commercetools/sdk-client-v2';
 import { Addresses } from 'globalConsts/api.const';
 import { Form, Span } from 'globalTypes/elements.type';
 import { NewCustomer } from 'interfaces/api.interface';
-import { successLogin } from 'pages/pageWrapper.helpers';
+import { getLoginDataWithCart, successLogin } from 'pages/pageWrapper.helpers';
 import { FormField } from 'pages/shared/components/formField/formField.component';
 import formFieldStyles from 'pages/shared/components/formField/formField.module.scss';
 import { loginNavLink } from 'pages/shared/components/navLinks/navLinks.component';
@@ -132,10 +132,12 @@ export class Signup extends BaseComponent {
     apiService
       .signupCustomer(this.getNewCustomerFromForm())
       .then(() =>
-        apiService.loginCustomer({
-          email: this.emailField.value,
-          password: this.passwordField.value,
-        }),
+        apiService.loginCustomer(
+          getLoginDataWithCart({
+            email: this.emailField.value,
+            password: this.passwordField.value,
+          }),
+        ),
       )
       .then((data) => {
         const { id, version, addresses } = data.body.customer;
@@ -152,7 +154,7 @@ export class Signup extends BaseComponent {
 
         apiService
           .updateCustomerInfo(id, version, actions)
-          .then(() => successLogin('Signed up successfully', id));
+          .then(() => successLogin('Signed up successfully', id, data.body.cart));
       })
       .catch((res) => this.showSignupErrors(res))
       .finally(() => {
