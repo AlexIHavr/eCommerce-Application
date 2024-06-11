@@ -8,6 +8,7 @@ import { SectionTitle } from 'pages/shared/components/sectionTitle/sectionTitle.
 import sharedStyles from 'pages/shared/styles/common.module.scss';
 import formStyles from 'pages/shared/styles/formElements.module.scss';
 import { apiService } from 'services/api.service';
+import { LocalStorageService } from 'services/localStorage.service';
 import { BaseComponent } from 'shared/base/base.component';
 import { loader } from 'shared/loader/loader.component';
 import { button, div, form, span } from 'shared/tags/tags.component';
@@ -98,7 +99,12 @@ export class Login extends BaseComponent {
 
     apiService
       .loginCustomer(loginData)
-      .then((data) => successLogin('Login successfully', data.body.customer.id))
+      .then((data) => {
+        successLogin('Login successfully', data.body.customer.id);
+        if (data.body.cart) {
+          LocalStorageService.saveData('cartId', data.body.cart.id);
+        }
+      })
       .catch(() => {
         this.passwordField.showApiError(LOGIN_API_ERROR_TEXT.password);
         apiService.apiRoot = clientBuild.getApiRootByAnonymousFlow();
