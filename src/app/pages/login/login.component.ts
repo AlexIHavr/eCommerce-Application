@@ -1,5 +1,6 @@
 import { Form } from 'globalTypes/elements.type';
-import { successLogin } from 'pages/pageWrapper.helpers';
+import { CustomerLoginData } from 'interfaces/api.interface';
+import { getCartId, successLogin } from 'pages/pageWrapper.helpers';
 import { FormField } from 'pages/shared/components/formField/formField.component';
 import formFieldStyles from 'pages/shared/components/formField/formField.module.scss';
 import { signupNavLink } from 'pages/shared/components/navLinks/navLinks.component';
@@ -86,11 +87,17 @@ export class Login extends BaseComponent {
   }
 
   private sendLogin(): void {
+    const cartId = getCartId();
+
+    const loginData: CustomerLoginData = {
+      email: this.emailField.value,
+      password: this.passwordField.value,
+    };
+
+    if (cartId) loginData.anonymousCart = { typeId: 'cart', id: cartId };
+
     apiService
-      .loginCustomer({
-        email: this.emailField.value,
-        password: this.passwordField.value,
-      })
+      .loginCustomer(loginData)
       .then((data) => successLogin('Login successfully', data.body.customer.id))
       .catch(() => {
         this.passwordField.showApiError(LOGIN_API_ERROR_TEXT.password);

@@ -115,12 +115,14 @@ export class Product extends BaseComponent {
       className: styles.addToCardBtn,
       text: 'Add to cart',
       onclick: () => this.addToCartHandler(),
+      disabled: true,
     });
 
     this.removeFromCart = button({
       className: styles.removeFromCardBtn,
       text: 'Remove from cart',
       onclick: () => this.removeFromCartHandler(),
+      disabled: true,
     });
 
     this.appendChildren([

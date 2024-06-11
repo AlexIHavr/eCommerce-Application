@@ -152,6 +152,7 @@ export class Header extends BaseComponent {
     LocalStorageService.removeData('refreshToken');
     LocalStorageService.removeData('token');
     LocalStorageService.removeData('customerId');
+    LocalStorageService.removeData('cartId');
 
     apiService.logout();
 
