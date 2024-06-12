@@ -95,25 +95,6 @@
           }
         }
       }
-
-      .addToCardBtn {
-        background-color: var(--add-to-card-background-color);
-      }
-
-      .removeFromCardBtn {
-        background-color: var(--discount-label-color);
-      }
-
-      .addToCardBtn,
-      .removeFromCardBtn {
-        max-width: 300px;
-        font-size: 0.8em;
-
-        &:disabled {
-          color: var(--disabled-text-color);
-          background-color: var(--disabled-background-color);
-        }
-      }
     }
 
     @media (width <= $catalog-medium-width) {

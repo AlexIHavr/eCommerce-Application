@@ -24,7 +24,7 @@ $product-card-color: whitesmoke;
 
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      justify-content: space-between;
 
       max-width: $card-max-width;
 
@@ -34,31 +34,37 @@ $product-card-color: whitesmoke;
 
       transition: scale 0.3s;
 
-      .cardImg {
-        width: 100%;
-        height: 250px;
-        object-fit: cover;
-      }
-
-      .cardName,
-      .cardDescription,
-      .cardPrices {
-        padding: 0 10px;
-      }
-
-      .cardDescription {
-        color: var(--product-card-description-color);
-      }
-
-      .cardPrices {
+      .productCardLink {
         display: flex;
-        flex-grow: 1;
-        align-items: flex-end;
-        justify-content: space-between;
+        flex-direction: column;
+        gap: 10px;
 
-        padding-bottom: 10px;
+        .cardImg {
+          width: 100%;
+          height: 250px;
+          object-fit: cover;
+        }
 
-        font-weight: bold;
+        .cardName,
+        .cardDescription,
+        .cardPrices {
+          padding: 0 10px;
+        }
+
+        .cardDescription {
+          color: var(--product-card-description-color);
+        }
+
+        .cardPrices {
+          display: flex;
+          flex-grow: 1;
+          align-items: flex-end;
+          justify-content: space-between;
+
+          padding-bottom: 10px;
+
+          font-weight: bold;
+        }
       }
 
       @media (hover: hover) and (pointer: fine) {

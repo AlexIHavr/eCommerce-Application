@@ -1,6 +1,8 @@
-import { ClientResponse } from '@commercetools/platform-sdk';
+import { Cart, ClientResponse } from '@commercetools/platform-sdk';
 
 export type ApiClientResponse<T> = Promise<ClientResponse<T>>;
+
+export type CartResponse = ClientResponse<Cart>;
 
 export type Country = 'BY' | 'UA';
 

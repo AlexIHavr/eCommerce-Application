@@ -107,7 +107,7 @@ export class ApiService {
         queryArgs: {
           markMatchingVariants: true,
           filter: queryFilter,
-          sort: querySort,
+          sort: querySort.length ? querySort : ['name.en asc'],
           fuzzy: false,
           'text.en': searchText,
         },
@@ -146,7 +146,39 @@ export class ApiService {
     return this.apiRoot.carts().withId({ ID: cartId }).get().execute();
   }
 
-  public removeProductFromCart(
+  public createCustomerCart(): ApiClientResponse<Cart> {
+    return this.apiRoot
+      .me()
+      .carts()
+      .post({ body: { currency: 'USD' } })
+      .execute();
+  }
+
+  public createAnonymousCart(anonymousId: string): ApiClientResponse<Cart> {
+    return this.apiRoot
+      .carts()
+      .post({ body: { currency: 'USD', anonymousId } })
+      .execute();
+  }
+
+  public async addProductToCart(
+    cartId: string,
+    version: number,
+    sku: string,
+  ): ApiClientResponse<Cart> {
+    return this.apiRoot
+      .carts()
+      .withId({ ID: cartId })
+      .post({
+        body: {
+          actions: [{ action: 'addLineItem', sku }],
+          version,
+        },
+      })
+      .execute();
+  }
+
+  public async removeProductFromCart(
     cartId: string,
     version: number,
     lineItemId: string,
