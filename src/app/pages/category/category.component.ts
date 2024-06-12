@@ -1,14 +1,16 @@
 import { ProductProjection } from '@commercetools/platform-sdk';
 import { ProductsCategories } from 'globalConsts/api.const';
-import { Anchor, Div } from 'globalTypes/elements.type';
+import { CartResponse } from 'globalTypes/api.type';
+import { Div } from 'globalTypes/elements.type';
 import { FilterProps, SortProps } from 'interfaces/api.interface';
 import { ProductsFilters } from 'pages/category/components/productsFilters/productsFilters.component';
-import { getCategoryBreadcrumbPath } from 'pages/pageWrapper.helpers';
+import { getCartId, getCategoryBreadcrumbPath } from 'pages/pageWrapper.helpers';
 import { Breadcrumbs } from 'pages/shared/components/breadcrumbs/breadcrumbs.component';
 import { SectionTitle } from 'pages/shared/components/sectionTitle/sectionTitle.component';
 import sharedStyles from 'pages/shared/styles/common.module.scss';
 import { apiService } from 'services/api.service';
 import { routingService } from 'services/routing.service';
+import { alertModal } from 'shared/alert/alert.component';
 import { BaseComponent } from 'shared/base/base.component';
 import { loader } from 'shared/loader/loader.component';
 import { button, div, h3 } from 'shared/tags/tags.component';
@@ -25,7 +27,7 @@ export class Category extends BaseComponent {
 
   private readonly pagination: Div;
 
-  private productsLinks: Anchor[] = [];
+  private productsLinks: Div[] = [];
 
   private isInitProducts: boolean = true;
 
@@ -74,14 +76,18 @@ export class Category extends BaseComponent {
         } else {
           this.productsList.append(h3('No products'));
         }
-
-        routingService.updateLinks();
       })
+      .catch((error) => alertModal.showAlert('error', (error as Error).message))
       .finally(() => loader.close());
   }
 
-  private setProductsOnPages(products: ProductProjection[]): void {
-    this.productsLinks = getProducts(this.category, products);
+  private async setProductsOnPages(products: ProductProjection[]): Promise<void> {
+    const cartId = getCartId();
+    let cart: CartResponse | undefined;
+
+    if (cartId) cart = await apiService.getCart(cartId);
+
+    this.productsLinks = getProducts(this.category, products, cart);
 
     const pagesCount = Math.ceil(this.productsLinks.length / PRODUCTS_COUNT_ON_PAGE);
 
@@ -104,6 +110,8 @@ export class Category extends BaseComponent {
     );
 
     this.goToPage(1);
+
+    routingService.updateLinks();
   }
 
   private goToPage(page: number): void {

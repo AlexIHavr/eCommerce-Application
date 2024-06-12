@@ -59,7 +59,7 @@ export class PageWrapper extends BaseComponent {
       [PagesPaths.MAIN]: () => this.goToPage(main),
       [PagesPaths.HOME]: () => this.goToPage(main),
       [PagesPaths.LOGIN]: () => this.goToLogin(),
-      [PagesPaths.SIGNUP]: () => this.goToPage(new Signup()),
+      [PagesPaths.SIGNUP]: () => this.goToSignup(),
       [PagesPaths.CATALOG]: () => this.goToPage(new Catalog()),
       [PagesPaths.ABOUT]: () => this.goToPage(new About()),
       [PagesPaths.CATEGORY]: (match) => this.goToCategory(match),
@@ -76,6 +76,14 @@ export class PageWrapper extends BaseComponent {
       redirectToMain();
     } else {
       this.goToPage(new Login());
+    }
+  }
+
+  private goToSignup(): void {
+    if (isLogined()) {
+      redirectToMain();
+    } else {
+      this.goToPage(new Signup());
     }
   }
 

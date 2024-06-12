@@ -1,4 +1,4 @@
-import { LocalizedString, ProductVariant } from '@commercetools/platform-sdk';
+import { Cart, LocalizedString, ProductVariant } from '@commercetools/platform-sdk';
 import {
   ProductsAttributes,
   ProductsBrands,
@@ -6,6 +6,7 @@ import {
   ProductsColors,
 } from 'globalConsts/api.const';
 import { Anchor } from 'globalTypes/elements.type';
+import { CustomerLoginData } from 'interfaces/api.interface';
 import { BreadcrumbPath } from 'pages/shared/components/breadcrumbs/breadcrumbs.interfaces';
 import { LocalStorageService } from 'services/localStorage.service';
 import { routingService } from 'services/routing.service';
@@ -44,9 +45,11 @@ export function saveTokensToLS(): void {
   LocalStorageService.saveData('token', tokenCache.cache.token);
 }
 
-export function successLogin(title: string, customerId: string): void {
+export function successLogin(title: string, customerId: string, cart?: Cart): void {
   saveTokensToLS();
   LocalStorageService.saveData('customerId', customerId);
+
+  if (cart) LocalStorageService.saveData('cartId', cart.id);
 
   redirectToMain();
   alertModal.showAlert('success', title);
@@ -107,4 +110,17 @@ export function getProductBrand(masterVariant: ProductVariant): ProductsBrands |
 export function getProductColor(masterVariant: ProductVariant): ProductsColors | undefined {
   return masterVariant.attributes?.find(({ name }) => name === ProductsAttributes.COLOR)?.value
     .label;
+}
+
+export function getCartId(): string | null {
+  return LocalStorageService.getData('cartId');
+}
+
+export function getLoginDataWithCart(loginData: CustomerLoginData): CustomerLoginData {
+  const cartId = getCartId();
+  const loginDataWithCart = loginData;
+
+  if (cartId) loginDataWithCart.anonymousCart = { typeId: 'cart', id: cartId };
+
+  return loginDataWithCart;
 }

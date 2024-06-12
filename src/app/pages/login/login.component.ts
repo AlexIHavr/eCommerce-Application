@@ -1,5 +1,5 @@
 import { Form } from 'globalTypes/elements.type';
-import { successLogin } from 'pages/pageWrapper.helpers';
+import { getLoginDataWithCart, successLogin } from 'pages/pageWrapper.helpers';
 import { FormField } from 'pages/shared/components/formField/formField.component';
 import formFieldStyles from 'pages/shared/components/formField/formField.module.scss';
 import { signupNavLink } from 'pages/shared/components/navLinks/navLinks.component';
@@ -87,11 +87,13 @@ export class Login extends BaseComponent {
 
   private sendLogin(): void {
     apiService
-      .loginCustomer({
-        email: this.emailField.value,
-        password: this.passwordField.value,
-      })
-      .then((data) => successLogin('Login successfully', data.body.customer.id))
+      .loginCustomer(
+        getLoginDataWithCart({
+          email: this.emailField.value,
+          password: this.passwordField.value,
+        }),
+      )
+      .then((data) => successLogin('Login successfully', data.body.customer.id, data.body.cart))
       .catch(() => {
         this.passwordField.showApiError(LOGIN_API_ERROR_TEXT.password);
         apiService.apiRoot = clientBuild.getApiRootByAnonymousFlow();

@@ -1,6 +1,7 @@
 import { LocalizedString, ProductProjection, ProductVariant } from '@commercetools/platform-sdk';
 import { ProductsCategories } from 'globalConsts/api.const';
-import { Anchor } from 'globalTypes/elements.type';
+import { CartResponse } from 'globalTypes/api.type';
+import { Div } from 'globalTypes/elements.type';
 import {
   getDiscountPercent,
   getNavLink,
@@ -13,6 +14,7 @@ import {
   getProductPath,
   getProductPrice,
 } from 'pages/pageWrapper.helpers';
+import { ProductCartButtons } from 'pages/shared/components/productCartButtons/productCartButtons.component';
 import productsStyles from 'pages/shared/styles/products.module.scss';
 import { div, h3, img } from 'shared/tags/tags.component';
 
@@ -24,7 +26,8 @@ function getProductCard(
   slug: LocalizedString,
   name: LocalizedString,
   description?: LocalizedString,
-): Anchor {
+  cart?: CartResponse,
+): Div {
   const price = getProductPrice(variant) ?? 0;
   const discount = getProductDiscount(variant);
   const color = getProductColor(variant);
@@ -34,19 +37,23 @@ function getProductCard(
     div({ text: getPriceWithCurrency(discount ?? price) }),
   );
 
-  const productCard = getNavLink(
-    '',
-    getProductPath(category, slug, color),
-    styles.productCard,
-    img({
-      className: styles.cardImg,
-      src: variant.images?.[0].url ?? '',
-      alt: 'product-card-img',
-    }),
-    h3(`${getProductName(name)} (${color})`, styles.cardName),
-    h3(`${getProductBrand(variant)}`, styles.cardName),
-    div({ className: styles.cardDescription, text: getProductDescription(description) }),
-    cardPrices,
+  const productCard = div(
+    { className: styles.productCard },
+    getNavLink(
+      '',
+      getProductPath(category, slug, color),
+      styles.productCardLink,
+      img({
+        className: styles.cardImg,
+        src: variant.images?.[0].url ?? '',
+        alt: 'product-card-img',
+      }),
+      h3(`${getProductName(name)} (${color})`, styles.cardName),
+      h3(`${getProductBrand(variant)}`, styles.cardName),
+      div({ className: styles.cardDescription, text: getProductDescription(description) }),
+      cardPrices,
+    ),
+    new ProductCartButtons(variant.sku, true, cart),
   );
 
   if (discount) {
@@ -67,17 +74,21 @@ function getProductCard(
   return productCard;
 }
 
-export function getProducts(category: ProductsCategories, products: ProductProjection[]): Anchor[] {
-  return products.reduce<Anchor[]>(
+export function getProducts(
+  category: ProductsCategories,
+  products: ProductProjection[],
+  cart?: CartResponse,
+): Div[] {
+  return products.reduce<Div[]>(
     (productsCards, { slug, name, description, masterVariant, variants }) => {
       if (masterVariant.isMatchingVariant) {
-        productsCards.push(getProductCard(category, masterVariant, slug, name, description));
+        productsCards.push(getProductCard(category, masterVariant, slug, name, description, cart));
       }
 
       variants
         .filter(({ isMatchingVariant }) => isMatchingVariant)
         .forEach((variant) =>
-          productsCards.push(getProductCard(category, variant, slug, name, description)),
+          productsCards.push(getProductCard(category, variant, slug, name, description, cart)),
         );
 
       return productsCards;
