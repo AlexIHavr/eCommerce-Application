@@ -7,6 +7,7 @@ import {
   CustomerPagedQueryResponse,
   CustomerSignInResult,
   CustomerUpdateAction,
+  DiscountCode,
   ProductProjectionPagedSearchResponse,
   Project,
 } from '@commercetools/platform-sdk';
@@ -192,6 +193,10 @@ export class ApiService {
         },
       })
       .execute();
+  }
+
+  public getPromocode(id: string): ApiClientResponse<DiscountCode> {
+    return this.apiRoot.discountCodes().withId({ ID: id }).get().execute();
   }
 
   public usePromocode(cartId: string, version: number, promocode: string): ApiClientResponse<Cart> {

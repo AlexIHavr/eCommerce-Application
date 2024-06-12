@@ -113,6 +113,10 @@ export class CartItem extends BaseComponent {
     this.promoprice.setText(centToDollar(promoPrice));
   }
 
+  public hidePromoPrice(): void {
+    this.priceWrapper.removeClass(styles.promo);
+  }
+
   public updateSubtotal(subtotal: number): void {
     this.subtotal.setText(`Subtotal: ${centToDollar(subtotal)}`);
   }

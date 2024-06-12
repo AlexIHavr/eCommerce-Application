@@ -1,5 +1,5 @@
 import { Cart } from '@commercetools/platform-sdk';
-import { Button, Div, Input } from 'globalTypes/elements.type';
+import { Button, Div, Form, Input } from 'globalTypes/elements.type';
 import { getCartId } from 'pages/pageWrapper.helpers';
 import { catalogNavLink } from 'pages/shared/components/navLinks/navLinks.component';
 import { SectionTitle } from 'pages/shared/components/sectionTitle/sectionTitle.component';
@@ -8,9 +8,14 @@ import { apiService } from 'services/api.service';
 import { alertModal } from 'shared/alert/alert.component';
 import { BaseComponent } from 'shared/base/base.component';
 import { loader } from 'shared/loader/loader.component';
-import { button, div, img, input, label } from 'shared/tags/tags.component';
+import { button, div, form, img, input, label } from 'shared/tags/tags.component';
 
-import { NO_SERVICE_AVAILABLE, NO_SUCH_CART, NO_SUCH_PROMOCODE } from './cart.consts';
+import {
+  NO_ACTIVE_PROMOCODE,
+  NO_SERVICE_AVAILABLE,
+  NO_SUCH_CART,
+  NO_SUCH_PROMOCODE,
+} from './cart.consts';
 import { centToDollar, makeCartClearActions, makeCartItemProps } from './cart.helpers';
 import styles from './cart.module.scss';
 import { CartItem } from './components/cartItem/cartItem.component';
@@ -22,13 +27,21 @@ export class CartComponent extends BaseComponent {
 
   private readonly cartTotal: Div;
 
+  private readonly promocodeWrapper: Form;
+
   private readonly promocodeInput: Input;
 
+  private readonly promocodeText: Div;
+
   private readonly applyPromoBtn: Button;
+
+  private readonly removePromoBtn: Button;
 
   private cartData: Cart | null;
 
   private cartItems: CartItem[];
+
+  private currentPromocode: string | undefined;
 
   constructor() {
     super({ className: styles.cartPage });
@@ -60,17 +73,33 @@ export class CartComponent extends BaseComponent {
     this.applyPromoBtn = button({
       className: styles.promocodeButton,
       text: 'Apply',
+      type: 'submit',
       disabled: true,
-      onclick: () => {
+      onclick: (e) => {
+        e.preventDefault();
         const promocode = this.promocodeInput.getNode().value.toUpperCase();
         if (promocode) this.applyPromocode(promocode);
       },
     });
 
-    const promocodeWrapper = div(
+    this.removePromoBtn = button({
+      className: styles.promocodeRemoveButton,
+      text: 'Remove',
+      type: 'button',
+      onclick: () => this.removePromocode(),
+    });
+
+    this.promocodeText = div({ className: styles.promocodeText });
+
+    this.promocodeWrapper = form(
       { className: styles.promocodeWrapper },
-      label({ className: styles.promocodeLabel, text: 'Promocode' }, this.promocodeInput),
+      label(
+        { className: styles.promocodeLabel, text: 'Promocode' },
+        this.promocodeInput,
+        this.promocodeText,
+      ),
       this.applyPromoBtn,
+      this.removePromoBtn,
     );
 
     this.cartTotal = div({ className: styles.cartTotal });
@@ -82,7 +111,7 @@ export class CartComponent extends BaseComponent {
         this.cart,
         div(
           { className: styles.cartFooter },
-          promocodeWrapper,
+          this.promocodeWrapper,
           this.cartTotal,
           button({
             className: styles.clearCartBtn,
@@ -111,6 +140,9 @@ export class CartComponent extends BaseComponent {
       .then((data) => {
         if (data?.lineItems) {
           this.renderCartItems(data);
+          if (data.discountCodes.length) {
+            this.renderPromocode(data.discountCodes[0].discountCode.id);
+          }
         } else {
           this.cart.destroyChildren();
         }
@@ -144,6 +176,15 @@ export class CartComponent extends BaseComponent {
     );
 
     this.updateCartTotal(cart.totalPrice.centAmount);
+  }
+
+  private renderPromocode(promocodeId: string): void {
+    this.promocodeWrapper.addClass(styles.active);
+    this.currentPromocode = promocodeId;
+
+    apiService.getPromocode(promocodeId).then((discount) => {
+      this.promocodeText.setText(discount.body.code);
+    });
   }
 
   private updateCartTotal(price: number): void {
@@ -263,11 +304,52 @@ export class CartComponent extends BaseComponent {
               }
             });
 
+            this.currentPromocode = updCart.body.discountCodes[0].discountCode.id;
+            this.promocodeWrapper.addClass(styles.active);
+            this.promocodeText.setText(promocode);
+            this.promocodeInput.getNode().value = '';
+            this.applyPromoBtn.setAttribute('disabled', 'true');
             this.updateCartTotal(updCart.body.totalPrice.centAmount);
           })
           .catch((error) => {
             if (error.code === 400) alertModal.showAlert('error', NO_SUCH_PROMOCODE);
           });
+      } catch (error) {
+        alertModal.showAlert('error', NO_SERVICE_AVAILABLE);
+      } finally {
+        loader.close();
+      }
+    } else {
+      this.cart.destroyChildren();
+      alertModal.showAlert('error', NO_SUCH_CART);
+    }
+  }
+
+  private async removePromocode(): Promise<void> {
+    if (!this.currentPromocode) {
+      alertModal.showAlert('attention', NO_ACTIVE_PROMOCODE);
+      return;
+    }
+
+    const cartId = getCartId();
+    if (cartId) {
+      try {
+        loader.open();
+        const cart = await apiService.getCart(cartId);
+
+        const { version } = cart.body;
+        const updCart = await apiService.abortPromocode(cartId, version, this.currentPromocode);
+
+        updCart.body.lineItems.forEach((item) => {
+          const lineItemForUpd = this.cartItems.find((lineItem) => lineItem.id === item.id);
+
+          lineItemForUpd?.hidePromoPrice();
+          lineItemForUpd?.updateSubtotal(item.totalPrice.centAmount);
+        });
+
+        this.currentPromocode = undefined;
+        this.promocodeWrapper.removeClass(styles.active);
+        this.updateCartTotal(updCart.body.totalPrice.centAmount);
       } catch (error) {
         alertModal.showAlert('error', NO_SERVICE_AVAILABLE);
       } finally {
