@@ -1,5 +1,6 @@
 import { LocalizedString, ProductProjection, ProductVariant } from '@commercetools/platform-sdk';
 import { ProductsCategories } from 'globalConsts/api.const';
+import { CartResponse } from 'globalTypes/api.type';
 import { Div } from 'globalTypes/elements.type';
 import {
   getDiscountPercent,
@@ -25,6 +26,7 @@ function getProductCard(
   slug: LocalizedString,
   name: LocalizedString,
   description?: LocalizedString,
+  cart?: CartResponse,
 ): Div {
   const price = getProductPrice(variant) ?? 0;
   const discount = getProductDiscount(variant);
@@ -51,7 +53,7 @@ function getProductCard(
       div({ className: styles.cardDescription, text: getProductDescription(description) }),
       cardPrices,
     ),
-    new ProductCartButtons(variant.sku, true),
+    new ProductCartButtons(variant.sku, true, cart),
   );
 
   if (discount) {
@@ -72,17 +74,21 @@ function getProductCard(
   return productCard;
 }
 
-export function getProducts(category: ProductsCategories, products: ProductProjection[]): Div[] {
+export function getProducts(
+  category: ProductsCategories,
+  products: ProductProjection[],
+  cart?: CartResponse,
+): Div[] {
   return products.reduce<Div[]>(
     (productsCards, { slug, name, description, masterVariant, variants }) => {
       if (masterVariant.isMatchingVariant) {
-        productsCards.push(getProductCard(category, masterVariant, slug, name, description));
+        productsCards.push(getProductCard(category, masterVariant, slug, name, description, cart));
       }
 
       variants
         .filter(({ isMatchingVariant }) => isMatchingVariant)
         .forEach((variant) =>
-          productsCards.push(getProductCard(category, variant, slug, name, description)),
+          productsCards.push(getProductCard(category, variant, slug, name, description, cart)),
         );
 
       return productsCards;

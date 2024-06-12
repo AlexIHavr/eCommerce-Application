@@ -1,4 +1,4 @@
-import { Cart, ClientResponse } from '@commercetools/platform-sdk';
+import { CartResponse } from 'globalTypes/api.type';
 import { Button } from 'globalTypes/elements.type';
 import { getCartId, isLogined } from 'pages/pageWrapper.helpers';
 import { apiService } from 'services/api.service';
@@ -20,6 +20,7 @@ export class ProductCartButtons extends BaseComponent {
   constructor(
     private readonly sku: string | undefined,
     isHiddenRemoveFromCart: boolean = false,
+    gettingCart?: CartResponse,
   ) {
     super({ className: styles.productCartButtons });
 
@@ -43,10 +44,10 @@ export class ProductCartButtons extends BaseComponent {
 
     this.appendChildren([this.addToCard, this.removeFromCart]);
 
-    this.setCartButtonsVisibility();
+    this.setCartButtonsVisibility(gettingCart);
   }
 
-  private async setCartButtonsVisibility(cart?: ClientResponse<Cart>): Promise<void> {
+  private async setCartButtonsVisibility(cart?: CartResponse): Promise<void> {
     const cartId = getCartId();
     let isProductInCart: boolean = Boolean(cartId);
 
@@ -71,7 +72,7 @@ export class ProductCartButtons extends BaseComponent {
     loader.open();
 
     try {
-      let newCart: ClientResponse<Cart> | undefined;
+      let newCart: CartResponse | undefined;
 
       if (cartId) {
         const cart = await apiService.getCart(cartId);
