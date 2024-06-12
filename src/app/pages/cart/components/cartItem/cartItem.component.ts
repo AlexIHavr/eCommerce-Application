@@ -9,15 +9,19 @@ import styles from './cartItem.module.scss';
 import { CartItemProps } from './cartItem.types';
 
 export class CartItem extends BaseComponent {
-  private readonly priceWrapper: Div;
-
   private readonly quantity: Input;
 
   private readonly quantityError: Div;
 
-  private readonly subtotal: Div;
+  private readonly subtotalWrapper: Div;
+
+  private readonly subtotalOrigin: Div;
+
+  private readonly subtotalPromo: Div;
 
   private readonly promoprice: Div;
+
+  private readonly sellPrice: number;
 
   private readonly quantityCallback: (id: string, quantity: number) => void;
 
@@ -30,16 +34,16 @@ export class CartItem extends BaseComponent {
   ) {
     super({ className: cartStyles.cartItem });
     this.id = props.id;
+    this.sellPrice = props.originPricePerOne;
     this.quantityCallback = quantityHandler;
 
     this.promoprice = div({ className: styles.promoPrice });
 
-    this.priceWrapper = div(
+    const priceWrapper = div(
       { className: styles.priceWrapper },
       div({ className: styles.originPrice, text: centToDollar(props.originPricePerOne) }),
       this.promoprice,
     );
-    if (props.promoPricePerOne) this.showPromoPrice(props.promoPricePerOne);
 
     this.quantity = input({
       className: styles.quantity,
@@ -51,10 +55,22 @@ export class CartItem extends BaseComponent {
         this.quantity.getNode().value = this.quantity.getNode().value.replace(/\D/g, '');
       },
     });
-    this.subtotal = div({
-      className: styles.subtotal,
-      text: `Subtotal: ${centToDollar(props.subtotal)}`,
+
+    this.subtotalOrigin = div({
+      className: styles.subtotalOrigin,
+      text: centToDollar(props.subtotal),
     });
+
+    this.subtotalPromo = div({
+      className: styles.subtotalPromo,
+      text: centToDollar(props.subtotal),
+    });
+
+    this.subtotalWrapper = div(
+      { className: styles.subtotalWrapper },
+      div({ className: styles.subtotalText, text: 'Subtotal:' }),
+      div({ className: styles.subtotalPrice }, this.subtotalOrigin, this.subtotalPromo),
+    );
 
     this.quantityError = div({ className: styles.quantityError });
 
@@ -73,12 +89,17 @@ export class CartItem extends BaseComponent {
       }),
     );
 
+    if (props.promoPricePerOne) {
+      this.showPromoPrice(props.promoPricePerOne);
+      this.updateSubtotal(props.subtotal, +props.quantity);
+    }
+
     this.appendChildren([
       div(
         { className: styles.cartContent },
         img({ className: styles.itemImage, src: props.imageSrc, alt: 'image' }),
         div({ className: styles.itemName, text: props.name }),
-        this.priceWrapper,
+        priceWrapper,
         div({ className: styles.quantityWrapper }, quantityContent, this.quantityError),
       ),
       div(
@@ -88,7 +109,7 @@ export class CartItem extends BaseComponent {
           text: 'Remove from Cart',
           onclick: () => removeHandler(props.id),
         }),
-        this.subtotal,
+        this.subtotalWrapper,
       ),
     ]);
   }
@@ -109,20 +130,21 @@ export class CartItem extends BaseComponent {
   }
 
   public showPromoPrice(promoPrice: number): void {
-    this.priceWrapper.addClass(styles.promo);
+    this.addClass(styles.promo);
     this.promoprice.setText(centToDollar(promoPrice));
   }
 
   public hidePromoPrice(): void {
-    this.priceWrapper.removeClass(styles.promo);
+    this.removeClass(styles.promo);
   }
 
-  public updateSubtotal(subtotal: number): void {
-    this.subtotal.setText(`Subtotal: ${centToDollar(subtotal)}`);
+  public updateSubtotal(subtotalPromo: number, quantity: number): void {
+    this.subtotalOrigin.setText(centToDollar(this.sellPrice * quantity));
+    this.subtotalPromo.setText(centToDollar(subtotalPromo));
   }
 
   public updateQuantity(quantity: number, subtotal: number): void {
     this.quantity.setProps({ value: String(quantity) });
-    this.updateSubtotal(subtotal);
+    this.updateSubtotal(subtotal, quantity);
   }
 }

@@ -300,7 +300,7 @@ export class CartComponent extends BaseComponent {
                 const lineItemForUpd = this.cartItems.find((lineItem) => lineItem.id === item.id);
 
                 lineItemForUpd?.showPromoPrice(promoprice);
-                lineItemForUpd?.updateSubtotal(item.totalPrice.centAmount);
+                lineItemForUpd?.updateSubtotal(item.totalPrice.centAmount, item.quantity);
               }
             });
 
@@ -344,7 +344,7 @@ export class CartComponent extends BaseComponent {
           const lineItemForUpd = this.cartItems.find((lineItem) => lineItem.id === item.id);
 
           lineItemForUpd?.hidePromoPrice();
-          lineItemForUpd?.updateSubtotal(item.totalPrice.centAmount);
+          lineItemForUpd?.updateSubtotal(item.totalPrice.centAmount, item.quantity);
         });
 
         this.currentPromocode = undefined;
