@@ -16,7 +16,12 @@ import {
   NO_SUCH_CART,
   NO_SUCH_PROMOCODE,
 } from './cart.consts';
-import { centToDollar, makeCartClearActions, makeCartItemProps } from './cart.helpers';
+import {
+  calculateOriginPrice,
+  centToDollar,
+  makeCartClearActions,
+  makeCartItemProps,
+} from './cart.helpers';
 import styles from './cart.module.scss';
 import { CartItem } from './components/cartItem/cartItem.component';
 import { ConfirmClear } from './components/confirmClear/confirmClear.component';
@@ -25,7 +30,11 @@ import emptyCartImage from './images/empty-cart.png';
 export class CartComponent extends BaseComponent {
   private readonly cart: Div;
 
-  private readonly cartTotal: Div;
+  private readonly cartTotalWrapper: Div;
+
+  private readonly cartTotalOrigin: Div;
+
+  private readonly cartTotalPromo: Div;
 
   private readonly promocodeWrapper: Form;
 
@@ -102,7 +111,14 @@ export class CartComponent extends BaseComponent {
       this.removePromoBtn,
     );
 
-    this.cartTotal = div({ className: styles.cartTotal });
+    this.cartTotalOrigin = div({ className: styles.cartTotalOrigin });
+    this.cartTotalPromo = div({ className: styles.cartTotalPromo });
+
+    this.cartTotalWrapper = div(
+      { className: styles.cartTotalWrapper },
+      div({ className: styles.cartSubtotalText, text: 'Cart Total:' }),
+      div({ className: styles.cartSubtotalPrice }, this.cartTotalOrigin, this.cartTotalPromo),
+    );
 
     this.appendChildren([
       new SectionTitle('Cart'),
@@ -112,7 +128,7 @@ export class CartComponent extends BaseComponent {
         div(
           { className: styles.cartFooter },
           this.promocodeWrapper,
-          this.cartTotal,
+          this.cartTotalWrapper,
           button({
             className: styles.clearCartBtn,
             text: 'Clear Shopping Cart',
@@ -142,6 +158,7 @@ export class CartComponent extends BaseComponent {
           this.renderCartItems(data);
           if (data.discountCodes.length) {
             this.renderPromocode(data.discountCodes[0].discountCode.id);
+            this.cartTotalWrapper.addClass(styles.promo);
           }
         } else {
           this.cart.destroyChildren();
@@ -175,7 +192,7 @@ export class CartComponent extends BaseComponent {
       }),
     );
 
-    this.updateCartTotal(cart.totalPrice.centAmount);
+    this.updateCartTotal(cart.totalPrice.centAmount, calculateOriginPrice(cart.lineItems));
   }
 
   private renderPromocode(promocodeId: string): void {
@@ -187,8 +204,9 @@ export class CartComponent extends BaseComponent {
     });
   }
 
-  private updateCartTotal(price: number): void {
-    this.cartTotal.setText(`Cart Total: ${centToDollar(price)}`);
+  private updateCartTotal(promoTotal: number, originTotal: number): void {
+    this.cartTotalPromo.setText(centToDollar(promoTotal));
+    this.cartTotalOrigin.setText(centToDollar(originTotal));
   }
 
   private deleteItem(id: string): void {
@@ -210,7 +228,10 @@ export class CartComponent extends BaseComponent {
         const updCart = await apiService.removeProductFromCart(cartId, version, lineItemId);
 
         this.deleteItem(lineItemId);
-        this.updateCartTotal(updCart.body.totalPrice.centAmount);
+        this.updateCartTotal(
+          updCart.body.totalPrice.centAmount,
+          calculateOriginPrice(updCart.body.lineItems),
+        );
       } catch (error) {
         alertModal.showAlert('error', NO_SERVICE_AVAILABLE);
       } finally {
@@ -268,7 +289,10 @@ export class CartComponent extends BaseComponent {
           );
         }
 
-        this.updateCartTotal(updCart.body.totalPrice.centAmount);
+        this.updateCartTotal(
+          updCart.body.totalPrice.centAmount,
+          calculateOriginPrice(updCart.body.lineItems),
+        );
         if (quantity === 0) this.deleteItem(id);
       } catch (error) {
         alertModal.showAlert('error', NO_SERVICE_AVAILABLE);
@@ -305,11 +329,15 @@ export class CartComponent extends BaseComponent {
             });
 
             this.currentPromocode = updCart.body.discountCodes[0].discountCode.id;
+            this.cartTotalWrapper.addClass(styles.promo);
             this.promocodeWrapper.addClass(styles.active);
             this.promocodeText.setText(promocode);
             this.promocodeInput.getNode().value = '';
             this.applyPromoBtn.setAttribute('disabled', 'true');
-            this.updateCartTotal(updCart.body.totalPrice.centAmount);
+            this.updateCartTotal(
+              updCart.body.totalPrice.centAmount,
+              calculateOriginPrice(updCart.body.lineItems),
+            );
           })
           .catch((error) => {
             if (error.code === 400) alertModal.showAlert('error', NO_SUCH_PROMOCODE);
@@ -348,8 +376,12 @@ export class CartComponent extends BaseComponent {
         });
 
         this.currentPromocode = undefined;
+        this.cartTotalWrapper.removeClass(styles.promo);
         this.promocodeWrapper.removeClass(styles.active);
-        this.updateCartTotal(updCart.body.totalPrice.centAmount);
+        this.updateCartTotal(
+          updCart.body.totalPrice.centAmount,
+          calculateOriginPrice(updCart.body.lineItems),
+        );
       } catch (error) {
         alertModal.showAlert('error', NO_SERVICE_AVAILABLE);
       } finally {

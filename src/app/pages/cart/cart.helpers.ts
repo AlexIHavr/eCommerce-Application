@@ -1,4 +1,4 @@
-import { Cart, CartUpdateAction } from '@commercetools/platform-sdk';
+import { Cart, CartUpdateAction, LineItem } from '@commercetools/platform-sdk';
 import { getProductColor } from 'pages/pageWrapper.helpers';
 
 import { CartItem } from './components/cartItem/cartItem.component';
@@ -33,4 +33,14 @@ export function makeCartClearActions(cartItems: CartItem[]): CartUpdateAction[] 
       lineItemId: item.id,
     } as CartUpdateAction;
   });
+}
+
+export function calculateOriginPrice(data: LineItem[]): number {
+  return data.reduce((sum, item) => {
+    const originPricePerOne = item.price.discounted
+      ? item.price.discounted.value.centAmount
+      : item.price.value.centAmount;
+
+    return originPricePerOne * item.quantity + sum;
+  }, 0);
 }

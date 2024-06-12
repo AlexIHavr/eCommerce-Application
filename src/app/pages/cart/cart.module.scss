@@ -155,8 +155,9 @@
   }
 }
 
-.cartTotal {
+.cartTotalWrapper {
   display: flex;
+  gap: 20px;
   align-items: center;
   justify-content: center;
 
@@ -172,6 +173,40 @@
   @media (max-width: $medium-width) {
     height: 80px;
     font-size: 1rem;
+  }
+}
+
+.subtotalText {
+  text-align: right;
+}
+
+.cartSubtotalPrice {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  line-height: 1.3;
+}
+
+.cartTotalPromo {
+  display: none;
+  color: var(--promo-price-color);
+}
+
+.promo {
+  .cartTotalOrigin {
+    font-size: 1.2rem;
+    color: var(--no-promo-price-color);
+    text-decoration: line-through;
+
+    @media (max-width: $medium-width) {
+      font-size: 0.8rem;
+    }
+  }
+
+  .cartTotalPromo {
+    display: block;
   }
 }
 
