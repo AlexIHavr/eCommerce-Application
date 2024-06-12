@@ -228,10 +228,17 @@ export class CartComponent extends BaseComponent {
         const updCart = await apiService.removeProductFromCart(cartId, version, lineItemId);
 
         this.deleteItem(lineItemId);
-        this.updateCartTotal(
-          updCart.body.totalPrice.centAmount,
-          calculateOriginPrice(updCart.body.lineItems),
-        );
+        if (this.cart.getNode().children.length) {
+          this.updateCartTotal(
+            updCart.body.totalPrice.centAmount,
+            calculateOriginPrice(updCart.body.lineItems),
+          );
+        } else if (this.currentPromocode) {
+          apiService.abortPromocode(cartId, updCart.body.version, this.currentPromocode);
+          this.currentPromocode = undefined;
+          this.cartTotalWrapper.removeClass(styles.promo);
+          this.promocodeWrapper.removeClass(styles.active);
+        }
       } catch (error) {
         alertModal.showAlert('error', NO_SERVICE_AVAILABLE);
       } finally {
@@ -253,10 +260,22 @@ export class CartComponent extends BaseComponent {
 
         const { version } = cart.body;
         const actions = makeCartClearActions(this.cartItems);
+        if (this.currentPromocode) {
+          actions.push({
+            action: 'removeDiscountCode',
+            discountCode: {
+              id: this.currentPromocode,
+              typeId: 'discount-code',
+            },
+          });
+        }
         await apiService.clearCart(cartId, version, actions);
 
         this.cart.destroyChildren();
         this.cartItems = [];
+        this.currentPromocode = undefined;
+        this.cartTotalWrapper.removeClass(styles.promo);
+        this.promocodeWrapper.removeClass(styles.active);
       } catch (error) {
         alertModal.showAlert('error', NO_SERVICE_AVAILABLE);
       } finally {
@@ -293,7 +312,17 @@ export class CartComponent extends BaseComponent {
           updCart.body.totalPrice.centAmount,
           calculateOriginPrice(updCart.body.lineItems),
         );
-        if (quantity === 0) this.deleteItem(id);
+
+        if (quantity === 0) {
+          this.deleteItem(id);
+
+          if (!this.cart.getNode().children.length && this.currentPromocode) {
+            apiService.abortPromocode(cartId, updCart.body.version, this.currentPromocode);
+            this.currentPromocode = undefined;
+            this.cartTotalWrapper.removeClass(styles.promo);
+            this.promocodeWrapper.removeClass(styles.active);
+          }
+        }
       } catch (error) {
         alertModal.showAlert('error', NO_SERVICE_AVAILABLE);
       } finally {
