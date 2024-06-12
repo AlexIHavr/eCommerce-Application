@@ -106,7 +106,12 @@ export class Header extends BaseComponent {
 
       this.closeMobileMenu();
 
-      if (navLink === this.navLinks[PagesPaths.LOGIN]) this.setLoginNavLink();
+      if (navLink === this.navLinks[PagesPaths.LOGIN]) {
+        this.setLoginNavLink();
+      } else if (navLink === this.navLinks[PagesPaths.SIGNUP]) {
+        if (isLogined()) navLink.addClass(styles.hide);
+        else navLink.removeClass(styles.hide);
+      }
     });
   }
 

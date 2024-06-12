@@ -77,6 +77,10 @@
             transition: width 0.4s;
           }
 
+          &.hide {
+            display: none;
+          }
+
           &.active::after {
             width: 100%;
           }

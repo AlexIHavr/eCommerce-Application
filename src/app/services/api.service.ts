@@ -105,7 +105,7 @@ export class ApiService {
         queryArgs: {
           markMatchingVariants: true,
           filter: queryFilter,
-          sort: querySort,
+          sort: querySort.length ? querySort : ['name.en asc'],
           fuzzy: false,
           'text.en': searchText,
         },
