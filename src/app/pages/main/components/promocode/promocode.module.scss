@@ -75,6 +75,10 @@
   text-align: left;
 }
 
+.promoValue {
+  color: var(--promo-border-color);
+}
+
 .code {
   cursor: pointer;
   z-index: 4;

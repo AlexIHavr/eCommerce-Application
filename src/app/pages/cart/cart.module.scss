@@ -74,9 +74,11 @@
 .promocode {
   margin-top: 3px;
   font-size: 1rem;
+  text-transform: uppercase;
 
   &::placeholder {
     font-size: 0.9em;
+    text-transform: initial;
     letter-spacing: initial;
   }
 
@@ -89,6 +91,10 @@
   max-width: 200px;
   height: 54px;
   font-size: 1rem;
+
+  &:disabled {
+    background-color: gray;
+  }
 
   @media (max-width: $medium-width) {
     width: 40%;

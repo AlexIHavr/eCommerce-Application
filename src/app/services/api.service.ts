@@ -193,6 +193,40 @@ export class ApiService {
       })
       .execute();
   }
+
+  public usePromocode(cartId: string, version: number, promocode: string): ApiClientResponse<Cart> {
+    return this.apiRoot
+      .carts()
+      .withId({ ID: cartId })
+      .post({
+        body: {
+          actions: [{ action: 'addDiscountCode', code: promocode }],
+          version,
+        },
+      })
+      .execute();
+  }
+
+  public abortPromocode(cartId: string, version: number, codeId: string): ApiClientResponse<Cart> {
+    return this.apiRoot
+      .carts()
+      .withId({ ID: cartId })
+      .post({
+        body: {
+          actions: [
+            {
+              action: 'removeDiscountCode',
+              discountCode: {
+                id: codeId,
+                typeId: 'discount-code',
+              },
+            },
+          ],
+          version,
+        },
+      })
+      .execute();
+  }
 }
 
 export const apiService = new ApiService();

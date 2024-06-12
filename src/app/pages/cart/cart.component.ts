@@ -1,5 +1,5 @@
 import { Cart } from '@commercetools/platform-sdk';
-import { Div } from 'globalTypes/elements.type';
+import { Button, Div, Input } from 'globalTypes/elements.type';
 import { getCartId } from 'pages/pageWrapper.helpers';
 import { catalogNavLink } from 'pages/shared/components/navLinks/navLinks.component';
 import { SectionTitle } from 'pages/shared/components/sectionTitle/sectionTitle.component';
@@ -10,7 +10,7 @@ import { BaseComponent } from 'shared/base/base.component';
 import { loader } from 'shared/loader/loader.component';
 import { button, div, img, input, label } from 'shared/tags/tags.component';
 
-import { NO_SERVICE_AVAILABLE, NO_SUCH_CART } from './cart.consts';
+import { NO_SERVICE_AVAILABLE, NO_SUCH_CART, NO_SUCH_PROMOCODE } from './cart.consts';
 import { centToDollar, makeCartClearActions, makeCartItemProps } from './cart.helpers';
 import styles from './cart.module.scss';
 import { CartItem } from './components/cartItem/cartItem.component';
@@ -22,6 +22,10 @@ export class CartComponent extends BaseComponent {
 
   private readonly cartTotal: Div;
 
+  private readonly promocodeInput: Input;
+
+  private readonly applyPromoBtn: Button;
+
   private cartData: Cart | null;
 
   private cartItems: CartItem[];
@@ -30,6 +34,7 @@ export class CartComponent extends BaseComponent {
     super({ className: styles.cartPage });
     this.cartData = null;
     this.cartItems = [];
+
     this.cart = div(
       { className: styles.cart },
       div({
@@ -37,22 +42,35 @@ export class CartComponent extends BaseComponent {
       }),
     );
 
-    const promocode = div(
+    this.promocodeInput = input({
+      className: styles.promocode,
+      type: 'text',
+      name: 'promocode',
+      autocomplete: 'off',
+      placeholder: 'Enter promocode',
+      oninput: () => {
+        if (this.promocodeInput.getNode().value.trim().length) {
+          this.applyPromoBtn.removeAttribute('disabled');
+        } else {
+          this.applyPromoBtn.setAttribute('disabled', 'true');
+        }
+      },
+    });
+
+    this.applyPromoBtn = button({
+      className: styles.promocodeButton,
+      text: 'Apply',
+      disabled: true,
+      onclick: () => {
+        const promocode = this.promocodeInput.getNode().value.toUpperCase();
+        if (promocode) this.applyPromocode(promocode);
+      },
+    });
+
+    const promocodeWrapper = div(
       { className: styles.promocodeWrapper },
-      label(
-        { className: styles.promocodeLabel, text: 'Promocode' },
-        input({
-          className: styles.promocode,
-          type: 'text',
-          name: 'promocode',
-          placeholder: 'Enter promocode',
-        }),
-      ),
-      button({
-        className: styles.promocodeButton,
-        text: 'Apply',
-        onclick: () => console.log('TODO Apply promocode'),
-      }),
+      label({ className: styles.promocodeLabel, text: 'Promocode' }, this.promocodeInput),
+      this.applyPromoBtn,
     );
 
     this.cartTotal = div({ className: styles.cartTotal });
@@ -64,7 +82,7 @@ export class CartComponent extends BaseComponent {
         this.cart,
         div(
           { className: styles.cartFooter },
-          promocode,
+          promocodeWrapper,
           this.cartTotal,
           button({
             className: styles.clearCartBtn,
@@ -211,6 +229,45 @@ export class CartComponent extends BaseComponent {
 
         this.updateCartTotal(updCart.body.totalPrice.centAmount);
         if (quantity === 0) this.deleteItem(id);
+      } catch (error) {
+        alertModal.showAlert('error', NO_SERVICE_AVAILABLE);
+      } finally {
+        loader.close();
+      }
+    } else {
+      this.cart.destroyChildren();
+      alertModal.showAlert('error', NO_SUCH_CART);
+    }
+  }
+
+  private async applyPromocode(promocode: string): Promise<void> {
+    const cartId = getCartId();
+
+    if (cartId) {
+      try {
+        loader.open();
+        const cart = await apiService.getCart(cartId);
+
+        const { version } = cart.body;
+        apiService
+          .usePromocode(cartId, version, promocode)
+          .then((updCart) => {
+            updCart.body.lineItems.forEach((item) => {
+              if (item.discountedPricePerQuantity.length) {
+                const promoprice =
+                  item.discountedPricePerQuantity[0].discountedPrice.value.centAmount;
+                const lineItemForUpd = this.cartItems.find((lineItem) => lineItem.id === item.id);
+
+                lineItemForUpd?.showPromoPrice(promoprice);
+                lineItemForUpd?.updateSubtotal(item.totalPrice.centAmount);
+              }
+            });
+
+            this.updateCartTotal(updCart.body.totalPrice.centAmount);
+          })
+          .catch((error) => {
+            if (error.code === 400) alertModal.showAlert('error', NO_SUCH_PROMOCODE);
+          });
       } catch (error) {
         alertModal.showAlert('error', NO_SERVICE_AVAILABLE);
       } finally {

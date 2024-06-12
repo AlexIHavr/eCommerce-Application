@@ -4,6 +4,6 @@ export type CartItemProps = {
   name: string;
   quantity: string;
   originPricePerOne: number;
-  promoPricePerOne: number;
+  promoPricePerOne: number | undefined;
   subtotal: number;
 };

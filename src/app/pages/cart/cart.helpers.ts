@@ -14,7 +14,9 @@ export function makeCartItemProps(data: Cart): CartItemProps[] {
       originPricePerOne: item.price.discounted
         ? item.price.discounted.value.centAmount
         : item.price.value.centAmount,
-      promoPricePerOne: 0, // TODO
+      promoPricePerOne: item.discountedPricePerQuantity.length
+        ? item.discountedPricePerQuantity[0].discountedPrice.value.centAmount
+        : undefined,
       subtotal: item.totalPrice.centAmount,
     } as CartItemProps;
   });
