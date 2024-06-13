@@ -1,6 +1,7 @@
 import { CartResponse } from 'globalTypes/api.type';
 import { Button } from 'globalTypes/elements.type';
-import { getCartId, isLogined } from 'pages/pageWrapper.helpers';
+import { getCartId } from 'pages/pageWrapper.helpers';
+import { getCustomerIdFromLS } from 'pages/profile/profile.helpers';
 import { apiService } from 'services/api.service';
 import { LocalStorageService } from 'services/localStorage.service';
 import { alertModal } from 'shared/alert/alert.component';
@@ -78,8 +79,9 @@ export class ProductCartButtons extends BaseComponent {
         const cart = await apiService.getCart(cartId);
         newCart = await apiService.addProductToCart(cartId, cart.body.version, this.sku);
       } else {
-        if (isLogined()) {
-          newCart = await apiService.createCustomerCart();
+        const customerId = getCustomerIdFromLS();
+        if (customerId) {
+          newCart = await apiService.createCustomerCart(customerId);
         } else {
           newCart = await apiService.createAnonymousCart(crypto.randomUUID());
         }
@@ -124,6 +126,8 @@ export class ProductCartButtons extends BaseComponent {
       } finally {
         loader.close();
       }
+    } else {
+      alertModal.showAlert('error', 'No such product in cart');
     }
   }
 }

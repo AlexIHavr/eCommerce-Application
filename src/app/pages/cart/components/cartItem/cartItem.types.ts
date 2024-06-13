@@ -1,7 +1,9 @@
 export type CartItemProps = {
+  id: string;
   imageSrc: string;
   name: string;
-  originPrice: string;
-  promoPrice: string;
-  pricePerOne: string;
+  quantity: string;
+  originPricePerOne: number;
+  promoPricePerOne: number | undefined;
+  subtotal: number;
 };

@@ -12,7 +12,7 @@ import styles from './about.module.scss';
 
 export class About extends BaseComponent {
   constructor() {
-    super({ className: styles.about }, new SectionTitle('About'));
+    super({ className: styles.about }, new SectionTitle('About Us'));
 
     this.append(
       div(

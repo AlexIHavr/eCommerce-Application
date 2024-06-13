@@ -32,6 +32,7 @@
 
 .priceWrapper {
   min-width: 120px;
+  line-height: 1.3;
   text-align: center;
 
   @media (max-width: $large-width) {
@@ -49,6 +50,12 @@
   color: var(--promo-price-color);
 }
 
+.subtotalPromo {
+  display: none;
+  font-weight: 600;
+  color: var(--promo-price-color);
+}
+
 .promo {
   .originPrice {
     color: var(--no-promo-price-color);
@@ -56,6 +63,16 @@
   }
 
   .promoPrice {
+    display: block;
+  }
+
+  .subtotalOrigin {
+    font-weight: normal;
+    color: var(--no-promo-price-color);
+    text-decoration: line-through;
+  }
+
+  .subtotalPromo {
     display: block;
   }
 }
@@ -120,15 +137,34 @@
 }
 
 .quantity {
-  min-width: 20px;
-  line-height: 1;
+  flex-grow: 1;
+
+  width: 50px;
+  padding: 0;
+
+  font-size: inherit;
   text-align: center;
+
+  border: none;
+
+  &:focus {
+    border: none;
+  }
 
   @media (max-width: $medium-width) {
     order: -1;
-    width: 100%;
     text-align: center;
   }
+}
+
+.quantityError {
+  max-width: 120px;
+  margin-top: 3px;
+
+  font-size: 0.8em;
+  line-height: 1.1;
+  color: var(--text-error-color);
+  text-align: center;
 }
 
 .itemFooter {
@@ -159,7 +195,22 @@
   }
 }
 
-.subtotal {
+.subtotalWrapper {
+  display: flex;
+  gap: 10px;
+  align-items: center;
   font-weight: bold;
-  text-align: center;
+}
+
+.subtotalText {
+  text-align: right;
+}
+
+.subtotalPrice {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  line-height: 1.15;
 }

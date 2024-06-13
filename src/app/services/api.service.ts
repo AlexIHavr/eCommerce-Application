@@ -1,11 +1,13 @@
 import {
   ByProjectKeyRequestBuilder,
   Cart,
+  CartUpdateAction,
   Customer,
   CustomerChangePassword,
   CustomerPagedQueryResponse,
   CustomerSignInResult,
   CustomerUpdateAction,
+  DiscountCode,
   ProductProjectionPagedSearchResponse,
   Project,
 } from '@commercetools/platform-sdk';
@@ -144,11 +146,10 @@ export class ApiService {
     return this.apiRoot.carts().withId({ ID: cartId }).get().execute();
   }
 
-  public createCustomerCart(): ApiClientResponse<Cart> {
+  public createCustomerCart(customerId: string): ApiClientResponse<Cart> {
     return this.apiRoot
-      .me()
       .carts()
-      .post({ body: { currency: 'USD' } })
+      .post({ body: { customerId, currency: 'USD' } })
       .execute();
   }
 
@@ -187,6 +188,76 @@ export class ApiService {
       .post({
         body: {
           actions: [{ action: 'removeLineItem', lineItemId }],
+          version,
+        },
+      })
+      .execute();
+  }
+
+  public clearCart(
+    cartId: string,
+    version: number,
+    actions: CartUpdateAction[],
+  ): ApiClientResponse<Cart> {
+    return this.apiRoot
+      .carts()
+      .withId({ ID: cartId })
+      .post({
+        body: { actions, version },
+      })
+      .execute();
+  }
+
+  public changeProductQuantity(
+    cartId: string,
+    version: number,
+    lineItemId: string,
+    quantity: number,
+  ): ApiClientResponse<Cart> {
+    return this.apiRoot
+      .carts()
+      .withId({ ID: cartId })
+      .post({
+        body: {
+          actions: [{ action: 'changeLineItemQuantity', lineItemId, quantity }],
+          version,
+        },
+      })
+      .execute();
+  }
+
+  public getPromocode(id: string): ApiClientResponse<DiscountCode> {
+    return this.apiRoot.discountCodes().withId({ ID: id }).get().execute();
+  }
+
+  public usePromocode(cartId: string, version: number, promocode: string): ApiClientResponse<Cart> {
+    return this.apiRoot
+      .carts()
+      .withId({ ID: cartId })
+      .post({
+        body: {
+          actions: [{ action: 'addDiscountCode', code: promocode }],
+          version,
+        },
+      })
+      .execute();
+  }
+
+  public abortPromocode(cartId: string, version: number, codeId: string): ApiClientResponse<Cart> {
+    return this.apiRoot
+      .carts()
+      .withId({ ID: cartId })
+      .post({
+        body: {
+          actions: [
+            {
+              action: 'removeDiscountCode',
+              discountCode: {
+                id: codeId,
+                typeId: 'discount-code',
+              },
+            },
+          ],
           version,
         },
       })

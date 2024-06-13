@@ -8,7 +8,7 @@ export class Promocode extends BaseComponent {
   constructor(promotext: string, promocode: string) {
     super(
       { className: styles.promocode },
-      div({ className: styles.promoText, text: promotext }),
+      div({ className: styles.promoText, innerHTML: promotext }),
       div(
         { className: styles.promoWrapper },
         div({ className: styles.title, text: 'Promo code' }),
