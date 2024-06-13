@@ -115,7 +115,7 @@ export class CartItem extends BaseComponent {
   }
 
   private changeQuantityHandler(action?: 'plus' | 'minus'): void {
-    let quantity = +this.quantity.getNode().value;
+    let quantity = Number(this.quantity.getNode().value);
 
     if (action === 'plus') quantity += 1;
     if (action === 'minus') quantity -= 1;
