@@ -46,15 +46,12 @@ export class CartComponent extends BaseComponent {
 
   private readonly removePromoBtn: Button;
 
-  private cartData: Cart | null;
-
   private cartItems: CartItem[];
 
   private currentPromocode: string | undefined;
 
   constructor() {
     super({ className: styles.cartPage });
-    this.cartData = null;
     this.cartItems = [];
 
     this.cart = div(
@@ -151,29 +148,35 @@ export class CartComponent extends BaseComponent {
       ),
     ]);
 
-    loader.open();
-    this.initCart()
-      .then((data) => {
-        if (data?.lineItems) {
-          this.renderCartItems(data);
-          if (data.discountCodes.length) {
-            this.renderPromocode(data.discountCodes[0].discountCode.id);
-            this.cartTotalWrapper.addClass(styles.promo);
-          }
-        } else {
-          this.cart.destroyChildren();
-        }
-      })
-      .finally(() => loader.close());
+    this.initCart();
   }
 
-  private async initCart(): Promise<Cart | null> {
+  private async initCart(): Promise<void> {
     const cartId = getCartId();
-    if (!cartId) return null;
 
-    const data = await apiService.getCart(cartId);
-    this.cartData = data.body;
-    return data.body;
+    if (!cartId) {
+      this.cart.destroyChildren();
+      return;
+    }
+
+    try {
+      loader.open();
+      const cart = await apiService.getCart(cartId);
+
+      if (cart.body.lineItems) {
+        this.renderCartItems(cart.body);
+        if (cart.body.discountCodes.length) {
+          this.renderPromocode(cart.body.discountCodes[0].discountCode.id);
+          this.cartTotalWrapper.addClass(styles.promo);
+        }
+      } else {
+        this.cart.destroyChildren();
+      }
+    } catch (error) {
+      alertModal.showAlert('error', NO_SERVICE_AVAILABLE);
+    } finally {
+      loader.close();
+    }
   }
 
   private renderCartItems(cart: Cart): void {
