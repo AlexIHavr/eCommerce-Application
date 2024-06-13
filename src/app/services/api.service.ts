@@ -146,11 +146,10 @@ export class ApiService {
     return this.apiRoot.carts().withId({ ID: cartId }).get().execute();
   }
 
-  public createCustomerCart(): ApiClientResponse<Cart> {
+  public createCustomerCart(customerId: string): ApiClientResponse<Cart> {
     return this.apiRoot
-      .me()
       .carts()
-      .post({ body: { currency: 'USD' } })
+      .post({ body: { customerId, currency: 'USD' } })
       .execute();
   }
 
