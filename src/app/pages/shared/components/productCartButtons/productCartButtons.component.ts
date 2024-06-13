@@ -126,6 +126,8 @@ export class ProductCartButtons extends BaseComponent {
       } finally {
         loader.close();
       }
+    } else {
+      alertModal.showAlert('error', 'No such product in cart');
     }
   }
 }
