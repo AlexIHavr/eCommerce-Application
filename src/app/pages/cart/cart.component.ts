@@ -202,9 +202,12 @@ export class CartComponent extends BaseComponent {
     this.promocodeWrapper.addClass(styles.active);
     this.currentPromocode = promocodeId;
 
-    apiService.getPromocode(promocodeId).then((discount) => {
-      this.promocodeText.setText(discount.body.code);
-    });
+    apiService
+      .getPromocode(promocodeId)
+      .then((discount) => {
+        this.promocodeText.setText(discount.body.code);
+      })
+      .catch(() => alertModal.showAlert('error', NO_SERVICE_AVAILABLE));
   }
 
   private updateCartTotal(promoTotal: number, originTotal: number): void {
