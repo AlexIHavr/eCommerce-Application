@@ -185,7 +185,7 @@ describe('api success in cart', () => {
     }
   });
 
-  test('check clear card, add to cart and remove from cart', async () => {
+  test('check clear card, add to cart, change product quantity and remove from cart', async () => {
     const { body } = await apiService.loginCustomer({
       email: 'test@mail.ru',
       password: 'Qwerty123',
@@ -220,17 +220,36 @@ describe('api success in cart', () => {
         expect(addingLineItem).not.toBeUndefined();
 
         if (addingLineItem) {
-          const removedProductCart = await apiService.removeProductFromCart(
+          const addingCount = 2;
+          const initPrice = addingLineItem.price.value.centAmount;
+          const updatedProductCart = await apiService.changeProductQuantity(
             cartId,
             addProductCart.body.version,
             addingLineItem.id,
+            addingCount,
           );
 
-          const isContainRemovedSlug = removedProductCart.body.lineItems.find(
+          const updatedLineItem = updatedProductCart.body.lineItems.find(
             ({ productSlug }) => productSlug?.en === firstProduct.slug.en,
           );
 
-          expect(isContainRemovedSlug).toBeUndefined();
+          expect(updatedLineItem).not.toBeUndefined();
+          expect(updatedLineItem?.quantity).toBe(addingCount);
+          expect(updatedLineItem?.totalPrice.centAmount).toBe(initPrice * addingCount);
+
+          if (updatedLineItem) {
+            const removedProductCart = await apiService.removeProductFromCart(
+              cartId,
+              updatedProductCart.body.version,
+              updatedLineItem.id,
+            );
+
+            const removedLineItem = removedProductCart.body.lineItems.find(
+              ({ productSlug }) => productSlug?.en === firstProduct.slug.en,
+            );
+
+            expect(removedLineItem).toBeUndefined();
+          }
         }
       }
     }
