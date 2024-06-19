@@ -1,5 +1,5 @@
 import { Cart, CartUpdateAction, LineItem } from '@commercetools/platform-sdk';
-import { getProductColor } from 'pages/pageWrapper.helpers';
+import { generateUpdateEvent, getProductColor } from 'pages/pageWrapper.helpers';
 
 import { CartItem } from './components/cartItem/cartItem.component';
 import { CartItemProps } from './components/cartItem/cartItem.types';
@@ -43,4 +43,12 @@ export function calculateOriginPrice(data: LineItem[]): number {
 
     return originPricePerOne * item.quantity + sum;
   }, 0);
+}
+
+export function updateCounter(cart: Cart): void {
+  if (cart.totalLineItemQuantity) {
+    generateUpdateEvent(cart);
+  } else {
+    generateUpdateEvent();
+  }
 }

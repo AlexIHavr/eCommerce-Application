@@ -12,5 +12,3 @@ export const aboutNavLink = (className: string): Anchor =>
   getNavLink('About', PagesPaths.ABOUT, className);
 export const profileNavLink = (className: string): Anchor =>
   getNavLink('', PagesPaths.PROFILE, className);
-export const cartNavLink = (className: string): Anchor =>
-  getNavLink('', PagesPaths.CART, className);

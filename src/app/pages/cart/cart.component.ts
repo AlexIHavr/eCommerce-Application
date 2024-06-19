@@ -1,6 +1,6 @@
 import { Cart } from '@commercetools/platform-sdk';
 import { Button, Div, Form, Input } from 'globalTypes/elements.type';
-import { getCartId } from 'pages/pageWrapper.helpers';
+import { generateUpdateEvent, getCartId } from 'pages/pageWrapper.helpers';
 import { catalogNavLink } from 'pages/shared/components/navLinks/navLinks.component';
 import { SectionTitle } from 'pages/shared/components/sectionTitle/sectionTitle.component';
 import sharedStyles from 'pages/shared/styles/common.module.scss';
@@ -21,6 +21,7 @@ import {
   centToDollar,
   makeCartClearActions,
   makeCartItemProps,
+  updateCounter,
 } from './cart.helpers';
 import styles from './cart.module.scss';
 import { CartItem } from './components/cartItem/cartItem.component';
@@ -162,6 +163,7 @@ export class CartComponent extends BaseComponent {
     try {
       loader.open();
       const cart = await apiService.getCart(cartId);
+      generateUpdateEvent(cart.body);
 
       if (cart.body.lineItems) {
         this.renderCartItems(cart.body);
@@ -245,6 +247,8 @@ export class CartComponent extends BaseComponent {
           this.cartTotalWrapper.removeClass(styles.promo);
           this.promocodeWrapper.removeClass(styles.active);
         }
+
+        updateCounter(updCart.body);
       } catch (error) {
         alertModal.showAlert('error', NO_SERVICE_AVAILABLE);
       } finally {
@@ -282,6 +286,7 @@ export class CartComponent extends BaseComponent {
         this.currentPromocode = undefined;
         this.cartTotalWrapper.removeClass(styles.promo);
         this.promocodeWrapper.removeClass(styles.active);
+        generateUpdateEvent();
       } catch (error) {
         alertModal.showAlert('error', NO_SERVICE_AVAILABLE);
       } finally {
@@ -329,6 +334,8 @@ export class CartComponent extends BaseComponent {
             this.promocodeWrapper.removeClass(styles.active);
           }
         }
+
+        updateCounter(updCart.body);
       } catch (error) {
         alertModal.showAlert('error', NO_SERVICE_AVAILABLE);
       } finally {
