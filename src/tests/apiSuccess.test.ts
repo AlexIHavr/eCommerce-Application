@@ -1,4 +1,6 @@
+import { CartUpdateAction } from '@commercetools/platform-sdk';
 import { ProductsBrands, ProductsColors } from 'globalConsts/api.const';
+import { makeCartItemProps } from 'pages/cart/cart.helpers';
 import {
   getProductBrand,
   getProductColor,
@@ -79,7 +81,7 @@ describe('api success filter products', () => {
     const toPrice = 150;
 
     const products = await apiService.getFilteredProducts({
-      price: { from: fromPrice, to: toPrice },
+      filterProps: { price: { from: fromPrice, to: toPrice } },
     });
 
     products.body.results.forEach(({ masterVariant, variants }) => {
@@ -103,7 +105,7 @@ describe('api success filter products', () => {
     const brands = [ProductsBrands.COLAMY, ProductsBrands.MELLOW];
     const colors = [ProductsColors.GREEN, ProductsColors.BLUE];
 
-    const products = await apiService.getFilteredProducts({ brands, colors });
+    const products = await apiService.getFilteredProducts({ filterProps: { brands, colors } });
 
     products.body.results
       .filter(({ masterVariant: { isMatchingVariant } }) => isMatchingVariant)
@@ -130,10 +132,9 @@ describe('api success filter products', () => {
     const productsData = await apiService.getFilteredProducts({});
     const products = productsData.body.results;
 
-    const productsWithSortName = await apiService.getFilteredProducts(
-      {},
-      { direction: 'asc', value: 'name' },
-    );
+    const productsWithSortName = await apiService.getFilteredProducts({
+      sortProps: { direction: 'asc', value: 'name' },
+    });
 
     products.sort((a, b) => getProductName(a.name).localeCompare(getProductName(b.name)));
 
@@ -141,26 +142,182 @@ describe('api success filter products', () => {
       expect(productsWithSortName.body.results[index].name).toStrictEqual(name);
     });
   });
+});
 
-  test('check sort products by price', async () => {
-    const productsData = await apiService.getFilteredProducts({});
-    const products = productsData.body.results;
+describe('api success in cart', () => {
+  test('check create cart', async () => {
+    expect.assertions(0);
 
-    const productsWithSortPrice = await apiService.getFilteredProducts(
-      {},
-      { direction: 'desc', value: 'price' },
-    );
-
-    products.sort(
-      (a, b) =>
-        (getProductDiscount(b.masterVariant) ?? getProductPrice(b.masterVariant) ?? 0) -
-        (getProductDiscount(a.masterVariant) ?? getProductPrice(a.masterVariant) ?? 0),
-    );
-
-    products.forEach(({ masterVariant }, index) => {
-      expect(getProductPrice(productsWithSortPrice.body.results[index].masterVariant)).toEqual(
-        getProductPrice(masterVariant),
-      );
+    const { body } = await apiService.loginCustomer({
+      email: 'test@mail.ru',
+      password: 'Qwerty123',
     });
+
+    const cartId = body.cart?.id;
+
+    if (cartId) {
+      await apiService.createAnonymousCart(crypto.randomUUID());
+    } else {
+      await apiService.createCustomerCart(body.customer.id);
+    }
+  });
+
+  test('check clear card, add to cart, change product quantity and remove from cart', async () => {
+    const { body } = await apiService.loginCustomer({
+      email: 'test@mail.ru',
+      password: 'Qwerty123',
+    });
+
+    const cartId = body.cart?.id;
+
+    if (cartId) {
+      const productsData = await apiService.getFilteredProducts({});
+      const firstProduct = productsData.body.results[0];
+      const { sku } = firstProduct.masterVariant;
+
+      if (sku) {
+        const clearActions = makeCartItemProps(body.cart).map((item) => {
+          return {
+            action: 'removeLineItem',
+            lineItemId: item.id,
+          } as CartUpdateAction;
+        });
+
+        const clearedCart = await apiService.clearCart(cartId, body.cart.version, clearActions);
+        const addProductCart = await apiService.addProductToCart(
+          cartId,
+          clearedCart.body.version,
+          sku,
+        );
+
+        const addingLineItem = addProductCart.body.lineItems.find(
+          ({ productSlug }) => productSlug?.en === firstProduct.slug.en,
+        );
+
+        expect(addingLineItem).not.toBeUndefined();
+
+        if (addingLineItem) {
+          const addingCount = 2;
+          const initPrice = addingLineItem.price.value.centAmount;
+          const updatedProductCart = await apiService.changeProductQuantity(
+            cartId,
+            addProductCart.body.version,
+            addingLineItem.id,
+            addingCount,
+          );
+
+          const updatedLineItem = updatedProductCart.body.lineItems.find(
+            ({ productSlug }) => productSlug?.en === firstProduct.slug.en,
+          );
+
+          expect(updatedLineItem).not.toBeUndefined();
+          expect(updatedLineItem?.quantity).toBe(addingCount);
+          expect(updatedLineItem?.totalPrice.centAmount).toBe(initPrice * addingCount);
+
+          if (updatedLineItem) {
+            const removedProductCart = await apiService.removeProductFromCart(
+              cartId,
+              updatedProductCart.body.version,
+              updatedLineItem.id,
+            );
+
+            const removedLineItem = removedProductCart.body.lineItems.find(
+              ({ productSlug }) => productSlug?.en === firstProduct.slug.en,
+            );
+
+            expect(removedLineItem).toBeUndefined();
+          }
+        }
+      }
+    }
+  });
+});
+
+describe('api success in cart', () => {
+  test('check create cart', async () => {
+    expect.assertions(0);
+
+    const { body } = await apiService.loginCustomer({
+      email: 'test@mail.ru',
+      password: 'Qwerty123',
+    });
+
+    const cartId = body.cart?.id;
+
+    if (cartId) {
+      await apiService.createAnonymousCart(crypto.randomUUID());
+    } else {
+      await apiService.createCustomerCart(body.customer.id);
+    }
+  });
+
+  test('check clear card, add to cart, change product quantity and remove from cart', async () => {
+    const { body } = await apiService.loginCustomer({
+      email: 'test@mail.ru',
+      password: 'Qwerty123',
+    });
+
+    const cartId = body.cart?.id;
+
+    if (cartId) {
+      const productsData = await apiService.getFilteredProducts({});
+      const firstProduct = productsData.body.results[0];
+      const { sku } = firstProduct.masterVariant;
+
+      if (sku) {
+        const clearActions = makeCartItemProps(body.cart).map((item) => {
+          return {
+            action: 'removeLineItem',
+            lineItemId: item.id,
+          } as CartUpdateAction;
+        });
+
+        const clearedCart = await apiService.clearCart(cartId, body.cart.version, clearActions);
+        const addProductCart = await apiService.addProductToCart(
+          cartId,
+          clearedCart.body.version,
+          sku,
+        );
+
+        const addingLineItem = addProductCart.body.lineItems.find(
+          ({ productSlug }) => productSlug?.en === firstProduct.slug.en,
+        );
+
+        expect(addingLineItem).not.toBeUndefined();
+
+        if (addingLineItem) {
+          const addingCount = 2;
+          const initPrice = addingLineItem.price.value.centAmount;
+          const updatedProductCart = await apiService.changeProductQuantity(
+            cartId,
+            addProductCart.body.version,
+            addingLineItem.id,
+            addingCount,
+          );
+
+          const updatedLineItem = updatedProductCart.body.lineItems.find(
+            ({ productSlug }) => productSlug?.en === firstProduct.slug.en,
+          );
+
+          expect(updatedLineItem).not.toBeUndefined();
+          expect(updatedLineItem?.quantity).toBe(addingCount);
+          expect(updatedLineItem?.totalPrice.centAmount).toBe(initPrice * addingCount);
+
+          if (updatedLineItem) {
+            const removedProductCart = await apiService.removeProductFromCart(
+              cartId,
+              updatedProductCart.body.version,
+              updatedLineItem.id,
+            );
+
+            const removedLineItem = removedProductCart.body.lineItems.find(
+              ({ productSlug }) => productSlug?.en === firstProduct.slug.en,
+            );
+
+            expect(removedLineItem).toBeUndefined();
+          }
+        }
+      }
+    }
   });
 });

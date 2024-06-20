@@ -1,3 +1,4 @@
+import { CartResourceIdentifier } from '@commercetools/platform-sdk';
 import {
   Addresses,
   ProductsBrands,
@@ -9,6 +10,7 @@ import { Country, SortType, SortValue } from 'globalTypes/api.type';
 export interface CustomerLoginData {
   email: string;
   password: string;
+  anonymousCart?: CartResourceIdentifier;
 }
 
 export interface NewCustomer extends CustomerLoginData {
@@ -42,4 +44,11 @@ export interface FilterProps {
   };
   brands?: ProductsBrands[];
   colors?: ProductsColors[];
+}
+
+export interface FilteredProductsProps {
+  filterProps?: FilterProps;
+  sortProps?: SortProps;
+  searchText?: string;
+  pageNumber?: number;
 }

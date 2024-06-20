@@ -10,13 +10,13 @@
 
     .slider {
       position: relative;
+      display: flex;
       max-width: 450px;
 
       .sliderImage {
         cursor: zoom-in;
         width: 100%;
         height: 100%;
-        object-fit: contain;
       }
 
       .discountLabel {
@@ -94,12 +94,6 @@
             }
           }
         }
-      }
-
-      .addToCardBtn {
-        max-width: 300px;
-        font-size: 0.8em;
-        background-color: var(--add-to-card-background-color);
       }
     }
 

@@ -136,8 +136,8 @@
 
   button {
     pointer-events: none;
-    color: gray;
-    background-color: rgb(200 200 200) !important;
+    color: var(--disabled-text-color);
+    background-color: var(--disabled-background-color) !important;
   }
 }
 

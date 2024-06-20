@@ -16,8 +16,14 @@ import { BaseComponent } from 'shared/base/base.component';
 import { loader } from 'shared/loader/loader.component';
 import { Slider } from 'shared/slider/slider.component';
 
+import { CartComponent } from './cart/cart.component';
 import { PagesPaths } from './pageWrapper.consts';
-import { isIncorrectCategoryPath, isLogined, redirectToMain } from './pageWrapper.helpers';
+import {
+  initCartCounter,
+  isIncorrectCategoryPath,
+  isLogined,
+  redirectToMain,
+} from './pageWrapper.helpers';
 import styles from './pageWrapper.module.scss';
 import { CategoryParams, ProductParams } from './pageWrapper.types';
 
@@ -42,6 +48,8 @@ export class PageWrapper extends BaseComponent {
     this.addListener('click', (event) => this.header.closeMobileMenu(event));
 
     this.initRoutingService();
+
+    initCartCounter();
   }
 
   private initRoutingService(): void {
@@ -58,12 +66,13 @@ export class PageWrapper extends BaseComponent {
       [PagesPaths.MAIN]: () => this.goToPage(main),
       [PagesPaths.HOME]: () => this.goToPage(main),
       [PagesPaths.LOGIN]: () => this.goToLogin(),
-      [PagesPaths.SIGNUP]: () => this.goToPage(new Signup()),
+      [PagesPaths.SIGNUP]: () => this.goToSignup(),
       [PagesPaths.CATALOG]: () => this.goToPage(new Catalog()),
       [PagesPaths.ABOUT]: () => this.goToPage(new About()),
       [PagesPaths.CATEGORY]: (match) => this.goToCategory(match),
       [PagesPaths.PRODUCT]: (match) => this.goToProduct(match),
       [PagesPaths.PROFILE]: () => this.goToProfile(),
+      [PagesPaths.CART]: () => this.goToPage(new CartComponent()),
     });
 
     routingService.setNotFound(() => this.goToPage(this.notFound));
@@ -74,6 +83,14 @@ export class PageWrapper extends BaseComponent {
       redirectToMain();
     } else {
       this.goToPage(new Login());
+    }
+  }
+
+  private goToSignup(): void {
+    if (isLogined()) {
+      redirectToMain();
+    } else {
+      this.goToPage(new Signup());
     }
   }
 
@@ -101,7 +118,12 @@ export class PageWrapper extends BaseComponent {
 
     loader.open();
     apiService
-      .getFilteredProducts({ slug: params.slug, colors: [params.color] })
+      .getFilteredProducts({
+        filterProps: {
+          slug: params.slug,
+          colors: [params.color],
+        },
+      })
       .then((products) => {
         const product = products.body.results;
 

@@ -1,6 +1,6 @@
 import { Anchor, Div, LI } from 'globalTypes/elements.type';
 import { PagesPaths } from 'pages/pageWrapper.consts';
-import { getNavLink, isLogined } from 'pages/pageWrapper.helpers';
+import { generateUpdateEvent, getNavLink, isLogined } from 'pages/pageWrapper.helpers';
 import {
   aboutNavLink,
   catalogNavLink,
@@ -34,6 +34,8 @@ export class Header extends BaseComponent {
 
   private readonly profileLink: Anchor;
 
+  private readonly cartItemsCounter: Div;
+
   constructor() {
     super({ tag: 'header', className: styles.header });
 
@@ -47,6 +49,9 @@ export class Header extends BaseComponent {
 
     this.profileLink = profileNavLink(styles.profile);
 
+    this.cartItemsCounter = div({ className: styles.cartCounter });
+    const cartLink = getNavLink('', PagesPaths.CART, styles.cart, this.cartItemsCounter);
+
     this.navLinks = {
       [PagesPaths.CATALOG]: catalogNavLink(styles.listItem),
       [PagesPaths.ABOUT]: aboutNavLink(styles.listItem),
@@ -57,6 +62,7 @@ export class Header extends BaseComponent {
     const outerNavLinks = {
       [PagesPaths.HOME]: homeLink,
       [PagesPaths.PROFILE]: this.profileLink,
+      [PagesPaths.CART]: cartLink,
     };
 
     this.navLinksEntries = Object.entries(this.navLinks);
@@ -88,10 +94,12 @@ export class Header extends BaseComponent {
           { className: styles.headerInner },
           homeLink,
           this.nav,
-          div({ className: styles.sidePanel }, this.profileLink, this.burger),
+          div({ className: styles.sidePanel }, this.profileLink, cartLink, this.burger),
         ),
       ),
     ]);
+
+    this.addListener('updateCartCounter', (e) => this.updateCartCounter(e));
   }
 
   public updateNavLinks(url: string): void {
@@ -103,7 +111,12 @@ export class Header extends BaseComponent {
 
       this.closeMobileMenu();
 
-      if (navLink === this.navLinks[PagesPaths.LOGIN]) this.setLoginNavLink();
+      if (navLink === this.navLinks[PagesPaths.LOGIN]) {
+        this.setLoginNavLink();
+      } else if (navLink === this.navLinks[PagesPaths.SIGNUP]) {
+        if (isLogined()) navLink.addClass(styles.hide);
+        else navLink.removeClass(styles.hide);
+      }
     });
   }
 
@@ -149,10 +162,22 @@ export class Header extends BaseComponent {
     LocalStorageService.removeData('refreshToken');
     LocalStorageService.removeData('token');
     LocalStorageService.removeData('customerId');
+    LocalStorageService.removeData('cartId');
 
     apiService.logout();
+    generateUpdateEvent();
 
     this.updateNavLinks(PagesPaths.LOGIN);
     this.setLoginNavLink();
+  }
+
+  private updateCartCounter(e?: Event): void {
+    const event = e as CustomEvent;
+
+    if (event.detail.totalQuantity === 0) {
+      this.cartItemsCounter.setText('');
+    } else {
+      this.cartItemsCounter.setText(String(event.detail.totalQuantity));
+    }
   }
 }

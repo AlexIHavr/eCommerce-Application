@@ -15,6 +15,7 @@ import {
   getProductPrice,
 } from 'pages/pageWrapper.helpers';
 import { Breadcrumbs } from 'pages/shared/components/breadcrumbs/breadcrumbs.component';
+import { ProductCartButtons } from 'pages/shared/components/productCartButtons/productCartButtons.component';
 import { SectionTitle } from 'pages/shared/components/sectionTitle/sectionTitle.component';
 import sharedStyles from 'pages/shared/styles/common.module.scss';
 import productsStyles from 'pages/shared/styles/products.module.scss';
@@ -118,7 +119,7 @@ export class Product extends BaseComponent {
               div({ className: styles.brandName, text: getProductBrand(currentVariant) }),
             ),
             div({ className: styles.colorsSelect }, div({ text: 'Color' }), colors),
-            button({ className: styles.addToCardBtn, text: 'Add to cart' }),
+            new ProductCartButtons(currentVariant.sku),
           ),
         ),
       ),
