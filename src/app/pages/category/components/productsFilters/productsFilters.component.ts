@@ -1,10 +1,8 @@
-import { ProductProjection } from '@commercetools/platform-sdk';
 import { ProductsAttributes, ProductsBrands, ProductsColors } from 'globalConsts/api.const';
 import { SortValue } from 'globalTypes/api.type';
 import { Div, Form, Input } from 'globalTypes/elements.type';
 import { SortProps } from 'interfaces/api.interface';
 import { Category } from 'pages/category/category.component';
-import { getProductBrand, getProductColor } from 'pages/pageWrapper.helpers';
 import { BaseComponent } from 'shared/base/base.component';
 import { button, div, form, img, input, label } from 'shared/tags/tags.component';
 import { capitalizeFirstLetter } from 'utils/strings.util';
@@ -13,7 +11,11 @@ import filterIcon from './images/filterIcon.png';
 import searchIcon from './images/searchIcon.png';
 import selectArrowIcon from './images/selectArrowIcon.png';
 import sortIcon from './images/sortIcon.png';
-import { PRODUCTS_FILTERS_PROPS } from './productsFilters.consts';
+import {
+  PRODUCTS_BRANDS_VALUES,
+  PRODUCTS_COLORS_VALUES,
+  PRODUCTS_FILTERS_PROPS,
+} from './productsFilters.consts';
 import { clearSortTypeClasses, getSortField, getSortType } from './productsFilters.helpers';
 import styles from './productsFilters.module.scss';
 
@@ -118,17 +120,8 @@ export class ProductsFilters extends BaseComponent {
     ]);
 
     window.onclick = (event): void => this.hideSelectFields(event);
-  }
 
-  public setProductsOptions(products: ProductProjection[]): void {
-    products.forEach(({ masterVariant, variants }) => {
-      this.addOptionToMultipleSelect(ProductsAttributes.BRAND, getProductBrand(masterVariant));
-      this.addOptionToMultipleSelect(ProductsAttributes.COLOR, getProductColor(masterVariant));
-
-      variants.forEach((variant) => {
-        this.addOptionToMultipleSelect(ProductsAttributes.COLOR, getProductColor(variant));
-      });
-    });
+    this.fillFilters();
   }
 
   private setSubmitFilter(mainSortField: Div, neighborSortField: Div, sortValue: SortValue): void {
@@ -183,14 +176,17 @@ export class ProductsFilters extends BaseComponent {
     return multipleSelectField;
   }
 
-  private addOptionToMultipleSelect(optionsType: ProductsAttributes, option?: string): void {
-    if (
-      !option ||
-      this.inputOptions[optionsType].find((inputOption) => inputOption.getNode().value === option)
-    ) {
-      return;
-    }
+  private fillFilters(): void {
+    PRODUCTS_BRANDS_VALUES.forEach((option) => {
+      this.addOptionToMultipleSelect(ProductsAttributes.BRAND, option);
+    });
 
+    PRODUCTS_COLORS_VALUES.forEach((option) => {
+      this.addOptionToMultipleSelect(ProductsAttributes.COLOR, option);
+    });
+  }
+
+  private addOptionToMultipleSelect(optionsType: ProductsAttributes, option: string): void {
     const inputOption = input({
       className: styles.selectCheckbox,
       value: option,
@@ -230,16 +226,16 @@ export class ProductsFilters extends BaseComponent {
     if (fromValue || toValue || brands.length || colors.length) {
       this.searchInput.setProps({ value: '' });
 
-      this.parent.setProducts(
-        {
+      this.parent.setProducts({
+        filterProps: {
           price: { from: fromValue, to: toValue },
           brands,
           colors,
         },
-        this.sortProps,
-      );
+        sortProps: this.sortProps,
+      });
     } else {
-      this.parent.setProducts({}, this.sortProps, this.getSearchText());
+      this.parent.setProducts({ sortProps: this.sortProps, searchText: this.getSearchText() });
     }
   }
 
@@ -263,7 +259,7 @@ export class ProductsFilters extends BaseComponent {
     if (!searchText) return;
 
     this.filterFieldForm.getNode().reset();
-    this.parent.setProducts({}, this.sortProps, searchText);
+    this.parent.setProducts({ sortProps: this.sortProps, searchText });
   }
 
   private getSearchText(): string {

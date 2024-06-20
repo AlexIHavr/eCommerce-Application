@@ -79,7 +79,7 @@ describe('api success filter products', () => {
     const toPrice = 150;
 
     const products = await apiService.getFilteredProducts({
-      price: { from: fromPrice, to: toPrice },
+      filterProps: { price: { from: fromPrice, to: toPrice } },
     });
 
     products.body.results.forEach(({ masterVariant, variants }) => {
@@ -103,7 +103,7 @@ describe('api success filter products', () => {
     const brands = [ProductsBrands.COLAMY, ProductsBrands.MELLOW];
     const colors = [ProductsColors.GREEN, ProductsColors.BLUE];
 
-    const products = await apiService.getFilteredProducts({ brands, colors });
+    const products = await apiService.getFilteredProducts({ filterProps: { brands, colors } });
 
     products.body.results
       .filter(({ masterVariant: { isMatchingVariant } }) => isMatchingVariant)
@@ -130,10 +130,9 @@ describe('api success filter products', () => {
     const productsData = await apiService.getFilteredProducts({});
     const products = productsData.body.results;
 
-    const productsWithSortName = await apiService.getFilteredProducts(
-      {},
-      { direction: 'asc', value: 'name' },
-    );
+    const productsWithSortName = await apiService.getFilteredProducts({
+      sortProps: { direction: 'asc', value: 'name' },
+    });
 
     products.sort((a, b) => getProductName(a.name).localeCompare(getProductName(b.name)));
 
@@ -146,10 +145,9 @@ describe('api success filter products', () => {
     const productsData = await apiService.getFilteredProducts({});
     const products = productsData.body.results;
 
-    const productsWithSortPrice = await apiService.getFilteredProducts(
-      {},
-      { direction: 'desc', value: 'price' },
-    );
+    const productsWithSortPrice = await apiService.getFilteredProducts({
+      sortProps: { direction: 'desc', value: 'price' },
+    });
 
     products.sort(
       (a, b) =>

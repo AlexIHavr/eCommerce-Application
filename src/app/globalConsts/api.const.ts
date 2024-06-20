@@ -13,6 +13,7 @@ export enum ProductsBrands {
   SHINTENCHI = 'Shintenchi',
   VECELO = 'VECELO',
   ZINUS = 'ZINUS',
+  ANJHOME = 'ANJHOME',
 }
 
 export enum ProductsColors {
@@ -49,4 +50,4 @@ export const PRODUCTS_CATEGORIES_IDS = {
   [ProductsCategories.BEDS]: '03933605-debc-43c0-86e9-ef19d49062b8',
 } as const satisfies Record<ProductsCategories, string>;
 
-export const PRODUCTS_COUNT_ON_PAGE = 8;
+export const PRODUCTS_COUNT_ON_PAGE = 4;

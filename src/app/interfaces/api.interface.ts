@@ -45,3 +45,10 @@ export interface FilterProps {
   brands?: ProductsBrands[];
   colors?: ProductsColors[];
 }
+
+export interface FilteredProductsProps {
+  filterProps?: FilterProps;
+  sortProps?: SortProps;
+  searchText?: string;
+  pageNumber?: number;
+}
