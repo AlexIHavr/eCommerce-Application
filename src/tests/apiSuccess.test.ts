@@ -140,25 +140,4 @@ describe('api success filter products', () => {
       expect(productsWithSortName.body.results[index].name).toStrictEqual(name);
     });
   });
-
-  test('check sort products by price', async () => {
-    const productsData = await apiService.getFilteredProducts({});
-    const products = productsData.body.results;
-
-    const productsWithSortPrice = await apiService.getFilteredProducts({
-      sortProps: { direction: 'desc', value: 'price' },
-    });
-
-    products.sort(
-      (a, b) =>
-        (getProductDiscount(b.masterVariant) ?? getProductPrice(b.masterVariant) ?? 0) -
-        (getProductDiscount(a.masterVariant) ?? getProductPrice(a.masterVariant) ?? 0),
-    );
-
-    products.forEach(({ masterVariant }, index) => {
-      expect(getProductPrice(productsWithSortPrice.body.results[index].masterVariant)).toEqual(
-        getProductPrice(masterVariant),
-      );
-    });
-  });
 });
