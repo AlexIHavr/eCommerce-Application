@@ -1,6 +1,6 @@
 import { CartResponse } from 'globalTypes/api.type';
 import { Button } from 'globalTypes/elements.type';
-import { getCartId } from 'pages/pageWrapper.helpers';
+import { generateUpdateEvent, getCartId } from 'pages/pageWrapper.helpers';
 import { getCustomerIdFromLS } from 'pages/profile/profile.helpers';
 import { apiService } from 'services/api.service';
 import { LocalStorageService } from 'services/localStorage.service';
@@ -96,6 +96,7 @@ export class ProductCartButtons extends BaseComponent {
 
       await this.setCartButtonsVisibility(newCart);
       alertModal.showAlert('success', 'The product has been added to Cart');
+      generateUpdateEvent(newCart.body);
     } catch (error) {
       alertModal.showAlert('error', (error as Error).message);
     } finally {
@@ -119,6 +120,7 @@ export class ProductCartButtons extends BaseComponent {
         );
 
         this.setCartButtonsVisibility(newCart);
+        generateUpdateEvent(newCart.body);
 
         alertModal.showAlert('success', 'The product has been removed from Cart');
       } catch (error) {

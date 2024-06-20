@@ -18,7 +18,12 @@ import { Slider } from 'shared/slider/slider.component';
 
 import { CartComponent } from './cart/cart.component';
 import { PagesPaths } from './pageWrapper.consts';
-import { isIncorrectCategoryPath, isLogined, redirectToMain } from './pageWrapper.helpers';
+import {
+  initCartCounter,
+  isIncorrectCategoryPath,
+  isLogined,
+  redirectToMain,
+} from './pageWrapper.helpers';
 import styles from './pageWrapper.module.scss';
 import { CategoryParams, ProductParams } from './pageWrapper.types';
 
@@ -43,6 +48,8 @@ export class PageWrapper extends BaseComponent {
     this.addListener('click', (event) => this.header.closeMobileMenu(event));
 
     this.initRoutingService();
+
+    initCartCounter();
   }
 
   private initRoutingService(): void {
@@ -111,7 +118,12 @@ export class PageWrapper extends BaseComponent {
 
     loader.open();
     apiService
-      .getFilteredProducts({ slug: params.slug, colors: [params.color] })
+      .getFilteredProducts({
+        filterProps: {
+          slug: params.slug,
+          colors: [params.color],
+        },
+      })
       .then((products) => {
         const product = products.body.results;
 

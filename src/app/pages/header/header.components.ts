@@ -1,9 +1,8 @@
 import { Anchor, Div, LI } from 'globalTypes/elements.type';
 import { PagesPaths } from 'pages/pageWrapper.consts';
-import { getNavLink, isLogined } from 'pages/pageWrapper.helpers';
+import { generateUpdateEvent, getNavLink, isLogined } from 'pages/pageWrapper.helpers';
 import {
   aboutNavLink,
-  cartNavLink,
   catalogNavLink,
   loginNavLink,
   profileNavLink,
@@ -35,6 +34,8 @@ export class Header extends BaseComponent {
 
   private readonly profileLink: Anchor;
 
+  private readonly cartItemsCounter: Div;
+
   constructor() {
     super({ tag: 'header', className: styles.header });
 
@@ -47,7 +48,9 @@ export class Header extends BaseComponent {
     );
 
     this.profileLink = profileNavLink(styles.profile);
-    const cartLink = cartNavLink(styles.cart);
+
+    this.cartItemsCounter = div({ className: styles.cartCounter });
+    const cartLink = getNavLink('', PagesPaths.CART, styles.cart, this.cartItemsCounter);
 
     this.navLinks = {
       [PagesPaths.CATALOG]: catalogNavLink(styles.listItem),
@@ -95,6 +98,8 @@ export class Header extends BaseComponent {
         ),
       ),
     ]);
+
+    this.addListener('updateCartCounter', (e) => this.updateCartCounter(e));
   }
 
   public updateNavLinks(url: string): void {
@@ -160,8 +165,19 @@ export class Header extends BaseComponent {
     LocalStorageService.removeData('cartId');
 
     apiService.logout();
+    generateUpdateEvent();
 
     this.updateNavLinks(PagesPaths.LOGIN);
     this.setLoginNavLink();
+  }
+
+  private updateCartCounter(e?: Event): void {
+    const event = e as CustomEvent;
+
+    if (event.detail.totalQuantity === 0) {
+      this.cartItemsCounter.setText('');
+    } else {
+      this.cartItemsCounter.setText(String(event.detail.totalQuantity));
+    }
   }
 }

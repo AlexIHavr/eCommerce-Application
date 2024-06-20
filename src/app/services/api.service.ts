@@ -12,9 +12,9 @@ import {
   Project,
 } from '@commercetools/platform-sdk';
 import { TokenCache } from '@commercetools/sdk-client-v2';
-import { PRODUCTS_CATEGORIES_IDS } from 'globalConsts/api.const';
+import { PRODUCTS_CATEGORIES_IDS, PRODUCTS_COUNT_ON_PAGE } from 'globalConsts/api.const';
 import { ApiClientResponse } from 'globalTypes/api.type';
-import { CustomerLoginData, FilterProps, NewCustomer, SortProps } from 'interfaces/api.interface';
+import { CustomerLoginData, FilteredProductsProps, NewCustomer } from 'interfaces/api.interface';
 import { clientBuild } from 'utils/clientBuild.util';
 import { getQueryFilterString } from 'utils/strings.util';
 import { tokenCache } from 'utils/tokenCache.util';
@@ -62,12 +62,13 @@ export class ApiService {
     this.apiRoot = clientBuild.getApiRootByAnonymousFlow();
   }
 
-  public getFilteredProducts(
-    filterProps: FilterProps,
-    sortProps?: SortProps,
-    searchText?: string,
-  ): ApiClientResponse<ProductProjectionPagedSearchResponse> {
-    const { slug, category, price, brands, colors } = filterProps;
+  public getFilteredProducts({
+    filterProps,
+    sortProps,
+    searchText,
+    pageNumber,
+  }: FilteredProductsProps): ApiClientResponse<ProductProjectionPagedSearchResponse> {
+    const { slug, category, price, brands, colors } = filterProps ?? {};
 
     const queryFilter: string[] = [];
     const querySort: string[] = [];
@@ -109,6 +110,8 @@ export class ApiService {
           filter: queryFilter,
           sort: querySort.length ? querySort : ['name.en asc'],
           fuzzy: false,
+          offset: (pageNumber ?? 0) * PRODUCTS_COUNT_ON_PAGE,
+          limit: PRODUCTS_COUNT_ON_PAGE,
           'text.en': searchText,
         },
       })

@@ -7,14 +7,18 @@ import {
 } from 'globalConsts/api.const';
 import { Anchor } from 'globalTypes/elements.type';
 import { CustomerLoginData } from 'interfaces/api.interface';
+import headerStyles from 'pages/header/header.module.scss';
 import { BreadcrumbPath } from 'pages/shared/components/breadcrumbs/breadcrumbs.interfaces';
+import { apiService } from 'services/api.service';
 import { LocalStorageService } from 'services/localStorage.service';
 import { routingService } from 'services/routing.service';
 import { alertModal } from 'shared/alert/alert.component';
 import { BaseComponent } from 'shared/base/base.component';
+import { loader } from 'shared/loader/loader.component';
 import { a } from 'shared/tags/tags.component';
 import { tokenCache } from 'utils/tokenCache.util';
 
+import { NO_SERVICE_AVAILABLE } from './cart/cart.consts';
 import { PagesPaths, PRODUCTS_CATEGORIES_KEYS } from './pageWrapper.consts';
 
 export function redirectToMain(): void {
@@ -43,16 +47,6 @@ export function saveTokensToLS(): void {
   }
 
   LocalStorageService.saveData('token', tokenCache.cache.token);
-}
-
-export function successLogin(title: string, customerId: string, cart?: Cart): void {
-  saveTokensToLS();
-  LocalStorageService.saveData('customerId', customerId);
-
-  if (cart) LocalStorageService.saveData('cartId', cart.id);
-
-  redirectToMain();
-  alertModal.showAlert('success', title);
 }
 
 export function isIncorrectCategoryPath(category: ProductsCategories): boolean {
@@ -123,4 +117,47 @@ export function getLoginDataWithCart(loginData: CustomerLoginData): CustomerLogi
   if (cartId) loginDataWithCart.anonymousCart = { typeId: 'cart', id: cartId };
 
   return loginDataWithCart;
+}
+
+export function generateUpdateEvent(cart?: Cart): void {
+  const header = document.querySelector(`.${headerStyles.header}`);
+  if (!header) return;
+
+  header.dispatchEvent(
+    new CustomEvent('updateCartCounter', {
+      detail: {
+        totalQuantity: cart && cart.totalLineItemQuantity ? cart.totalLineItemQuantity : 0,
+      },
+    }),
+  );
+}
+
+export async function initCartCounter(): Promise<void> {
+  const cartId = getCartId();
+
+  if (cartId) {
+    try {
+      loader.open();
+
+      const cart = await apiService.getCart(cartId);
+      generateUpdateEvent(cart.body);
+    } catch (error) {
+      alertModal.showAlert('error', NO_SERVICE_AVAILABLE);
+    } finally {
+      loader.close();
+    }
+  }
+}
+
+export function successLogin(title: string, customerId: string, cart?: Cart): void {
+  saveTokensToLS();
+  LocalStorageService.saveData('customerId', customerId);
+
+  if (cart) {
+    LocalStorageService.saveData('cartId', cart.id);
+    initCartCounter();
+  }
+
+  redirectToMain();
+  alertModal.showAlert('success', title);
 }

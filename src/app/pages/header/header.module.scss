@@ -161,6 +161,8 @@
       .cart {
         cursor: pointer;
 
+        position: relative;
+
         width: 40px;
         height: 40px;
 
@@ -169,6 +171,24 @@
         border-radius: 50%;
 
         transition: background-color 0.3s ease-in;
+
+        .cartCounter {
+          position: absolute;
+          top: -10px;
+          right: -5px;
+
+          display: block;
+
+          width: fit-content;
+          min-width: 20px;
+          padding: 0 3px;
+
+          font-size: 0.5rem;
+          text-align: center;
+
+          background-color: lightseagreen;
+          border-radius: 6px;
+        }
 
         @media (hover: hover) and (pointer: fine) {
           &:hover {

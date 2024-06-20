@@ -83,13 +83,15 @@ export function getProducts(
     (productsCards, { slug, name, description, masterVariant, variants }) => {
       if (masterVariant.isMatchingVariant) {
         productsCards.push(getProductCard(category, masterVariant, slug, name, description, cart));
-      }
+      } else {
+        const matchingVariants = variants.filter(({ isMatchingVariant }) => isMatchingVariant);
 
-      variants
-        .filter(({ isMatchingVariant }) => isMatchingVariant)
-        .forEach((variant) =>
-          productsCards.push(getProductCard(category, variant, slug, name, description, cart)),
-        );
+        if (matchingVariants.length) {
+          productsCards.push(
+            getProductCard(category, matchingVariants[0], slug, name, description, cart),
+          );
+        }
+      }
 
       return productsCards;
     },

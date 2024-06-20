@@ -1,8 +1,8 @@
 import { ProductProjection } from '@commercetools/platform-sdk';
-import { ProductsCategories } from 'globalConsts/api.const';
+import { PRODUCTS_COUNT_ON_PAGE, ProductsCategories } from 'globalConsts/api.const';
 import { CartResponse } from 'globalTypes/api.type';
 import { Div } from 'globalTypes/elements.type';
-import { FilterProps, SortProps } from 'interfaces/api.interface';
+import { FilteredProductsProps } from 'interfaces/api.interface';
 import { ProductsFilters } from 'pages/category/components/productsFilters/productsFilters.component';
 import { getCartId, getCategoryBreadcrumbPath } from 'pages/pageWrapper.helpers';
 import { Breadcrumbs } from 'pages/shared/components/breadcrumbs/breadcrumbs.component';
@@ -16,7 +16,6 @@ import { loader } from 'shared/loader/loader.component';
 import { button, div, h3 } from 'shared/tags/tags.component';
 import { capitalizeFirstLetter } from 'utils/strings.util';
 
-import { PRODUCTS_COUNT_ON_PAGE } from './category.consts';
 import { getProducts } from './category.helpers';
 import styles from './category.module.scss';
 
@@ -27,9 +26,9 @@ export class Category extends BaseComponent {
 
   private readonly pagination: Div;
 
-  private productsLinks: Div[] = [];
+  private totalProducts?: number;
 
-  private isInitProducts: boolean = true;
+  private filteredProductsProps: FilteredProductsProps = {};
 
   constructor(private readonly category: ProductsCategories) {
     super(
@@ -52,27 +51,32 @@ export class Category extends BaseComponent {
     this.setProducts({});
   }
 
-  public setProducts(
-    filterProps: Omit<FilterProps, 'category'>,
-    sortProps?: SortProps,
-    searchText?: string,
-  ): void {
+  public async setProducts({
+    filterProps,
+    sortProps,
+    searchText,
+    pageNumber,
+  }: FilteredProductsProps): Promise<void> {
     loader.open();
     apiService
-      .getFilteredProducts({ category: this.category, ...filterProps }, sortProps, searchText)
+      .getFilteredProducts({
+        filterProps: { category: this.category, ...filterProps },
+        sortProps,
+        searchText,
+        pageNumber,
+      })
       .then((res) => {
         const products = res.body.results;
+
+        this.filteredProductsProps = { filterProps, sortProps, searchText, pageNumber };
+
+        this.totalProducts = res.body.total;
 
         this.productsList.destroyChildren();
         this.pagination.destroyChildren();
 
         if (products.length) {
-          if (this.isInitProducts) {
-            this.productsFilters.setProductsOptions(products);
-            this.isInitProducts = false;
-          }
-
-          this.setProductsOnPages(products);
+          this.setProductsOnPages(products, pageNumber ?? 0);
         } else {
           this.productsList.append(h3('No products'));
         }
@@ -81,15 +85,24 @@ export class Category extends BaseComponent {
       .finally(() => loader.close());
   }
 
-  private async setProductsOnPages(products: ProductProjection[]): Promise<void> {
+  private async setProductsOnPages(
+    products: ProductProjection[],
+    currentPage: number,
+  ): Promise<void> {
     const cartId = getCartId();
     let cart: CartResponse | undefined;
 
     if (cartId) cart = await apiService.getCart(cartId);
 
-    this.productsLinks = getProducts(this.category, products, cart);
+    this.setPagination(currentPage);
 
-    const pagesCount = Math.ceil(this.productsLinks.length / PRODUCTS_COUNT_ON_PAGE);
+    this.productsList.appendChildren(getProducts(this.category, products, cart));
+
+    routingService.updateLinks();
+  }
+
+  private setPagination(currentPage: number): void {
+    const pagesCount = Math.ceil((this.totalProducts ?? 0) / PRODUCTS_COUNT_ON_PAGE);
 
     this.pagination.appendChildren(
       new Array(pagesCount).fill(null).map((_, index) => {
@@ -97,33 +110,14 @@ export class Category extends BaseComponent {
           className: styles.pageLink,
           text: String(index + 1),
           onclick: () => {
-            this.pagination.getChildren().forEach((child) => child.removeClass(styles.active));
-            pageLink.addClass(styles.active);
-            this.goToPage(index + 1);
+            this.setProducts({ ...this.filteredProductsProps, pageNumber: index });
           },
         });
 
-        if (!index) pageLink.addClass(styles.active);
+        if (index === currentPage) pageLink.addClass(styles.active);
 
         return pageLink;
       }),
     );
-
-    this.goToPage(1);
-
-    routingService.updateLinks();
-  }
-
-  private goToPage(page: number): void {
-    this.productsList.destroyChildren();
-
-    this.productsList.appendChildren(
-      this.productsLinks.filter(
-        (_, index) =>
-          index >= (page - 1) * PRODUCTS_COUNT_ON_PAGE && index < page * PRODUCTS_COUNT_ON_PAGE,
-      ),
-    );
-
-    routingService.updateLinks();
   }
 }
