@@ -12,7 +12,7 @@ import {
   Project,
 } from '@commercetools/platform-sdk';
 import { TokenCache } from '@commercetools/sdk-client-v2';
-import { PRODUCTS_CATEGORIES_IDS } from 'globalConsts/api.const';
+import { PRODUCTS_CATEGORIES_IDS, PRODUCTS_COUNT_ON_PAGE } from 'globalConsts/api.const';
 import { ApiClientResponse } from 'globalTypes/api.type';
 import { CustomerLoginData, FilterProps, NewCustomer, SortProps } from 'interfaces/api.interface';
 import { clientBuild } from 'utils/clientBuild.util';
@@ -66,6 +66,7 @@ export class ApiService {
     filterProps: FilterProps,
     sortProps?: SortProps,
     searchText?: string,
+    pageNumber: number = 0,
   ): ApiClientResponse<ProductProjectionPagedSearchResponse> {
     const { slug, category, price, brands, colors } = filterProps;
 
@@ -109,6 +110,8 @@ export class ApiService {
           filter: queryFilter,
           sort: querySort.length ? querySort : ['name.en asc'],
           fuzzy: false,
+          offset: pageNumber,
+          limit: PRODUCTS_COUNT_ON_PAGE,
           'text.en': searchText,
         },
       })
